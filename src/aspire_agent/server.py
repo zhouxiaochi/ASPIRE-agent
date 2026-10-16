@@ -8,8 +8,8 @@ def _key(payload: dict[str, Any]) -> str: return str(payload.get("task_hash") or
 
 def create_app(store: SessionStore | None = None) -> Any:
     try: from fastapi import FastAPI, HTTPException
-    except ImportError as exc: raise RuntimeError("Install asipre-agent[server]") from exc
-    app = FastAPI(title="ASIPRE Agent Aspen Service"); store = store or SessionStore(_windows_factory)
+    except ImportError as exc: raise RuntimeError("Install aspire-agent[server]") from exc
+    app = FastAPI(title="ASPIRE Agent Aspen Service"); store = store or SessionStore(_windows_factory)
     @app.get("/health")
     def health(): return {"status": "ok", "active_sessions": len(store.sessions)}
     @app.post("/session/start")
@@ -44,5 +44,5 @@ def _windows_factory(initial_bkp: str | None, show_gui: bool | None) -> Any:
 def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--host", default="127.0.0.1"); parser.add_argument("--port", default=5000, type=int); args = parser.parse_args()
     try: import uvicorn
-    except ImportError as exc: raise RuntimeError("Install asipre-agent[server]") from exc
+    except ImportError as exc: raise RuntimeError("Install aspire-agent[server]") from exc
     uvicorn.run(create_app(), host=args.host, port=args.port); return 0

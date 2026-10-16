@@ -15,7 +15,7 @@ class OpenAIAdapter:
         try:
             from openai import OpenAI
         except ImportError as exc:
-            raise RuntimeError("Install asipre-agent[llm] to call a model") from exc
+            raise RuntimeError("Install aspire-agent[llm] to call a model") from exc
         client = OpenAI(base_url=self.base_url)
         response = client.chat.completions.create(model=self.model, messages=[{"role": "system", "content": system}, {"role": "user", "content": user}])
         return response.choices[0].message.content or ""

@@ -54,7 +54,7 @@ class _Harness:
     def _execution_command(self, request: RuntimeInput, stage: StagePlan) -> tuple[str, ...]:
         slug = re.sub(r"[^a-z0-9]+", "-", stage.name.casefold()).strip("-") or "stage"
         digest = hashlib.sha256(f"{request.text}\n{stage.name}".encode()).hexdigest()[:12]
-        task_key = f"asipre-{slug[:24]}-{digest}"
+        task_key = f"aspire-{slug[:24]}-{digest}"
         return ("python", stage.entry, "--task-key", task_key, "--evidence-name", f"evidence/{slug}", "--checkpoint", f"{slug}.bkp")
     def _audit_attempt(self, request: RuntimeInput, output: Path, stage: StagePlan, paths: list[Path], attempt: int, execute: bool, accepted: tuple[str, ...]) -> tuple[Diagnostic, RepairFocus | None, Any, bool]:
         report = self.auditor.audit_source(paths); receipt = None

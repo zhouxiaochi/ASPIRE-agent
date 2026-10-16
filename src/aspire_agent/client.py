@@ -11,7 +11,7 @@ class HttpTransport(Protocol):
 class HttpxTransport:
     def request(self, method: str, url: str, *, json: Mapping[str, Any] | None = None, timeout: float | None = None) -> HttpResponse:
         try: import httpx
-        except ImportError as exc: raise RuntimeError("Install asipre-agent[http] to use the HTTP client") from exc
+        except ImportError as exc: raise RuntimeError("Install aspire-agent[http] to use the HTTP client") from exc
         return httpx.request(method, url, json=json, timeout=timeout)
 class AspenError(RuntimeError): pass
 _UNSET = object()

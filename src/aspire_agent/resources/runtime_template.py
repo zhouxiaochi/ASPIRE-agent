@@ -2,7 +2,7 @@
 from __future__ import annotations
 import argparse, json, sys
 from pathlib import Path
-from asipre_agent import AspenClient
+from aspire_agent import AspenClient
 
 def build_topology(client: AspenClient, task_key: str) -> None:
     """Generated code replaces this prompt-only hook."""

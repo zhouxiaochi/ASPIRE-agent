@@ -1,5 +1,5 @@
 import pytest
-from asipre_agent.client import AspenClient,AspenError,is_explicitly_complete
+from aspire_agent.client import AspenClient,AspenError,is_explicitly_complete
 class Response:
     status_code=200
     def __init__(self,body): self.body=body

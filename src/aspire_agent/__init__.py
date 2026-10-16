@@ -1,4 +1,4 @@
-"""Public API for ASIPRE Agent."""
+"""Public API for ASPIRE Agent."""
 from .client import AspenClient, AspenError
 from .components import Compound, CompoundRegistry, COMMON_COMPOUNDS
 from .contracts import BlockKind, HeaterMode

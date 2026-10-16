@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "asipre-agent"
+name = "aspire-agent"
 version = "0.1.0"
 description = "ASPIRE Agent toolkit for Aspen Plus MIXER and HEATER workflows"
 readme = "README.md"
@@ -18,15 +18,15 @@ server = ["fastapi>=0.110", "uvicorn>=0.27"]
 windows = ["pywin32>=306; platform_system == 'Windows'"]
 llm = ["openai>=1.0"]
 test = ["pytest>=8", "httpx>=0.25"]
-dev = ["asipre-agent[http,server,test]"]
+dev = ["aspire-agent[http,server,test]"]
 
 [project.scripts]
-task-agent = "asipre_agent.cli:task_main"
-thesis-agent = "asipre_agent.cli:thesis_main"
-asipre-server = "asipre_agent.server:main"
+task-agent = "aspire_agent.cli:task_main"
+thesis-agent = "aspire_agent.cli:thesis_main"
+aspire-server = "aspire_agent.server:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/asipre_agent"]
+packages = ["src/aspire_agent"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

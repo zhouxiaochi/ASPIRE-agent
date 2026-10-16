@@ -8,5 +8,5 @@ def list_skills() -> tuple[str, ...]:
 
 def load_skill(name: str) -> str:
     if name not in SKILL_NAMES:
-        raise KeyError(f"Unknown ASIPRE skill: {name}")
-    return files("asipre_agent.resources.skills").joinpath(f"{name}.md").read_text(encoding="utf-8")
+        raise KeyError(f"Unknown ASPIRE skill: {name}")
+    return files("aspire_agent.resources.skills").joinpath(f"{name}.md").read_text(encoding="utf-8")

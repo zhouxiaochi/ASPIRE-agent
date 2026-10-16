@@ -1,6 +1,6 @@
 # ASPIRE Agent
 
-ASPIRE Agent is a focused research toolkit for generating, auditing, executing, and repairing Aspen Plus automation for MIXER and HEATER workflows. The Python distribution is `asipre-agent`, the import package is `asipre_agent`, and the command-line programs are `task-agent`, `thesis-agent`, and `asipre-server`. Source code and releases are available at <https://github.com/zhouxiaochi/ASPIRE-agent>.
+ASPIRE Agent is a focused research toolkit for generating, auditing, executing, and repairing Aspen Plus automation for MIXER and HEATER workflows. The Python distribution is `aspire-agent`, the import package is `aspire_agent`, and the command-line programs are `task-agent`, `thesis-agent`, and `aspire-server`. Source code and releases are available at <https://github.com/zhouxiaochi/ASPIRE-agent>.
 
 ## Scope
 
@@ -44,7 +44,7 @@ Names, Aspen IDs, CAS numbers, formulas, and documented aliases resolve through 
 
 ## Prerequisites
 
-- Windows on the machine running `asipre-server`;
+- Windows on the machine running `aspire-server`;
 - a licensed Aspen Plus installation with working COM automation;
 - Python 3.10 or newer; and
 - an OpenAI-compatible chat-completions endpoint for model-backed generation.
@@ -79,7 +79,7 @@ python -m pip install ".[http,llm]"
 Run this on the Windows/Aspen COM host:
 
 ```console
-asipre-server --host 127.0.0.1 --port 5000
+aspire-server --host 127.0.0.1 --port 5000
 ```
 
 Use an appropriate reachable interface instead of `127.0.0.1` only when the service must accept remote clients, and protect that network exposure. Verify startup with `GET http://127.0.0.1:5000/health`.
@@ -163,7 +163,7 @@ python -m twine check dist/*
 ## Project layout
 
 ```text
-src/asipre_agent/       Public package, agents, client, COM service, and resources
+src/aspire_agent/       Public package, agents, client, COM service, and resources
 skills/                 Public MIXER, HEATER, and common-compound guidance
 tests/                  Unit and contract tests with test doubles
 examples/               Task and thesis manifest templates

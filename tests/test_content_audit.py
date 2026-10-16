@@ -20,8 +20,12 @@ def test_public_naming_and_module_sizes():
     old_agent = "slim" + "-own-agent"
     old_role = "valid" + "ator"
     old_activity = "valid" + "ation"
+    legacy_identifier = "asi" + "pre"
     for path in tracked_text_files():
+        relative_path = path.relative_to(ROOT).as_posix().lower()
         text = path.read_text(encoding="utf-8").lower()
+        assert legacy_identifier not in relative_path, path
+        assert legacy_identifier not in text, path
         assert old_agent not in text, path
         assert old_role not in text, path
         assert old_activity not in text, path
@@ -30,7 +34,7 @@ def test_public_naming_and_module_sizes():
 def test_prompt_and_skill_domain_boundary():
     process_words = ["react" + "or", "col" + "umn", "separ" + "ator"]
     study_words = ["design" + " spec", "sensitiv" + "ity", "optim" + "ization", "recy" + "cle"]
-    roots = [ROOT / "skills", ROOT / "src" / "asipre_agent" / "resources"]
+    roots = [ROOT / "skills", ROOT / "src" / "aspire_agent" / "resources"]
     for root in roots:
         for path in root.rglob("*.md"):
             text = path.read_text(encoding="utf-8").lower()

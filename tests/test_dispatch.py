@@ -1,4 +1,4 @@
-from asipre_agent.com.dispatch import execute
+from aspire_agent.com.dispatch import execute
 class Table:
     def __init__(self): self.labels={};self.calls=[]
     def SetLabel(self,row,col,flag,value): self.calls.append((row,col,flag,value));self.labels[(row,col)]=value

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from asipre_agent.agents import ExecutionResult, StaticAdapter, TaskAgent, ThesisAgent, read_runtime_input
+from aspire_agent.agents import ExecutionResult, StaticAdapter, TaskAgent, ThesisAgent, read_runtime_input
 
 
 def script(text):
@@ -71,7 +71,7 @@ def test_harness_passes_stable_runtime_arguments(tmp_path):
     request = read_runtime_input(text="MIXER task"); executor = ReceiptExecutor()
     assert TaskAgent(QueueLLM([script("print('ok')")]), executor).run(request, tmp_path, execute=True, max_repairs=0).ok
     command = executor.commands[0]
-    assert command[0:2] == ("python", "generated_task.py") and command[2] == "--task-key" and command[3].startswith("asipre-task-")
+    assert command[0:2] == ("python", "generated_task.py") and command[2] == "--task-key" and command[3].startswith("aspire-task-")
     assert command[4:] == ("--evidence-name", "evidence/task", "--checkpoint", "task.bkp")
 
 

@@ -1,5 +1,5 @@
 import pytest
-from asipre_agent.com.operations import *
+from aspire_agent.com.operations import *
 class Elements:
     def __init__(self, items=None, add_factory=None): self.items=list(items or []); self.added=[]; self.add_factory=add_factory
     @property

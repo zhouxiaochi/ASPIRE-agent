@@ -1,5 +1,5 @@
 import pytest
-from asipre_agent.com.setters import SetterError,set_heater,set_mixer
+from aspire_agent.com.setters import SetterError,set_heater,set_mixer
 class Node:
     def __init__(self): self.Value="stale"; self.writes=[]
     def SetValueAndUnit(self,value,unit): self.Value=value; self.writes.append((value,unit))
@@ -14,7 +14,7 @@ def test_heater_unit_writes_and_stale_clear():
     tree=Tree("H1"); set_heater(tree,"H1","TP",temperature=350,temperature_unit="K",pressure=2,pressure_unit="bar"); assert tree.FindNode("Data\\Blocks\\H1\\Input\\TEMP").writes==[(350,"K")]; assert tree.FindNode("Data\\Blocks\\H1\\Input\\DUTY").Value is None
     set_heater(tree,"H1","PV",pressure=2,pressure_unit="bar",vapor_fraction=.5); set_heater(tree,"H1","PD",pressure=2,pressure_unit="bar",duty=0,duty_unit="kW")
     with pytest.raises(SetterError): set_heater(tree,"H1","TP",temperature=350,pressure=2,pressure_unit="bar")
-from asipre_agent.com.setters import set_basis_mixed,set_flow_mixed,set_mixed_spec_mixed,set_pres_mixed,set_temp_mixed,set_totflow_mixed
+from aspire_agent.com.setters import set_basis_mixed,set_flow_mixed,set_mixed_spec_mixed,set_pres_mixed,set_temp_mixed,set_totflow_mixed
 class StreamNode:
     def __init__(self): self.Value=None; self.writes=[]
     def SetValueAndUnit(self,value,unit): self.Value=value; self.writes.append((value,unit))

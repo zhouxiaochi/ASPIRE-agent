@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
-from asipre_agent.agents import AuditAgent, ChemicalReasoningAgent, ExecutionResult, PlannerAgent, RepairDirector
-from asipre_agent.agents.models import AuditIssue, AuditReport, ChemicalReasoningInput
+from aspire_agent.agents import AuditAgent, ChemicalReasoningAgent, ExecutionResult, PlannerAgent, RepairDirector
+from aspire_agent.agents.models import AuditIssue, AuditReport, ChemicalReasoningInput
 
 def test_planner_serializes_and_preserves_dependencies():
     manifest = {"stages": [{"name": "build", "entry": "build.py"}, {"name": "run", "entry": "run.py", "dependencies": ["build"]}]}

@@ -1,6 +1,6 @@
 ---
 name: common-components
-description: Resolve and verify the ten public ASIPRE Agent compounds.
+description: Resolve and verify the ten public ASPIRE Agent compounds.
 ---
 # Common components
 

@@ -1,7 +1,7 @@
 import re
 from importlib.resources import files
 from pathlib import Path
-from asipre_agent.skills import list_skills, load_skill
+from aspire_agent.skills import list_skills, load_skill
 ROOT=Path(__file__).parents[1]
 EXPECTED=("mixer","heater","common-components")
 CJK=re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
@@ -11,7 +11,7 @@ def test_all_skills_discoverable_and_packaged():
     for name in EXPECTED:
         source=(ROOT/"skills"/name/"SKILL.md").read_text(encoding="utf-8")
         assert load_skill(name)==source
-        packaged=files("asipre_agent.resources.skills").joinpath(f"{name}.md")
+        packaged=files("aspire_agent.resources.skills").joinpath(f"{name}.md")
         assert packaged.is_file()
 
 def test_skills_are_english_and_scoped():

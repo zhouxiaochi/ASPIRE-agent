@@ -1,5 +1,5 @@
 import pytest
-from asipre_agent.components import COMMON_COMPOUNDS, CompoundRegistry
+from aspire_agent.components import COMMON_COMPOUNDS, CompoundRegistry
 
 def test_registry_has_exact_public_compounds():
     assert len(COMMON_COMPOUNDS) == 10
