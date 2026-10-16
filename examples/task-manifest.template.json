@@ -1,0 +1,4 @@
+{
+  "request": "Describe the desired MIXER and HEATER workflow here.",
+  "constraints": ["Use only registry compounds", "Discover live ports"]
+}

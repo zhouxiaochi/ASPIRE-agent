@@ -1,0 +1,7 @@
+{
+  "request": "Describe the desired multi-file MIXER and HEATER workspace here.",
+  "stages": [
+    {"name": "build", "entry": "workflow.py"},
+    {"name": "verify", "entry": "verify.py"}
+  ]
+}
