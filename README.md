@@ -2,6 +2,12 @@
 
 ASPIRE Agent is a focused research toolkit for generating, auditing, executing, and repairing Aspen Plus automation for MIXER and HEATER workflows. The Python distribution is `aspire-agent`, the import package is `aspire_agent`, and the command-line programs are `task-agent`, `thesis-agent`, and `aspire-server`. Source code and releases are available at <https://github.com/zhouxiaochi/ASPIRE-agent>.
 
+## Demo
+
+[![ASPIRE Agent demonstration](https://img.youtube.com/vi/6JDFBJ_Mo8Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=6JDFBJ_Mo8Q)
+
+The image opens the demonstration on YouTube.
+
 ## Scope
 
 ASPIRE Agent supports:
