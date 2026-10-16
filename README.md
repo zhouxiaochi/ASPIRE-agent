@@ -175,7 +175,7 @@ docs/architecture.md    Detailed execution and evidence architecture
 If you use ASPIRE Agent in academic work, cite the repository release or commit you used.
 
 ```text
-Zhou, Xiaochi. ASPIRE Agent, version or commit, 2026. https://github.com/zhouxiaochi/ASPIRE-agent
+Zhou, Xiaochi, and Yunhu Gao. ASPIRE Agent, version or commit, 2026. https://github.com/zhouxiaochi/ASPIRE-agent
 ```
 
 ## License

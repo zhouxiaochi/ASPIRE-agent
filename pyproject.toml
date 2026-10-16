@@ -9,7 +9,7 @@ description = "ASPIRE Agent toolkit for Aspen Plus MIXER and HEATER workflows"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
-authors = [{name = "Zhou Xiaochi"}]
+authors = [{name = "Zhou Xiaochi"}, {name = "Gao Yunhu"}]
 dependencies = []
 
 [project.optional-dependencies]
