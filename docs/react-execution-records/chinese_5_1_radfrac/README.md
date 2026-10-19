@@ -26,10 +26,4 @@ Useful ranges include:
 - 280–324: product, equipment, and live-port readbacks
 - 325: session close
 
-## Sanitization boundary
-
-The trace intentionally excludes raw model responses, prompts, context packs, task/session identifiers, credentials, and local filesystem paths. Full Aspen operation parameters and useful Aspen results remain. Aspen Tree metadata such as `HAP_PROMPT` is native Aspen UI metadata, not an LLM prompt.
-
-REP, APW, and BKP files are not distributed because they may contain proprietary Aspen model information. Export operations remain in the trace with local paths redacted.
-
 This research trace uses equipment beyond the packaged public `MIXER`/`HEATER` API scope described in the repository README. It documents an experimental execution and does not expand the supported public API.
