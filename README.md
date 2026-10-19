@@ -6,17 +6,17 @@ ASPIRE Agent is a focused research toolkit for generating, auditing, executing, 
 
 ### Script Agent CHN51 execution
 
+**Aspen Plus V14 · Default model: GPT-5.5**
+
 <a href="https://www.youtube.com/watch?v=zUXi5dmyuxs">
-  <img src="https://img.youtube.com/vi/zUXi5dmyuxs/hqdefault.jpg" width="720" alt="Script Agent CHN51 execution — click to watch on YouTube">
+  <img src="docs/assets/script-agent-chn51-youtube-hd.png" width="960" alt="Watch the Script Agent CHN51 execution in Aspen Plus V14 on YouTube">
 </a>
 
-[![Watch the Script Agent CHN51 execution on YouTube](https://img.shields.io/badge/YouTube-Watch_CHN51_execution-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=zUXi5dmyuxs)
+[Watch the full CHN51 execution on YouTube](https://www.youtube.com/watch?v=zUXi5dmyuxs)
 
 ### ASPIRE Agent overview
 
-[![Watch the ASPIRE Agent overview on YouTube](https://img.shields.io/badge/YouTube-Watch_ASPIRE_overview-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=6JDFBJ_Mo8Q)
-
-The CHN51 preview and both badges open YouTube in a new page.
+[Watch the ASPIRE Agent overview on YouTube](https://www.youtube.com/watch?v=6JDFBJ_Mo8Q)
 
 ## Research execution records
 
