@@ -18,6 +18,14 @@ ASPIRE Agent is a focused research toolkit for generating, auditing, executing, 
 
 [Watch the ASPIRE Agent overview on YouTube](https://www.youtube.com/watch?v=6JDFBJ_Mo8Q)
 
+## Aspen Plus BKP files
+
+The Aspen Plus backup files prepared for the 2026-10-19 submission are available from the [BKP files release](https://github.com/zhouxiaochi/ASPIRE-agent/releases/tag/bkp-files-20261019).
+
+- [Download the ZIP archive](https://github.com/zhouxiaochi/ASPIRE-agent/releases/download/bkp-files-20261019/ASPIRE-agent-bkp-files-20261019.zip)
+- [Download the SHA-256 checksum](https://github.com/zhouxiaochi/ASPIRE-agent/releases/download/bkp-files-20261019/ASPIRE-agent-bkp-files-20261019.sha256)
+- Contents: 66 Aspen Plus `.bkp` files — 53 benchmark files covering the 41-case set and 13 paper-study files
+
 ## Research execution records
 
 Sanitized end-to-end records from successful research runs of the `chinese_5_1_radfrac` benchmark are available for two control approaches:
