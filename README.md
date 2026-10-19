@@ -8,9 +8,16 @@ ASPIRE Agent is a focused research toolkit for generating, auditing, executing, 
 
 The image opens the demonstration on YouTube.
 
-## ReAct Aspen execution trace
+## Research execution records
 
-A sanitized, call-by-call Aspen operation trace from a successful ReAct-controlled `chinese_5_1_radfrac` benchmark run is available in [`docs/react-execution-records/chinese_5_1_radfrac/`](docs/react-execution-records/chinese_5_1_radfrac/). It contains all 325 ordered Aspen calls, including topology construction, specifications, completion checks, engine execution, and final result readbacks. Raw model responses, prompts, context, credentials, and local filesystem paths are excluded.
+Sanitized end-to-end records from successful research runs of the `chinese_5_1_radfrac` benchmark are available for two control approaches:
+
+- [ReAct Aspen operation trace](docs/react-execution-records/chinese_5_1_radfrac/): all 325 ordered Aspen calls from the ReAct-controlled run.
+- [Script Agent execution record](docs/script-agent-execution-records/chinese_5_1_radfrac/): the sanitized event ledger, aggregate metrics, and both generated code versions from the Script-based ASPIRE run.
+
+The Script Agent record distinguishes the initial candidate from its pre-execution static revision. The initial candidate was rejected by a deterministic source contract before any Aspen-side mutation; only the revision was executed.
+
+Raw model responses, prompts, context packs, credentials, proprietary Aspen artifacts, local filesystem paths, and unsanitized validator payloads are excluded. These research traces exercise process equipment beyond the packaged public `MIXER`/`HEATER` support described below. They document experimental executions and do not expand the supported public API.
 
 ## Scope
 

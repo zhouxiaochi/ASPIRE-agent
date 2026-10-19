@@ -1,0 +1,82 @@
+{
+  "schema": "script_agent_execution_metrics.v1",
+  "case_id": "chinese_5_1_radfrac",
+  "method": "Script-based ASPIRE",
+  "execution_profile": "slim-own-agent",
+  "result": "PASS",
+  "full_iterations": 1,
+  "program_generation": {
+    "initial_generation_calls": 1,
+    "pre_execution_static_revision_calls": 1,
+    "aspen_runs_before_static_acceptance": 0,
+    "executed_code_version": "iteration_0_static_revision.py"
+  },
+  "llm_usage": {
+    "recorded_calls": 5,
+    "input_tokens": 368522,
+    "output_tokens": 37009,
+    "total_tokens": 405531,
+    "provider_cost_usd": 2.405207,
+    "by_scope": {
+      "program_generation": {
+        "calls": 2,
+        "tokens": 296451,
+        "cost_usd": 1.536879
+      },
+      "rep_readback": {
+        "calls": 1,
+        "tokens": 25326,
+        "cost_usd": 0.325338
+      },
+      "gate_validation": {
+        "calls": 1,
+        "tokens": 72921,
+        "cost_usd": 0.4167
+      },
+      "final_report": {
+        "calls": 1,
+        "tokens": 10833,
+        "cost_usd": 0.12629
+      }
+    }
+  },
+  "execution": {
+    "aspen_http_calls": 251,
+    "unique_operation_categories": 77,
+    "explicit_failed_aspen_results": 0,
+    "script_execution_seconds": 56.48457,
+    "total_pipeline_seconds": 437.575711
+  },
+  "model_inventory": {
+    "components": 5,
+    "blocks": 11,
+    "material_streams": 17
+  },
+  "aspen_result": {
+    "converged": true,
+    "per_error": 0
+  },
+  "primary_result": {
+    "stream": "PRODUCT",
+    "component": "CYCLOHEX",
+    "variable": "mole_fraction",
+    "value": 0.99907
+  },
+  "code_versions": {
+    "iteration_0_initial.py": {
+      "status": "rejected_before_execution",
+      "sha256": "b2c91aaab0bdc57ff5de934a88b7674ea4835bb538659f1fbb82609db8502164"
+    },
+    "iteration_0_static_revision.py": {
+      "status": "executed_and_validated",
+      "sha256": "6a9222485b5f6eb66823b1c4b68398ee3c0b1141a0fb7d0382ca6fa49dfd3a13"
+    }
+  },
+  "privacy": {
+    "raw_model_responses_included": false,
+    "prompts_or_context_included": false,
+    "local_paths_included": false,
+    "raw_aspen_payloads_included": false,
+    "proprietary_aspen_artifacts_included": false
+  }
+}
