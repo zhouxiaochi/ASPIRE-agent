@@ -8,6 +8,10 @@ ASPIRE Agent is a focused research toolkit for generating, auditing, executing, 
 
 The image opens the demonstration on YouTube.
 
+## ReAct Aspen execution trace
+
+A sanitized, call-by-call Aspen operation trace from a successful ReAct-controlled `chinese_5_1_radfrac` benchmark run is available in [`docs/react-execution-records/chinese_5_1_radfrac/`](docs/react-execution-records/chinese_5_1_radfrac/). It contains all 325 ordered Aspen calls, including topology construction, specifications, completion checks, engine execution, and final result readbacks. Raw model responses, prompts, context, credentials, and local filesystem paths are excluded.
+
 ## Scope
 
 ASPIRE Agent supports:

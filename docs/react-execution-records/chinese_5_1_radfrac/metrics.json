@@ -1,0 +1,26 @@
+{
+  "schema": "react_aspen_execution_metrics.v1",
+  "case_id": "chinese_5_1_radfrac",
+  "method": "ReAct with MCP-driven Aspen execution",
+  "result": "PASS",
+  "react_steps": 10,
+  "aspen_http_calls": 325,
+  "successful_http_calls": 325,
+  "run_duration_seconds": 209.935181,
+  "llm_tokens": {
+    "input": 1309384,
+    "output": 10602,
+    "total": 1319986
+  },
+  "aspen_result": {
+    "converged": true,
+    "per_error": 0
+  },
+  "primary_result": {
+    "stream": "PRODUCT",
+    "component": "CYCLOHEX",
+    "variable": "mole_fraction",
+    "value": 0.999122737
+  },
+  "trace_file": "aspen_operations.jsonl"
+}
