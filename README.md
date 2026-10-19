@@ -2,17 +2,21 @@
 
 ASPIRE Agent is a focused research toolkit for generating, auditing, executing, and repairing Aspen Plus automation for MIXER and HEATER workflows. The Python distribution is `aspire-agent`, the import package is `aspire_agent`, and the command-line programs are `task-agent`, `thesis-agent`, and `aspire-server`. Source code and releases are available at <https://github.com/zhouxiaochi/ASPIRE-agent>.
 
-## Demo
+## Video demonstrations
 
-### ASPIRE Agent demonstration
+### Script Agent CHN51 execution
 
-[![ASPIRE Agent demonstration](https://img.youtube.com/vi/6JDFBJ_Mo8Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=6JDFBJ_Mo8Q)
+<a href="https://www.youtube.com/watch?v=zUXi5dmyuxs">
+  <img src="https://img.youtube.com/vi/zUXi5dmyuxs/hqdefault.jpg" width="720" alt="Script Agent CHN51 execution — click to watch on YouTube">
+</a>
 
-### Script Agent CHN51 execution demonstration
+[![Watch the Script Agent CHN51 execution on YouTube](https://img.shields.io/badge/YouTube-Watch_CHN51_execution-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=zUXi5dmyuxs)
 
-[![Script Agent CHN51 execution demonstration](https://img.youtube.com/vi/zUXi5dmyuxs/maxresdefault.jpg)](https://www.youtube.com/watch?v=zUXi5dmyuxs)
+### ASPIRE Agent overview
 
-Each image opens its demonstration on YouTube.
+[![Watch the ASPIRE Agent overview on YouTube](https://img.shields.io/badge/YouTube-Watch_ASPIRE_overview-red?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=6JDFBJ_Mo8Q)
+
+The CHN51 preview and both badges open YouTube in a new page.
 
 ## Research execution records
 
