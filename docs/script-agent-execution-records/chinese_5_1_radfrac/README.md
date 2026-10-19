@@ -5,7 +5,7 @@ This directory contains a sanitized execution record and the two generated code 
 ## Run result
 
 - Full generation iterations: **1**
-- Code-generation calls: **2** — one initial generation and one pre-execution static revision
+- Code-generation calls: **2** â€” one initial generation and one pre-execution static revision
 - Total recorded LLM calls in the execution-and-evidence pipeline: **5**
 - Aspen HTTP calls: **251**
 - Aspen result: **converged**, `PER_ERROR = 0`
@@ -25,9 +25,3 @@ The code depends on experimental internal runtime and helper modules that are no
 
 - [`execution.jsonl`](execution.jsonl): sanitized ordered events covering generation, pre-execution audit, deterministic Aspen execution, readback, and validation.
 - [`metrics.json`](metrics.json): aggregate token, cost, timing, model-inventory, and result metrics.
-
-## Sanitization boundary
-
-The record intentionally excludes raw model responses, prompts, context packs, planner inputs, credentials, local filesystem paths, complete Aspen HTTP payloads, and raw validator payloads. REP, APW, BKP, and history files are not distributed because they may contain proprietary Aspen model information.
-
-This research trace uses equipment beyond the packaged public `MIXER`/`HEATER` API scope described in the repository README. It documents an experimental execution and does not expand the supported public API.
