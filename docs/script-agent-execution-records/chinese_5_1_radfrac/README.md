@@ -21,6 +21,10 @@ These are two code versions from the same full generation iteration, not two ind
 
 The code depends on experimental internal runtime and helper modules that are not distributed by this public repository. It is published for research auditability, not as a directly runnable example of the packaged public API.
 
+## LLM call record
+
+- [`main_control_llm_calls.md`](main_control_llm_calls.md): the two main code-generation calls, including the shared input, static-revision feedback, exact raw outputs, and provider token/cost telemetry. **296,451 total tokens.**
+
 ## Other files
 
 - [`execution.jsonl`](execution.jsonl): sanitized ordered events covering generation, pre-execution audit, deterministic Aspen execution, readback, and validation.
