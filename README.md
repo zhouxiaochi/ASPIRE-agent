@@ -35,6 +35,17 @@ Sanitized end-to-end records from successful research runs of the `chinese_5_1_r
 
 The Script Agent record distinguishes the initial candidate from its pre-execution static revision. The initial candidate was rejected by a deterministic source contract before any Aspen-side mutation; only the revision was executed.
 
+### Main-control LLM call comparison
+
+[Open the comparison guide](docs/llm-call-comparison/chinese_5_1_radfrac/) or inspect the two complete English-only JSONL exports directly.
+
+| Method | Main-control calls | Input tokens | Output tokens | Total tokens |
+| --- | ---: | ---: | ---: | ---: |
+| [Script Agent](docs/llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.english.jsonl) | 2 | 269,475 | 26,976 | **296,451** |
+| [ReAct](docs/llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.english.jsonl) | 10 | 1,309,384 | 10,602 | **1,319,986** |
+
+ReAct used **4.45×** as many main-control tokens in this run. Each record repeats the complete input structure; non-English source passages are explicitly marked in the public English-only export rather than silently translated.
+
 Raw model responses, prompts, context packs, credentials, proprietary Aspen artifacts, local filesystem paths, and unsanitized validator payloads are excluded. These research traces exercise process equipment beyond the packaged public `MIXER`/`HEATER` support described below. They document experimental executions and do not expand the supported public API.
 
 ## Scope

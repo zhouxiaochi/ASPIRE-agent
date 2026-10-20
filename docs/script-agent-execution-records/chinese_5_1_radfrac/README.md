@@ -21,6 +21,10 @@ These are two code versions from the same full generation iteration, not two ind
 
 The code depends on experimental internal runtime and helper modules that are not distributed by this public repository. It is published for research auditability, not as a directly runnable example of the packaged public API.
 
+## LLM call record
+
+- [`complete English-only main-control LLM calls`](../../llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.english.jsonl): every call contains its complete input structure, raw output, and exact provider telemetry. **296,451 total tokens.**
+
 ## Other files
 
 - [`execution.jsonl`](execution.jsonl): sanitized ordered events covering generation, pre-execution audit, deterministic Aspen execution, readback, and validation.

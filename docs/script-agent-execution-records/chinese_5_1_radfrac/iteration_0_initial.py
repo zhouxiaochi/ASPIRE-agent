@@ -100,7 +100,7 @@ MATERIAL_EDGES = [
 ]
 
 # Pump-curve table belongs to FEEDPUMP/FP only. The unlabelled head values are
-# interpreted as metres of liquid head, matching the Chinese table heading 扬程.
+# interpreted as metres of liquid head, matching the Chinese table heading head.
 FEEDPUMP_CURVE_POINTS = [
     {"flow": 20.0, "head": 40.0},
     {"flow": 10.0, "head": 250.0},

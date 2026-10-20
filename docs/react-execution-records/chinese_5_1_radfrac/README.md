@@ -10,6 +10,10 @@ This directory contains the ordered Aspen operation trace from one successful Re
 - Aspen result: **converged**, `PER_ERROR = 0`
 - Final readback: `PRODUCT` mole fraction of `CYCLOHEX` = **0.999122737**
 
+## LLM call record
+
+- [`complete English-only main-control LLM calls`](../../llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.english.jsonl): every call contains its complete input structure, raw output, and exact provider telemetry. **1,319,986 total tokens.**
+
 ## Files
 
 - [`aspen_operations.jsonl`](aspen_operations.jsonl): all 325 Aspen calls in execution order.

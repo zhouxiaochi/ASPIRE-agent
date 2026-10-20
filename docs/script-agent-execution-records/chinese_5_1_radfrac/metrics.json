@@ -65,7 +65,8 @@
   "code_versions": {
     "iteration_0_initial.py": {
       "status": "rejected_before_execution",
-      "sha256": "b2c91aaab0bdc57ff5de934a88b7674ea4835bb538659f1fbb82609db8502164"
+      "sha256": "4a0d75280700099a9643bf605e9d1cb1b615161a6e6aaf4cfed9a0d4efd51858",
+      "public_export_note": "One Chinese comment was translated to English; executable semantics are unchanged."
     },
     "iteration_0_static_revision.py": {
       "status": "executed_and_validated",
