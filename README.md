@@ -37,12 +37,14 @@ The Script Agent record distinguishes the initial candidate from its pre-executi
 
 ### Main-control LLM call comparison
 
+[Open the comparison guide](docs/llm-call-comparison/chinese_5_1_radfrac/) or inspect the two complete JSONL records directly.
+
 Open the two call records side by side to inspect the model inputs, raw outputs, and provider token telemetry:
 
 | Method | Main-control calls | Input tokens | Output tokens | Total tokens |
 | --- | ---: | ---: | ---: | ---: |
-| [Script Agent](docs/script-agent-execution-records/chinese_5_1_radfrac/main_control_llm_calls.md) | 2 | 269,475 | 26,976 | **296,451** |
-| [ReAct](docs/react-execution-records/chinese_5_1_radfrac/main_control_llm_calls.md) | 10 | 1,309,384 | 10,602 | **1,319,986** |
+| [Script Agent](docs/llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.full.jsonl) | 2 | 269,475 | 26,976 | **296,451** |
+| [ReAct](docs/llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.full.jsonl) | 10 | 1,309,384 | 10,602 | **1,319,986** |
 
 ReAct used **4.45×** as many main-control tokens in this run. Script Agent generated and statically revised one executable program; ReAct repeatedly resubmitted the task/context and evolving observation state for sequential action selection.
 

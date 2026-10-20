@@ -12,7 +12,7 @@ This directory contains the ordered Aspen operation trace from one successful Re
 
 ## LLM call record
 
-- [`main_control_llm_calls.md`](main_control_llm_calls.md): all ten sequential `select_action` calls with exact raw outputs and provider token/cost telemetry. The input message bodies are deterministically reconstructed from persisted run state and explicitly labeled. **1,319,986 total tokens.**
+- [`complete main-control LLM calls`](../../llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.full.jsonl): all ten sequential `select_action` calls with exact raw outputs and provider token/cost telemetry. The input message bodies are deterministically reconstructed from persisted run state and explicitly labeled. **1,319,986 total tokens.**
 
 ## Files
 

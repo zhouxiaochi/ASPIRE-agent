@@ -23,7 +23,7 @@ The code depends on experimental internal runtime and helper modules that are no
 
 ## LLM call record
 
-- [`main_control_llm_calls.md`](main_control_llm_calls.md): the two main code-generation calls, including the shared input, static-revision feedback, exact raw outputs, and provider token/cost telemetry. **296,451 total tokens.**
+- [`complete main-control LLM calls`](../../llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.full.jsonl): the two main code-generation calls, including the shared input, static-revision feedback, exact raw outputs, and provider token/cost telemetry. **296,451 total tokens.**
 
 ## Other files
 
