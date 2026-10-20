@@ -11,13 +11,13 @@ ReAct used **4.45×** as many main-control tokens. Its full task/context block i
 
 ## Files
 
-- [`script_agent_main_control_calls.english.jsonl`](script_agent_main_control_calls.english.jsonl) — two code-generation calls.
-- [`react_main_control_calls.english.jsonl`](react_main_control_calls.english.jsonl) — ten sequential action-selection calls.
+- [`script_agent_main_control_calls.raw.jsonl`](script_agent_main_control_calls.raw.jsonl) — two code-generation calls.
+- [`react_main_control_calls.raw.jsonl`](react_main_control_calls.raw.jsonl) — ten sequential action-selection calls.
 
 Raw download links:
 
-- [Script Agent calls](https://raw.githubusercontent.com/zhouxiaochi/ASPIRE-agent/main/docs/llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.english.jsonl)
-- [ReAct calls](https://raw.githubusercontent.com/zhouxiaochi/ASPIRE-agent/main/docs/llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.english.jsonl)
+- [Script Agent calls](https://raw.githubusercontent.com/zhouxiaochi/ASPIRE-agent/main/docs/llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.raw.jsonl)
+- [ReAct calls](https://raw.githubusercontent.com/zhouxiaochi/ASPIRE-agent/main/docs/llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.raw.jsonl)
 
 ## Export policy and provenance
 
