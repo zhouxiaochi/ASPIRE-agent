@@ -44,7 +44,7 @@ The Script Agent record distinguishes the initial candidate from its pre-executi
 | [Script Agent](docs/llm-call-comparison/chinese_5_1_radfrac/script-agent/) | 2 | 269,475 | 26,976 | **296,451** |
 | [ReAct](docs/llm-call-comparison/chinese_5_1_radfrac/react/) | 10 | 1,309,384 | 10,602 | **1,319,986** |
 
-ReAct used **4.45×** as many main-control tokens in this run. Each record repeats the complete input structure; non-English source passages are explicitly marked in the public English-only export rather than silently translated.
+ReAct used **4.45×** as many main-control tokens in this run. Each record repeats the complete input structure; Chinese source passages are faithfully translated into English in the public export; provider token telemetry remains the original recorded usage.
 
 Raw model responses, prompts, context packs, credentials, proprietary Aspen artifacts, local filesystem paths, and unsanitized validator payloads are excluded. These research traces exercise process equipment beyond the packaged public `MIXER`/`HEATER` support described below. They document experimental executions and do not expand the supported public API.
 

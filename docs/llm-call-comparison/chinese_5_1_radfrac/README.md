@@ -26,10 +26,10 @@ Open the formatted call indexes to inspect each complete input and output in a b
 - [Script Agent raw calls](script_agent_main_control_calls.raw.jsonl)
 - [ReAct raw calls](react_main_control_calls.raw.jsonl)
 
-## Export policy and provenance
+## Translation and provenance
 
-The original benchmark task and some injected context were written in Chinese. Each contiguous CJK passage is replaced by `[NON-ENGLISH REDACTED]`; no machine translation is presented as original model input. Message boundaries, English content, repeated context structure, raw English model output, and exact provider token/cost telemetry are retained.
+The original benchmark task and some injected context were written in Chinese. Those passages are faithfully translated into English in this public export. Code, identifiers, Aspen tokens, units, numbers, message boundaries, repeated context structure, raw English model output, and exact provider token/cost telemetry are retained.
 
-Script Agent's initial input and both raw outputs were persisted exactly before the English-only replacement. Its second input combines the persisted base messages with deterministic static-contract feedback.
+Script Agent's initial input and both raw outputs were persisted exactly before translation. Its second input combines the persisted base messages with deterministic static-contract feedback.
 
-ReAct persisted exact provider telemetry and raw outputs, but not literal per-step input message bodies. Its inputs are deterministically reconstructed from persisted task/context artifacts, memory update rules, prompt reducer, and prior observations. Every ReAct record states this provenance. Local filesystem roots and run/session identifiers are redacted.
+ReAct persisted exact provider telemetry and raw outputs, but not literal per-step input message bodies. Its inputs are deterministically reconstructed from persisted task/context artifacts, memory update rules, prompt reducer, and prior observations, then translated where the source text was Chinese. Every ReAct record states this provenance. Local filesystem roots and run/session identifiers are redacted.

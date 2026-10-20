@@ -23,7 +23,7 @@ The code depends on experimental internal runtime and helper modules that are no
 
 ## LLM call record
 
-- [`complete raw main-control LLM calls`](../../llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.raw.jsonl): every call contains its complete input structure, raw output, and exact provider telemetry. **296,451 total tokens.**
+- [`complete raw main-control LLM calls with faithful English translation of Chinese source passages`](../../llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.raw.jsonl): every call contains its complete input structure, raw output, and exact provider telemetry. **296,451 total tokens.**
 
 ## Other files
 

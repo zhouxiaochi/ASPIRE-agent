@@ -12,7 +12,7 @@ This directory contains the ordered Aspen operation trace from one successful Re
 
 ## LLM call record
 
-- [`complete raw main-control LLM calls`](../../llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.raw.jsonl): every call contains its complete input structure, raw output, and exact provider telemetry. **1,319,986 total tokens.**
+- [`complete raw main-control LLM calls with faithful English translation of Chinese source passages`](../../llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.raw.jsonl): every call contains its complete input structure, raw output, and exact provider telemetry. **1,319,986 total tokens.**
 
 ## Files
 

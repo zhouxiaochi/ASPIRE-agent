@@ -9,7 +9,7 @@ Recorded at: `2026-10-15T22:54:44.398`
 
 ## Input
 
-### Message 1 — `system` (28,284 characters)
+### Message 1 — `system` (28,284 translated characters)
 
 ````text
 You are a local coding agent embedded in a Python harness, not Cursor.
@@ -73,7 +73,7 @@ Rules:
 
 ````
 
-### Message 2 — `user` (543,687 characters)
+### Message 2 — `user` (537,949 translated characters)
 
 ````text
 Create a new Aspen hardcoded script for case `chinese_5_1`.
@@ -282,51 +282,51 @@ Curated context (skills and planner context are preserved in full):
 ### FILE: tasks/test/chn/chapter_05/exercise_5_1.md
 Reason: target task statement
 ```text
-# [NON-ENGLISH REDACTED] 5.1
+# Exercise 5.1
 
-![[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]](./images/exercise_5_1_flow.png)
+![Exercise 5.1 Flowchart](./images/exercise_5_1_flow.png)
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `Aspen Plus` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] `RK-SOAVE`。
+The attached figure is a cyclohexane production flowsheet. Create this process in `Aspen Plus`, become familiar with its pressure-changing units, and determine the mole fraction of cyclohexane in the product stream. Use `RK-SOAVE` as the property method.
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+Cyclohexane can be obtained by hydrogenation of benzene as follows:
 
-`C6H6([NON-ENGLISH REDACTED]) + 3H2([NON-ENGLISH REDACTED]) -> C6H12([NON-ENGLISH REDACTED])`
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] `99.8%`，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+`C6H6(benzene) + 3H2(hydrogen) -> C6H12(cyclohexane)`
+The benzene and hydrogen feeds are mixed with recycled hydrogen and cyclohexane before entering the fixed-bed catalytic reactor. Assuming a benzene conversion of `99.8%`, the reactor outlet is cooled and the light gases are separated from the two-phase flash separator. Part of the light gas is returned to the reactor as recycled hydrogen. Part of the liquid phase flow from the separator enters the distillation column to further remove dissolved light gases to stabilize the final product, and the remaining liquid phase flow enters the reactor to assist in temperature control.
 
-## [NON-ENGLISH REDACTED]
+## Given Conditions
 
-- [NON-ENGLISH REDACTED] `H2IN`：[NON-ENGLISH REDACTED] `50℃`，[NON-ENGLISH REDACTED] `2.5 MPa`，[NON-ENGLISH REDACTED] `330 kmol/h`，[NON-ENGLISH REDACTED] `H2`、`N2`、`CH4` [NON-ENGLISH REDACTED] `0.975`、`0.005` [NON-ENGLISH REDACTED] `0.02`
-- [NON-ENGLISH REDACTED] `BZIN`：[NON-ENGLISH REDACTED] `40℃`，[NON-ENGLISH REDACTED] `0.1 MPa`，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `100 kmol/h`
-- [NON-ENGLISH REDACTED] `FEED-MIX`（`Heater` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `150℃`，[NON-ENGLISH REDACTED] `2.3 MPa`
-- [NON-ENGLISH REDACTED] `REACT`（`Rstoic` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `200℃`，[NON-ENGLISH REDACTED] `0.1 MPa`，[NON-ENGLISH REDACTED] `0.998`
-- [NON-ENGLISH REDACTED] `VFLOW`（`FSplit` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `H2RCY` [NON-ENGLISH REDACTED] `92%`
-- [NON-ENGLISH REDACTED] `LFLOW`（`FSplit` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `CHRCY` [NON-ENGLISH REDACTED] `30%`
-- [NON-ENGLISH REDACTED] `HP-SEP`（`Flash2` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `50℃`，[NON-ENGLISH REDACTED] `0.05 MPa`
-- [NON-ENGLISH REDACTED] `COLUMN`（`RadFrac` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `12`，[NON-ENGLISH REDACTED] `1.2`，[NON-ENGLISH REDACTED] `8` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `1.5 MPa`，[NON-ENGLISH REDACTED] `99 kmol/h`，[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] `FEEDPUMP`（`Pump` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `0.6`，[NON-ENGLISH REDACTED] `0.9`
-- [NON-ENGLISH REDACTED] `PIPE`（`Pipe` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `40`，[NON-ENGLISH REDACTED] `1 in`，[NON-ENGLISH REDACTED] `25 m`
-- [NON-ENGLISH REDACTED] `PUMP`（`Pump HI`）：[NON-ENGLISH REDACTED] `2.6 MPa`
-- [NON-ENGLISH REDACTED] `COMP`（`Compr` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `0.4 MPa`
-- [NON-ENGLISH REDACTED] `VALVE`（`Valve` [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] `2 MPa`，[NON-ENGLISH REDACTED] `V810 equal percent flow` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `1.5 in`
+- Stream `H2IN`: temperature `50°C`, pressure `2.5 MPa`, total flow rate `330 kmol/h`, where the mole fractions of `H2`, `N2`, and `CH4` are `0.975`, `0.005`, and `0.02` respectively.
+- Stream `BZIN`: temperature `40°C`, pressure `0.1 MPa`, component is pure benzene, flow rate `100 kmol/h`
+- Module `FEED-MIX` (`Heater` module): temperature `150°C`, pressure `2.3 MPa`
+- Module `REACT` (`Rstoic` module): temperature `200°C`, pressure drop `0.1 MPa`, benzene conversion `0.998`
+- Module `VFLOW` (module `FSplit`): Stream `H2RCY` fraction `92%`
+- Module `LFLOW` (module `FSplit`): Stream `CHRCY` has a split fraction of `30%`
+- Module `HP-SEP` (`Flash2` module): temperature `50°C`, pressure drop `0.05 MPa`
+- Module `COLUMN` (`RadFrac` module): `12` theoretical stages, reflux ratio `1.2`, feed on theoretical stage `8`, column pressure `1.5 MPa`, distillate draw rate `99 kmol/h`, and a partial condenser with vapor product only
+- Module `FEEDPUMP` (module `Pump`): pump efficiency `0.6`, driver efficiency `0.9`
+- Module `PIPE` (`Pipe` module): material is carbon steel, Schedule `40`, diameter `1 in`, length `25 m`
+- Module `PUMP` (`Pump HI`): outlet pressure `2.6 MPa`
+- Module `COMP` (`Compr` module): use an isentropic compressor with a pressure increase of `0.4 MPa`
+- Module `VALVE` (module `Valve`): outlet pressure `2 MPa`, valve size `V810 equal percent flow` globe valve, nominal diameter `1.5 in`
 
-## [NON-ENGLISH REDACTED]
+## Pump characteristic curve
 
-[NON-ENGLISH REDACTED] `FEEDPUMP`，[NON-ENGLISH REDACTED] `BZIN → FEEDPUMP → BZIN2`，[NON-ENGLISH REDACTED] `PUMP`。
+The following characteristic curve belongs to the `FEEDPUMP` of the fresh benzene feed branch, that is, `BZIN → FEEDPUMP → BZIN2`, but does not belong to the `PUMP` of the liquid recycle branch.
 
-- `FEEDPUMP` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-- `FEEDPUMP` [NON-ENGLISH REDACTED] `0.6`，[NON-ENGLISH REDACTED] `0.9`；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `FEED-MIX` [NON-ENGLISH REDACTED] `2.3 MPa` [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] `PUMP` [NON-ENGLISH REDACTED] `2.6 MPa`，[NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] `m3/h` [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] SI [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `FEEDPUMP` [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] ID [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+- `FEEDPUMP` must use pump-curve mode; after writing the curve, keep this mode active and do not switch back to fixed outlet-pressure mode, which would disable the curve.
+- The pump efficiency of `FEEDPUMP` is `0.6`, and the driver efficiency is `0.9`; its outlet state is calculated by the effective curve and actual flow rate, and the pump curve specification cannot be directly replaced by the `2.3 MPa` of the downstream `FEED-MIX`.
+- `PUMP` of the liquid recycle branch uses an independent fixed outlet pressure specification `2.6 MPa`, and the curve in the following table must not be written to this pump.
+- Curve flow rate is used according to `m3/h` in the table. The source table does not specify the head unit; before writing it into Aspen, the chosen unit interpretation must be recorded explicitly and converted according to the actual units of the native curve table. The original values must not be entered directly into an SI-unit table without conversion.
+- Read back the actual specification mode, curve cells, and connected branch for both pumps to prove that the curve is active in the calculation for `FEEDPUMP`. Block IDs may use aliases, but branch and specification ownership must not change.
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] 1 | [NON-ENGLISH REDACTED] 2 | [NON-ENGLISH REDACTED] 3 | [NON-ENGLISH REDACTED] 4 |
+| Item | Value 1 | Value 2 | Value 3 | Value 4 |
 | --- | --- | --- | --- | --- |
-| [NON-ENGLISH REDACTED] / (m3/h) | 20 | 10 | 5 | 3 |
-| [NON-ENGLISH REDACTED] | 40 | 250 | 300 | 400 |
+| Flow rate / (m3/h) | 20 | 10 | 5 | 3 |
+| Head | 40 | 250 | 300 | 400 |
 
-## [NON-ENGLISH REDACTED]
+## Target
 
-[NON-ENGLISH REDACTED]。
+Find the mole fraction of cyclohexane in the product stream.
 
 ```
 
@@ -342,38 +342,38 @@ If any figure note conflicts with the written markdown or a generated split-task
 
 ### Image: `tasks/test/chn/chapter_05/images/exercise_5_1_flow.png`
 
-- Question `subfigure_scope_and_authority`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] blocking uncertainty，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow；[NON-ENGLISH REDACTED] part_a、part_b [NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Direct answer: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：1 [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”。[NON-ENGLISH REDACTED]。
-  - Visual evidence: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、(a)/(b)、part_a/part_b、[NON-ENGLISH REDACTED]。
-  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、LFLOW、PUMP、PIPE、COLUMN。
-  - Visual evidence: [NON-ENGLISH REDACTED]：BZIN、H2IN、BZIN2、H2RCY2、RXIN、RXOUT、VAP、H2RCY、PURGE、PURGE2、LIQ、COLFD、CHRCY、CHRCY2、CHRCY3、LTENDS、PRODUCT。
-  - Visual evidence: [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] BZIN/H2IN [NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED] REACT、HP-SEP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE，[NON-ENGLISH REDACTED] LFLOW [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED] FEED-MIX。
-- Question `labels_and_topology`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] from -> through/into -> to。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] fan-in/fan-out，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Aspen block type，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] visible_label [NON-ENGLISH REDACTED] type_from_context [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。
+- Question `subfigure_scope_and_authority`: Please only judge whether this picture contains multiple sub-pictures/processes based on the problem picture and task context. List the title or legend of each visible subfigure and indicate which subfigure most likely corresponds to the current task. If the text-derived description conflicts with visible connections or labels in the figure, the conflict must be listed as blocking uncertainty and do not automatically overwrite the title figure with the text. When selecting subgraphs, give priority to using clear process arrangement words, such as parallel flow, cross flow, parallel, co-current, cross-flow; do not use part_a, part_b or the generated split id as an authoritative basis. If the split id conflicts with the scheduling term, the conflict must be reported and the routing term shall prevail.
+- Direct answer: This question diagram does not contain multiple sub-diagrams/processes; only a complete flow diagram is shown. It can be seen that the sub-picture/process is: 1 cyclohexane production flow chart. No independent subfigure title or legend is visible within the figure; the figure legend/title in the context of the task reads "Exercise 5.1 Flowchart" and is described as "Cyclohexane Production Flowchart". The current task most likely corresponds to this unique flowchart.
+  - Visual evidence: The figure contains only one continuously connected process network, with no columns, (a)/(b), part_a/part_b, parallel flowsheets, or multiple independent frames.
+- Visual evidence: Visible device/module labels include: FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, LFLOW, PUMP, PIPE, COLUMN.
+- Visual evidence: Visible stream labels include: BZIN, H2IN, BZIN2, H2RCY2, RXIN, RXOUT, VAP, H2RCY, PURGE, PURGE2, LIQ, COLFD, CHRCY, CHRCY2, CHRCY3, LTENDS, PRODUCT.
+- Visual evidence: The process connection shows the same set of cyclohexane production process: the feed BZIN/H2IN and the recycling stream enter FEED-MIX. After REACT and HP-SEP, the gas phase is split into H2RCY and PURGE through VFLOW, and the liquid phase is split through LFLOW and enters COLUMN or recycled back to FEED-MIX.
+- Question `labels_and_topology`: Based only on this task figure, list the clearly visible module/equipment labels, stream labels, and the directly visible connections between these streams and modules. Treat this section as the topology contract: visible module/equipment labels are nodes and stream labels are edges; for each edge, describe from -> through/into -> to as clearly as possible. If multiple streams converge at or branch from one visible equipment label, record it as one visible node with its fan-in/fan-out; do not split it into nodes not labeled in the figure based on process semantics, multiple reaction equations, or icon candidates. One visible reactor is one node; the main and side reactions in the same equipment still belong to that single node. If the text provides an Aspen block type while the figure only shows an equipment label, record visible_label and type_from_context separately; icon-type candidates must not override, remove, split, or add to the visible labeled nodes here. Do not add names that are illegible or absent from the figure.
   - Direct answer: {'visible_modules_or_equipment': [{'visible_label': 'FEEDPUMP', 'type_from_context': 'Pump'}, {'visible_label': 'FEED-MIX', 'type_from_context': 'Heater'}, {'visible_label': 'REACT', 'type_from_context': 'Rstoic'}, {'visible_label': 'HP-SEP', 'type_from_context': 'Flash2'}, {'visible_label': 'VFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'VALVE', 'type_from_context': 'Valve'}, {'visible_label': 'COMP', 'type_from_context': 'Compr'}, {'visible_label': 'LFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'PUMP', 'type_from_context': 'Pump HI'}, {'visible_label': 'PIPE', 'type_from_context': 'Pipe'}, {'visible_label': 'COLUMN', 'type_from_context': 'RadFrac'}], 'visible_stream_labels': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], 'directly_visible_connections_as_edges': [{'stream_label': 'BZIN', 'connection': 'external left feed -> into FEEDPUMP'}, {'stream_label': 'BZIN2', 'connection': 'FEEDPUMP -> into FEED-MIX'}, {'stream_label': 'H2IN', 'connection': 'external left feed -> into FEED-MIX'}, {'stream_label': 'H2RCY2', 'connection': 'COMP -> into FEED-MIX'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> into FEED-MIX'}, {'stream_label': 'RXIN', 'connection': 'FEED-MIX -> into REACT'}, {'stream_label': 'RXOUT', 'connection': 'REACT -> into HP-SEP'}, {'stream_label': 'VAP', 'connection': 'HP-SEP -> into VFLOW'}, {'stream_label': 'H2RCY', 'connection': 'VFLOW -> into COMP'}, {'stream_label': 'PURGE', 'connection': 'VFLOW -> into VALVE'}, {'stream_label': 'PURGE2', 'connection': 'VALVE -> external right outlet'}, {'stream_label': 'LIQ', 'connection': 'HP-SEP -> into LFLOW'}, {'stream_label': 'COLFD', 'connection': 'LFLOW -> into COLUMN'}, {'stream_label': 'CHRCY', 'connection': 'LFLOW -> into PUMP'}, {'stream_label': 'CHRCY2', 'connection': 'PUMP -> into PIPE'}, {'stream_label': 'LTENDS', 'connection': 'COLUMN -> external right outlet'}, {'stream_label': 'PRODUCT', 'connection': 'COLUMN -> external right outlet'}], 'visible_node_fan_in_fan_out_summary': [{'node': 'FEEDPUMP', 'fan_in': ['BZIN'], 'fan_out': ['BZIN2']}, {'node': 'FEED-MIX', 'fan_in': ['BZIN2', 'H2IN', 'H2RCY2', 'CHRCY3'], 'fan_out': ['RXIN']}, {'node': 'REACT', 'fan_in': ['RXIN'], 'fan_out': ['RXOUT']}, {'node': 'HP-SEP', 'fan_in': ['RXOUT'], 'fan_out': ['VAP', 'LIQ']}, {'node': 'VFLOW', 'fan_in': ['VAP'], 'fan_out': ['H2RCY', 'PURGE']}, {'node': 'COMP', 'fan_in': ['H2RCY'], 'fan_out': ['H2RCY2']}, {'node': 'VALVE', 'fan_in': ['PURGE'], 'fan_out': ['PURGE2']}, {'node': 'LFLOW', 'fan_in': ['LIQ'], 'fan_out': ['COLFD', 'CHRCY']}, {'node': 'PUMP', 'fan_in': ['CHRCY'], 'fan_out': ['CHRCY2']}, {'node': 'PIPE', 'fan_in': ['CHRCY2'], 'fan_out': ['CHRCY3']}, {'node': 'COLUMN', 'fan_in': ['COLFD'], 'fan_out': ['LTENDS', 'PRODUCT']}]}
-  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]："FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN"。
-  - Visual evidence: [NON-ENGLISH REDACTED] "BZIN" [NON-ENGLISH REDACTED] "FEEDPUMP"，[NON-ENGLISH REDACTED] "BZIN2" [NON-ENGLISH REDACTED] "FEED-MIX"。
-  - Visual evidence: "FEED-MIX" [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] "H2IN", "BZIN2", "H2RCY2", "CHRCY3" [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] "RXIN" [NON-ENGLISH REDACTED] "REACT"。
-  - Visual evidence: "REACT" [NON-ENGLISH REDACTED] "RXOUT" [NON-ENGLISH REDACTED] "HP-SEP"。
-  - Visual evidence: "HP-SEP" [NON-ENGLISH REDACTED] "VAP" [NON-ENGLISH REDACTED] "VFLOW"，[NON-ENGLISH REDACTED] "LIQ" [NON-ENGLISH REDACTED] "LFLOW"。
-  - Visual evidence: "VFLOW" [NON-ENGLISH REDACTED] "H2RCY"，[NON-ENGLISH REDACTED] "COMP"；[NON-ENGLISH REDACTED] "PURGE" [NON-ENGLISH REDACTED] "VALVE" [NON-ENGLISH REDACTED] "PURGE2"。
-  - Visual evidence: "LFLOW" [NON-ENGLISH REDACTED] "COLFD" [NON-ENGLISH REDACTED] "COLUMN"；[NON-ENGLISH REDACTED] "CHRCY" [NON-ENGLISH REDACTED] "PUMP"，[NON-ENGLISH REDACTED] "CHRCY2" [NON-ENGLISH REDACTED] "PIPE"，[NON-ENGLISH REDACTED] "CHRCY3" [NON-ENGLISH REDACTED] "FEED-MIX"。
-  - Visual evidence: "COLUMN" [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] "LTENDS"，[NON-ENGLISH REDACTED] "PRODUCT"。
-  - Uncertainty: [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] "COLUMN" [NON-ENGLISH REDACTED]。
-  - Uncertainty: "type_from_context" [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
-- Question `numbers_and_constraints`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。
-  - Direct answer: {'[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': ['FEEDPUMP', 'FEED-MIX', 'REACT', 'HP-SEP', 'VFLOW', 'VALVE', 'COMP', 'LFLOW', 'PUMP', 'PIPE', 'COLUMN'], '[NON-ENGLISH REDACTED]': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], '[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]': {'PRODUCT': 'COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]', 'LTENDS': 'COLUMN [NON-ENGLISH REDACTED]', 'H2RCY': 'VFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] COMP', 'H2RCY2': 'COMP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX', 'CHRCY': 'LFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] PUMP', 'CHRCY2': 'PUMP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] PIPE', 'CHRCY3': 'PIPE [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX', 'PURGE': 'VFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] VALVE', 'PURGE2': 'VALVE [NON-ENGLISH REDACTED]'}, '[NON-ENGLISH REDACTED]_Aspen_[NON-ENGLISH REDACTED]': ['BZIN [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEEDPUMP；FEEDPUMP [NON-ENGLISH REDACTED] BZIN2。', 'H2IN [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX。', 'FEED-MIX [NON-ENGLISH REDACTED] 4 [NON-ENGLISH REDACTED]：BZIN2、H2IN、H2RCY2、CHRCY3；[NON-ENGLISH REDACTED] RXIN。', 'RXIN [NON-ENGLISH REDACTED] REACT；REACT [NON-ENGLISH REDACTED] RXOUT。', 'RXOUT [NON-ENGLISH REDACTED] HP-SEP；HP-SEP [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] VAP、[NON-ENGLISH REDACTED] LIQ。', 'VAP [NON-ENGLISH REDACTED] VFLOW；VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE [NON-ENGLISH REDACTED]。', 'H2RCY [NON-ENGLISH REDACTED] COMP [NON-ENGLISH REDACTED] H2RCY2，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'PURGE [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] PURGE2，[NON-ENGLISH REDACTED]。', 'LIQ [NON-ENGLISH REDACTED] LFLOW；LFLOW [NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED]。', 'COLFD [NON-ENGLISH REDACTED] COLUMN。', 'CHRCY [NON-ENGLISH REDACTED] PUMP、PIPE，[NON-ENGLISH REDACTED] CHRCY、CHRCY2、CHRCY3，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'COLUMN [NON-ENGLISH REDACTED] COLFD，[NON-ENGLISH REDACTED]：LTENDS [NON-ENGLISH REDACTED] PRODUCT。', '[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。']}
-  - Visual evidence: [NON-ENGLISH REDACTED]："FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN"。
-  - Visual evidence: [NON-ENGLISH REDACTED] "BZIN" [NON-ENGLISH REDACTED] "FEEDPUMP"，[NON-ENGLISH REDACTED] "BZIN2"。
-  - Visual evidence: "H2IN", "BZIN2", "H2RCY2", "CHRCY3" [NON-ENGLISH REDACTED] "FEED-MIX"，"FEED-MIX" [NON-ENGLISH REDACTED] "RXIN"。
-  - Visual evidence: "RXIN" [NON-ENGLISH REDACTED] "REACT"，"REACT" [NON-ENGLISH REDACTED] "RXOUT"，[NON-ENGLISH REDACTED] "HP-SEP"。
-  - Visual evidence: "HP-SEP" [NON-ENGLISH REDACTED] "VAP"，[NON-ENGLISH REDACTED] "LIQ"。
-  - Visual evidence: "VAP" [NON-ENGLISH REDACTED] "VFLOW"；"VFLOW" [NON-ENGLISH REDACTED] "H2RCY"，[NON-ENGLISH REDACTED] "PURGE"。
-  - Visual evidence: "H2RCY" [NON-ENGLISH REDACTED] "COMP"，[NON-ENGLISH REDACTED] "H2RCY2" [NON-ENGLISH REDACTED] "FEED-MIX"。
-  - Visual evidence: "PURGE" [NON-ENGLISH REDACTED] "VALVE" [NON-ENGLISH REDACTED] "PURGE2"，[NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
-  - Uncertainty: COLUMN [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
+- Visual evidence: The device/module text labels visible in the picture include: "FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN".
+- Visual evidence: There is "BZIN" on the left that enters "FEEDPUMP", and then the stream is marked as "BZIN2" and enters "FEED-MIX".
+- Visual evidence: "H2IN", "BZIN2", "H2RCY2", "CHRCY3" are visible on the left/lower side of "FEED-MIX" at the same time; "RXIN" to "REACT" are output on the right side.
+  - Visual evidence: The right outlet from "REACT" is "RXOUT" to "HP-SEP".
+- Visual evidence: "HP-SEP" outputs "VAP" to "VFLOW" above and "LIQ" to "LFLOW" below.
+- Visual evidence: "VFLOW" The left-hand stream is marked "H2RCY" and leads to "COMP"; the right-hand stream "PURGE" passes through "VALVE" and becomes "PURGE2".
+- Visual evidence: "LFLOW", the right stream "COLFD" leads to "COLUMN"; the left stream "CHRCY" leads to "PUMP", then "CHRCY2" to "PIPE", and then "CHRCY3" returns to "FEED-MIX".
+  - Visual evidence: Two outgoing streams are visible on the right side of "COLUMN": upper "LTENDS" and lower "PRODUCT".
+- Uncertainty: Some small arrows are light or blurry; the above directions are mainly recorded according to visible arrows, stream layout and label adjacency relationships.
+- Uncertainty: There is a small icon/connection point near the top of COLUMN in the figure, but there is no clear independent device label; it is not added as a node as required, and only "COLUMN" is used as a visible node.
+- Uncertainty: "type_from_context" comes from the context of the question, not the visible text in the picture; visible nodes are still only recorded according to the device labels in the picture.
+- Question `numbers_and_constraints`: Based only on this task figure, list the clearly visible values, units, stage numbers, captions, operating conditions, product/reflux/recycle notes, and any visible constraints that are important for Aspen modeling but may be absent from the text. Do not guess.
+- Direct answer: {'Clearly visible value': [], 'Clearly visible unit': [], 'Clearly visible stage number': [], 'Clearly visible legend': [], 'Clearly visible operating condition': [], 'Clearly visible device or module label': ['FEEDPUMP', 'FEED-MIX', 'REACT', 'HP-SEP', 'VFLOW', 'VALVE', 'COMP', 'LFLOW', 'PUMP', 'PIPE', 'COLUMN'], 'Clearly visible stream labels': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], 'Product_return_circulation_emission description': {'PRODUCT': 'COLUMN bottom/lower right outgoing product stream', 'LTENDS': 'COLUMN upper right outgoing light end stream', 'H2RCY': 'VFLOW separated circulating gas stream, enter COMP', 'H2RCY2': 'COMP export stream, return to FEED-MIX', 'CHRCY': 'Liquid phase circulation stream separated from LFLOW, enter PUMP', 'CHRCY2': 'PUMP export stream, enter PIPE', 'CHRCY3': 'PIPE export stream, return to FEED-MIX', 'PURGE': 'VFLOW separated discharge stream, enter VALVE', 'PURGE2': 'VALVE export discharge stream'}, 'Visible constraints important for modeling _Aspen_': ['BZIN is the external feed into FEEDPUMP; the FEEDPUMP outlet is BZIN2. ', 'H2IN is an external feed that goes directly into FEED-MIX. ', 'FEED-MIX has 4 visible entrances: BZIN2, H2IN, H2RCY2, CHRCY3; the exit is RXIN. ', 'RXIN enters REACT; the REACT exit is RXOUT. ', 'RXOUT enters HP-SEP; HP-SEP has two outlets: upper VAP and lower LIQ. ', 'VAP enters VFLOW; VFLOW divides the gas phase into H2RCY and PURGE. ', 'H2RCY becomes H2RCY2 after COMP, and returns to FEED-MIX to form a gas phase circulation loop. ', 'PURGE becomes PURGE2 after VALVE and leaves the process as outbound stream. ', 'LIQ enters LFLOW; LFLOW divides the liquid phase into two streams, COLFD and CHRCY. ', 'COLFD enters COLUMN. ', 'CHRCY passes through PUMP and PIPE in sequence, and the stream names are CHRCY, CHRCY2, CHRCY3, and finally returns to FEED-MIX to form a liquid phase circulation loop. ', 'COLUMN has one visible incoming material COLFD and two visible outgoing stream: LTENDS and PRODUCT. ', 'No temperature, pressure, flow, composition, conversion, split ratio, reflux ratio, number of plates, feed plate position or pump/compressor/valve parameters are visible in the figure. ']}
+- Visual evidence: In the picture, the text box of the module or the labels next to the equipment are clearly visible: "FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN".
+- Visual evidence: On the left, the stream "BZIN" can be seen entering "FEEDPUMP", and then the stream is marked as "BZIN2".
+  - Visual evidence: "H2IN", "BZIN2", "H2RCY2", and "CHRCY3" all enter "FEED-MIX" through arrows, and the "FEED-MIX" outlet is labeled "RXIN".
+- Visual evidence: "RXIN" goes to "REACT", "REACT" exits to "RXOUT", goes to "HP-SEP".
+- Visual evidence: "HP-SEP" The upper outlet is labeled "VAP" and the lower outlet is labeled "LIQ".
+- Visual evidence: "VAP" enters "VFLOW"; the left exit of "VFLOW" is "H2RCY" and the right exit is "PURGE".
+  - Visual evidence: "H2RCY" enters "COMP"; its outlet is "H2RCY2" and returns to "FEED-MIX".
+- Visual evidence: "PURGE" passes through "VALVE" and becomes "PURGE2", leaving the process to the right.
+- Uncertainty: The problem diagram itself does not show any numerical values, units, stage numbers, temperatures, pressures, flow rates, compositions, fractions or equipment specifications; if these exist, they can only come from the text conditions and cannot be read from the diagram.
+- Uncertainty: There is no independently visible title or caption text in the figure; only the flow chart and equipment/stream labels are visible.
+  - Uncertainty: The internal stage count, feed-stage location, and condenser/reboiler configuration of COLUMN are not marked with text or numbers in the figure.
 - Question `stream_types_and_coupling`: You are given a stream-type icon legend reference image, then the task figure. Classify each visible stream label by line style and symbol using the reference legend only: solid line = material stream, dashed line with C = heat stream, dashed line with W = work stream, dashed line with I = power stream. Also classify block/unit symbols separately from stream labels. If a label such as Q1-Q4 uses dashed heat-style lines, treat it as heat/energy coupling, not material flow. Do not guess from label text alone. Do not invent a heat stream, including a label such as Q1, unless a dashed heat line is visible. A quench or reactor duty that the text describes as a material stream or a block result is not a heat stream.
   - Direct answer: {'stream_type_classification': {'material_streams_solid_line': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], 'heat_streams_dashed_line_with_C': [], 'work_streams_dashed_line_with_W': [], 'power_streams_dashed_line_with_I': []}, 'block_unit_symbols_separate_from_stream_labels': ['FEEDPUMP', 'FEED-MIX', 'REACT', 'HP-SEP', 'VFLOW', 'VALVE', 'COMP', 'LFLOW', 'PUMP', 'PIPE', 'COLUMN'], 'summary': 'All visible labeled streams in the task figure are drawn as solid material-flow lines. No dashed heat/work/power coupling lines with C, W, or I symbols are visible.'}
   - Uncertainty: The figure is low-resolution, but the visible stream lines appear consistently solid; no dashed heat/work/power stream symbols are discernible.
@@ -388,25 +388,25 @@ If any figure note conflicts with the written markdown or a generated split-task
   - Uncertainty: The figure does not show any heat-stream labels or explicit Aspen energy ports; therefore heat coupling endpoints cannot be resolved.
   - Uncertainty: FEED-MIX is identified in the task context as a Heater module, but the visible figure does not show a separate Q heat stream into or out of it.
   - Uncertainty: The active figure is not a multi-effect evaporation flowsheet, so evaporation-specific path classes are not directly applicable.
-- Question `label_semantics_and_mapping`: [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]），[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“1”[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
-  - Direct answer: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、LFLOW、PUMP、PIPE、COLUMN。[NON-ENGLISH REDACTED]：BZIN、H2IN、BZIN2、H2RCY2、RXIN、RXOUT、VAP、H2RCY、PURGE、PURGE2、LIQ、COLFD、CHRCY、CHRCY2、CHRCY3、LTENDS、PRODUCT。
+- Question `label_semantics_and_mapping`: If multiple sets of numbers or names appear in both the task context and the diagram (such as equipment serial numbers, stage numbers, Roman numerals, section numbers/efficiency numbers in tables, etc.), please only list the serial numbers/names in the diagram based on the labels visible in the title diagram, and explain whether there is a possible correspondence between them and the semantic numbers in the task context, which mappings cannot be directly derived from the diagram, and which must be supplemented by relying on the text or tables. Do not assume that the serial number "1" in the figure automatically equals the first paragraph/first effect/first level in semantics.
+- Direct answer: What is visible in the title picture is a set of flowcharts mainly with name tags. There are no visible stage numbers, Roman numerals, plate numbers, effect numbers or table section numbers. The device/module names visible in the picture are: FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, LFLOW, PUMP, PIPE, COLUMN. The stream names visible in the picture are: BZIN, H2IN, BZIN2, H2RCY2, RXIN, RXOUT, VAP, H2RCY, PURGE, PURGE2, LIQ, COLFD, CHRCY, CHRCY2, CHRCY3, LTENDS, PRODUCT.
 
-[NON-ENGLISH REDACTED]：BZIN2、H2RCY2、PURGE2、CHRCY2、CHRCY3；[NON-ENGLISH REDACTED] H2IN、H2RCY、H2RCY2 [NON-ENGLISH REDACTED]“H2”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]2[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]2[NON-ENGLISH REDACTED]”。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
+Stream names with numeric suffixes in the figure include BZIN2, H2RCY2, PURGE2, CHRCY2, and CHRCY3. In addition, the “H2” in H2IN, H2RCY, and H2RCY2 is part of the hydrogen symbol and must not be interpreted as “stage 2/section 2.” These numeric suffixes can only be confirmed from the figure as parts of stream names; they must not be interpreted directly as indicating a second section, effect, stage, or primary stream.
 
-[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、LFLOW、COLUMN、PIPE、PUMP、COMP、VALVE [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] H2IN、BZIN、H2RCY、CHRCY、PRODUCT [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
+Correspondence to the task context: The module names FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, LFLOW, COLUMN, PIPE, PUMP, COMP, and VALVE all appear with the same name in the figure, so these names can directly correspond to the module names in the context. Stream names H2IN, BZIN, H2RCY, CHRCY, PRODUCT, etc. also appear in the figure and can correspond to the stream of the same name in the context. However, the figure does not show semantic numbers or numerical conditions such as temperature, pressure, flow rate, composition, split ratio, conversion rate, number of trays, feed plate position, reflux ratio, pump curve number, etc.; these must be supplemented by the text or tables.
 
-[NON-ENGLISH REDACTED]：COLUMN [NON-ENGLISH REDACTED]“12 [NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 1、[NON-ENGLISH REDACTED] 2、[NON-ENGLISH REDACTED] 3、[NON-ENGLISH REDACTED] 4”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEEDPUMP [NON-ENGLISH REDACTED] PUMP [NON-ENGLISH REDACTED]；BZIN2、H2RCY2、PURGE2、CHRCY2、CHRCY3 [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“PUMP”[NON-ENGLISH REDACTED]“FEEDPUMP”[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
-  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]："FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN"。
-  - Visual evidence: [NON-ENGLISH REDACTED]："BZIN", "H2IN", "BZIN2", "H2RCY2", "RXIN", "RXOUT", "VAP", "H2RCY", "PURGE", "PURGE2", "LIQ", "COLFD", "CHRCY", "CHRCY2", "CHRCY3", "LTENDS", "PRODUCT"。
-  - Visual evidence: "BZIN" [NON-ENGLISH REDACTED] "FEEDPUMP"，[NON-ENGLISH REDACTED] "BZIN2"，[NON-ENGLISH REDACTED] BZIN2 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Visual evidence: "H2RCY" [NON-ENGLISH REDACTED] "COMP" [NON-ENGLISH REDACTED] "H2RCY2" [NON-ENGLISH REDACTED] "FEED-MIX"；[NON-ENGLISH REDACTED]。
-  - Visual evidence: "PURGE" [NON-ENGLISH REDACTED] "VALVE" [NON-ENGLISH REDACTED] "PURGE2"；[NON-ENGLISH REDACTED]。
-  - Visual evidence: "CHRCY" [NON-ENGLISH REDACTED] "PUMP" [NON-ENGLISH REDACTED] "CHRCY2"，[NON-ENGLISH REDACTED] "PIPE" [NON-ENGLISH REDACTED] "CHRCY3"，[NON-ENGLISH REDACTED] "FEED-MIX"；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Visual evidence: "COLUMN" [NON-ENGLISH REDACTED] "COLFD" [NON-ENGLISH REDACTED] "LTENDS"、"PRODUCT"；[NON-ENGLISH REDACTED] 1–12、[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] BZIN2、PURGE2、CHRCY2、CHRCY3，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Uncertainty: COLUMN [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 1–4”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
+Mappings that cannot be directly derived from the figure include: COLUMN's "12 theoretical plates" and "8th theoretical plate feed" have no plate number or feed plate number label in the figure, and cannot be directly derived from the COLFD connection point in the figure; "Value 1, Value 2, Value 3, Value 4" in the pump characteristic curve do not appear in the figure and cannot be mapped to FEEDPUMP or PUMP in the figure. a specific sequence number; the numerical suffixes of BZIN2, H2RCY2, PURGE2, CHRCY2, and CHRCY3 cannot be directly mapped to the first section/second section/stage number in the text. They can only be understood as different stream names before and after the corresponding unit according to the connection relationship in the figure. It is also not possible to judge which is the semantic first pump or the second pump just by "PUMP" and "FEEDPUMP" in the figure; its type and parameters need to rely on the module description given in the text.
+- Visual evidence: Device/module labels are clearly visible: "FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN".
+  - Visual evidence: Stream labels are clearly visible: "BZIN", "H2IN", "BZIN2", "H2RCY2", "RXIN", "RXOUT", "VAP", "H2RCY", "PURGE", "PURGE2", "LIQ", "COLFD", "CHRCY", "CHRCY2", "CHRCY3", "LTENDS", and "PRODUCT".
+- Visual evidence: "BZIN" enters "FEEDPUMP", and its export stream is marked "BZIN2", indicating that BZIN2 is a specific stream name in the picture, not a visible stage number.
+- Visual evidence: "H2RCY" becomes "H2RCY2" after "COMP" and returns "FEED-MIX"; the picture can only confirm that these are the names of the two streams before and after the compressor.
+- Visual evidence: "PURGE" becomes "PURGE2" after "VALVE"; the figure can only confirm that this is the name of the stream before and after the valve.
+  - Visual evidence: "CHRCY" becomes "CHRCY2" after passing through "PUMP", then becomes "CHRCY3" after passing through "PIPE", and subsequently returns to "FEED-MIX"; the numeric suffixes in the figure indicate stream-name changes and do not convey any stage or effect meaning.
+- Visual evidence: "COLUMN" has only one visible feed "COLFD" and two visible outlets "LTENDS", "PRODUCT"; the figure does not show plates 1–12, feed plate 8, or any plate number designation.
+- Uncertainty: There are no stage numbers, effect numbers, Roman numerals, plate numbers or table numbers visible in the figure, so no mapping to these semantic numbers can be established from the image itself.
+- Uncertainty: Stream names with numerical suffixes, such as BZIN2, PURGE2, CHRCY2, CHRCY3, may be named in Aspen to distinguish the stream before and after the unit, but the naming rules of the numerical suffix are not explained in the figure.
+  - Uncertainty: The number of theoretical stages, feed location, reflux ratio, and draw rate for COLUMN are not shown in the figure and must be taken from the task text.
+- Uncertainty: The "values ​​1-4" in the pump curve table do not appear in the diagram, and it is impossible to determine which point, segment or unit in the diagram these numbers correspond to.
 - Question `icon_unit_family`: You are given Aspen Plus block-icon legend reference images, then the task figure. First mentally mask out ALL text and all rectangular text callout boxes in the task figure, including short labels such as V-1, E1, FLASH-2, B9, Q1, FEED1, PRODUCT, WATER, and S29. Then, using only the remaining non-text graphical process symbols, compare each symbol shape against the reference icons. If one icon is visually distinctive, report that match. If multiple block types share an ambiguous or simplified icon shape (for example a horizontal rounded vessel that could be HeatX or Decanter in textbook figures), report all plausible icon candidates instead of forcing a single geometry-only match. After listing icon candidates, use the task context only to rank which candidate is process-semantically more plausible; keep the ambiguity explicit when the figure itself cannot distinguish them. This icon-only result is lower priority than the visible-label topology result: never use icon candidates to override, split, delete, or add visible topology nodes reported by the label/topology question. Do not create a block entry for a boxed label, a stream tag, a connector segment, or a label attached to a stream. If a candidate would disappear after text/callout masking, omit it. Return entries with keys: symbol_id, symbol_location_without_using_text, icon_candidates, preferred_candidate_from_task_context, visual_reason_from_shape_only, semantic_reason_from_task_context, confidence, uncertainty. Never include visible text labels as evidence or as an output field.
   - Direct answer: [{'symbol_id': 'S1', 'symbol_location_without_using_text': 'far left on the lower incoming material line', 'icon_candidates': ['Pump'], 'preferred_candidate_from_task_context': 'Pump', 'visual_reason_from_shape_only': 'The symbol is a small circular rotating-equipment icon with a short connected line and base-like shading, matching the supplied Pump icon more closely than vessel, valve, or column icons.', 'semantic_reason_from_task_context': 'The task context describes this left-side pressure-raising unit as a pump.', 'confidence': 'high', 'uncertainty': 'Low-resolution shading makes fine details indistinct, but the round pump-like shape is distinctive.'}, {'symbol_id': 'S2', 'symbol_location_without_using_text': 'left-center where several incoming lines join before the reactor-like vessel', 'icon_candidates': ['Heater'], 'preferred_candidate_from_task_context': 'Heater', 'visual_reason_from_shape_only': 'The remaining non-text symbol is a small round icon with internal diagonal/zigzag-like markings. This is closest to the supplied Heater icon, not to the triangular Mixer or FSplit icons.', 'semantic_reason_from_task_context': 'The task context states that this feed conditioning/mixing point is modeled with a heater-type module.', 'confidence': 'medium', 'uncertainty': 'The internal markings are small and blurred; the symbol also functions topologically as a mixing point, but its shape does not match the supplied triangular Mixer icon.'}, {'symbol_id': 'S3', 'symbol_location_without_using_text': 'center-left, immediately downstream of the round multi-inlet symbol', 'icon_candidates': ['RStoic'], 'preferred_candidate_from_task_context': 'RStoic', 'visual_reason_from_shape_only': 'The symbol is a horizontal cylindrical vessel with internal crosshatched/packed-looking shading, closely matching the supplied RStoic reactor icon.', 'semantic_reason_from_task_context': 'The task context describes this step as the stoichiometric reaction section.', 'confidence': 'high', 'uncertainty': 'The hatch pattern is somewhat low-resolution, but the horizontal crosshatched reactor vessel is visually distinctive.'}, {'symbol_id': 'S4', 'symbol_location_without_using_text': 'center-right vertical vessel receiving material from the reactor-like symbol and sending one line upward and one downward', 'icon_candidates': ['Flash2'], 'preferred_candidate_from_task_context': 'Flash2', 'visual_reason_from_shape_only': 'The symbol is a simple vertical rounded vessel without column trays or external condenser/reboiler attachments, matching the supplied Flash2 icon.', 'semantic_reason_from_task_context': 'The task context describes this vessel as a two-phase flash separator.', 'confidence': 'high', 'uncertainty': 'It could be generically interpreted as a vertical separator from shape alone, but among the supplied icons Flash2 is the closest match.'}, {'symbol_id': 'S5', 'symbol_location_without_using_text': 'upper middle, small filled square on the upward vapor/gas path where the line divides left and right', 'icon_candidates': ['FSplit', 'Dupl', 'Mult'], 'preferred_candidate_from_task_context': 'FSplit', 'visual_reason_from_shape_only': 'The visible symbol is only a small filled square junction with one incoming line and two outgoing lines. It does not closely match the supplied wedge-shaped FSplit icon or the boxed Mult/Dupl icons, so the match is a simplified splitter-marker ambiguity rather than a distinctive icon match.', 'semantic_reason_from_task_context': 'The task context identifies this upper gas-path divider as a fractional splitter.', 'confidence': 'medium-low', 'uncertainty': 'Shape alone is not a close match to any supplied splitter icon; the candidate ranking depends strongly on the non-text split topology and task context.'}, {'symbol_id': 'S6', 'symbol_location_without_using_text': 'upper left of the vapor/gas recycle loop, on the line returning toward the central feed-conditioning area', 'icon_candidates': ['Compr'], 'preferred_candidate_from_task_context': 'Compr', 'visual_reason_from_shape_only': 'The symbol is a tapered wedge/trapezoid rotating-equipment icon, visually matching the supplied compressor icon.', 'semantic_reason_from_task_context': 'The task context describes this recycle-gas pressure-changing unit as a compressor.', 'confidence': 'high', 'uncertainty': 'No significant ambiguity from the remaining shape.'}, {'symbol_id': 'S7', 'symbol_location_without_using_text': 'upper right on the outlet branch after the upper splitter marker', 'icon_candidates': ['Valve'], 'preferred_candidate_from_task_context': 'Valve', 'visual_reason_from_shape_only': 'The symbol is an inline valve/bowtie-like mark with a small stem-like feature, matching the supplied Valve icon.', 'semantic_reason_from_task_context': 'The task context describes this outlet pressure-changing unit as a valve.', 'confidence': 'high', 'uncertainty': 'The icon is small, but its inline valve geometry is recognizable.'}, {'symbol_id': 'S8', 'symbol_location_without_using_text': 'lower middle, small filled square below the vertical flash-like vessel where the liquid path divides', 'icon_candidates': ['FSplit', 'Dupl', 'Mult'], 'preferred_candidate_from_task_context': 'FSplit', 'visual_reason_from_shape_only': 'The visible symbol is a small filled square junction with one incoming line and two outgoing lines. It is not a distinctive match to the supplied wedge-shaped FSplit icon, so the geometry-only identification remains ambiguous among simplified splitter-type blocks.', 'semantic_reason_from_task_context': 'The task context identifies this lower liquid-path divider as a fractional splitter.', 'confidence': 'medium-low', 'uncertainty': 'The square marker shape is not a close geometry match to the supplied Aspen splitter icons; context is needed to prefer FSplit.'}, {'symbol_id': 'S9', 'symbol_location_without_using_text': 'lower center-left on the recycle line leaving the lower splitter marker', 'icon_candidates': ['Pump'], 'preferred_candidate_from_task_context': 'Pump', 'visual_reason_from_shape_only': 'The symbol is a circular rotating-equipment icon with connected inlet/outlet lines, matching the supplied Pump icon.', 'semantic_reason_from_task_context': 'The task context describes this lower recycle pressure-raising unit as a pump.', 'confidence': 'high', 'uncertainty': 'Low-resolution shading limits fine-detail comparison, but the pump-like circle is clear.'}, {'symbol_id': 'S10', 'symbol_location_without_using_text': 'lower left-of-center, horizontal tubular element downstream of the lower pump-like symbol', 'icon_candidates': ['Pipe', 'Pipeline'], 'preferred_candidate_from_task_context': 'Pipe', 'visual_reason_from_shape_only': 'The symbol is a short horizontal cylindrical tube. This geometry is closest to the supplied Pipe and Pipeline icons, which are visually similar in the legend.', 'semantic_reason_from_task_context': 'The task context describes this recycle-line element as a pipe section.', 'confidence': 'medium-high', 'uncertainty': 'The supplied Pipe and Pipeline icons are very similar; the figure’s simplified tube shape does not distinguish them by geometry alone.'}, {'symbol_id': 'S11', 'symbol_location_without_using_text': 'right side, tall vertical tower with side connection from the lower splitter path and two product-side exits', 'icon_candidates': ['DSTWU', 'Distl', 'RadFrac'], 'preferred_candidate_from_task_context': 'RadFrac', 'visual_reason_from_shape_only': 'The symbol is a vertical distillation-column-like vessel with small top and bottom auxiliary round features. The supplied DSTWU, Distl, and RadFrac column icons are visually very similar, so the simplified shape alone does not uniquely distinguish among them.', 'semantic_reason_from_task_context': 'The task context describes this tower as a rigorous distillation column modeled with a RadFrac-type block.', 'confidence': 'medium', 'uncertainty': 'The icon geometry alone is ambiguous among several distillation-column icons in the reference legend.'}]
   - Visual evidence: All rectangular callout boxes and text were mentally masked before matching.
@@ -430,7 +430,7 @@ Source artifact: `<SANDBOX_ROOT>\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese
 
 ## Primary Semantic Targets
 - P1_product_cyclohexane_mole_fraction: Report the mole fraction of cyclohexane/C6H12 in the final PRODUCT material stream.
-  Evidence policy: The stated objective is to[NON-ENGLISH REDACTED]. This is the main deliverable of the task.
+Evidence policy: The stated objective is to find the mole fraction of cyclohexane in the product stream. This is the main deliverable of the task.
 - P2_aspen_flowsheet_result_path: The reported PRODUCT C6H12 mole fraction must come from a solved Aspen Plus flowsheet, not from a hand calculation or an input-only restatement.
   Evidence policy: The task asks to use Aspen Plus to create the cyclohexane production process and determine the product composition. A result not derived from the Aspen flowsheet would not satisfy the central request.
 - P3_core_process_semantics: Model the intended cyclohexane production chemistry and separations: benzene hydrogenation C6H6 + 3 H2 -> C6H12 with 99.8% benzene conversion, cooling/flash light-gas separation, vapor purge/recycle, liquid recycle/column feed split, and RadFrac stabilization column producing PRODUCT.
@@ -482,25 +482,25 @@ This context is produced by aspen_task_planner before script generation.
 Treat explicit task facts as hard requirements. Do not remove named units, streams, or recycles unless the task says they are optional.
 
 ## Explicit Blocks
-- name=FEEDPUMP; block_type=PUMP; specs=[NON-ENGLISH REDACTED] `0.6`，[NON-ENGLISH REDACTED] `0.9` Numeric table `[NON-ENGLISH REDACTED]` assigned to this block:
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] 1 | [NON-ENGLISH REDACTED] 2 | [NON-ENGLISH REDACTED] 3 | [NON-ENGLISH REDACTED] 4 |
+- name=FEEDPUMP; block_type=PUMP; specs=pump efficiency `0.6`, driver efficiency `0.9` Numeric table `Pump performance curve` assigned to this block:
+| Item | Value 1 | Value 2 | Value 3 | Value 4 |
 | --- | --- | --- | --- | --- |
-| [NON-ENGLISH REDACTED] / (m3/h) | 20 | 10 | 5 | 3 |
-| [NON-ENGLISH REDACTED] | 40 | 250 | 300 | 400 |
-- name=FEED-MIX; block_type=HEATER; specs=Temperature 150℃, pressure 2.3 MPa.
-- name=REACT; block_type=RSTOIC; specs=Temperature 200℃, pressure drop 0.1 MPa; reaction C6H6 + 3H2 -> C6H12; benzene conversion 0.998.
+| Flow rate / (m3/h) | 20 | 10 | 5 | 3 |
+| Head | 40 | 250 | 300 | 400 |
+- name=FEED-MIX; block_type=HEATER; specs=Temperature 150°C, pressure 2.3 MPa.
+- name=REACT; block_type=RSTOIC; specs=Temperature 200°C, pressure drop 0.1 MPa; reaction C6H6 + 3H2 -> C6H12; benzene conversion 0.998.
 - name=VFLOW; block_type=FSPLIT; specs=Fraction of stream H2RCY is 92%.
 - name=LFLOW; block_type=FSPLIT; specs=Fraction of stream CHRCY is 30%.
-- name=HP-SEP; block_type=FLASH2; specs=Temperature 50℃, pressure drop 0.05 MPa.
+- name=HP-SEP; block_type=FLASH2; specs=Temperature 50°C, pressure drop 0.05 MPa.
 - name=COLUMN; block_type=RADFRAC; specs=12 theoretical stages; reflux ratio 1.2; feed on stage 8; column pressure 1.5 MPa; distillate rate 99 kmol/h; partial condenser with vapor distillate only.
 - name=PIPE; block_type=PIPE; specs=Carbon steel; schedule 40; diameter 1 in; length 25 m.
-- name=PUMP; block_type=PUMP; specs=[NON-ENGLISH REDACTED] `2.6 MPa`
+- name=PUMP; block_type=PUMP; specs=Outlet pressure `2.6 MPa`
 - name=COMP; block_type=COMPR; specs=Isentropic compressor; pressure increase 0.4 MPa.
 - name=VALVE; block_type=VALVE; specs=Outlet pressure 2 MPa; V810 equal percent flow globe valve; nominal diameter 1.5 in.
 
 ## Explicit Streams
-- name=H2IN; kind=material; specs=Temperature 50℃, pressure 2.5 MPa, total flow 330 kmol/h; mole fractions H2 0.975, N2 0.005, CH4 0.02.
-- name=BZIN; kind=material; specs=Temperature 40℃, pressure 0.1 MPa; pure benzene; flow 100 kmol/h.
+- name=H2IN; kind=material; specs=Temperature 50°C, pressure 2.5 MPa, total flow 330 kmol/h; mole fractions H2 0.975, N2 0.005, CH4 0.02.
+- name=BZIN; kind=material; specs=Temperature 40°C, pressure 0.1 MPa; pure benzene; flow 100 kmol/h.
 - name=BZIN2; kind=material; specs=(none)
 - name=H2RCY2; kind=material; specs=(none)
 - name=RXIN; kind=material; specs=(none)
@@ -535,7 +535,7 @@ Treat explicit task facts as hard requirements. Do not remove named units, strea
 - Solve flowsheet and report PRODUCT cyclohexane mole fraction; phase=analysis_tuning; blocks=[]; streams=[P5]
 
 ## Resolved Dataset Attachments
-- Put the numeric table under `[NON-ENGLISH REDACTED]` on `FEEDPUMP`. `PUMP` already states its own operating specification and does not receive this table.
+- Put the numeric table under `Pump Characteristic Curve` on `FEEDPUMP`. `PUMP` already states its own operating specification and does not receive this table.
 
 ```
 
@@ -752,217 +752,217 @@ Reason: LLM-selected validation gate contract from task text
       "operator": "=",
       "value": 50,
       "unit": "degC",
-      "evidence": "[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 50℃"
+"evidence": "Stream H2IN: Temperature 50°C"
     },
     {
       "metric": "H2IN pressure",
       "operator": "=",
       "value": 2.5,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 2.5 MPa"
+      "evidence": "Stream H2IN: pressure 2.5 MPa"
     },
     {
       "metric": "H2IN total molar flow",
       "operator": "=",
       "value": 330,
       "unit": "kmol/h",
-      "evidence": "[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 330 kmol/h"
+"evidence": "Stream H2IN: Total flow 330 kmol/h"
     },
     {
       "metric": "H2IN H2 mole fraction",
       "operator": "=",
       "value": 0.975,
       "unit": "mole fraction",
-      "evidence": "H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
+      "evidence": "The mole fractions of H2, N2, and CH4 are 0.975, 0.005, and 0.02, respectively"
     },
     {
       "metric": "H2IN N2 mole fraction",
       "operator": "=",
       "value": 0.005,
       "unit": "mole fraction",
-      "evidence": "H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
+      "evidence": "The mole fractions of H2, N2, and CH4 are 0.975, 0.005, and 0.02, respectively"
     },
     {
       "metric": "H2IN CH4 mole fraction",
       "operator": "=",
       "value": 0.02,
       "unit": "mole fraction",
-      "evidence": "H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
+      "evidence": "The mole fractions of H2, N2, and CH4 are 0.975, 0.005, and 0.02, respectively"
     },
     {
       "metric": "BZIN temperature",
       "operator": "=",
       "value": 40,
       "unit": "degC",
-      "evidence": "[NON-ENGLISH REDACTED] BZIN：[NON-ENGLISH REDACTED] 40℃"
+      "evidence": "Stream BZIN: Temperature 40°C"
     },
     {
       "metric": "BZIN pressure",
       "operator": "=",
       "value": 0.1,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] BZIN：[NON-ENGLISH REDACTED] 0.1 MPa"
+"evidence": "Stream BZIN: Pressure 0.1 MPa"
     },
     {
       "metric": "BZIN benzene feed flow",
       "operator": "=",
       "value": 100,
       "unit": "kmol/h",
-      "evidence": "[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 100 kmol/h"
+      "evidence": "Composition is pure benzene, flow rate 100 kmol/h"
     },
     {
       "metric": "FEED-MIX temperature",
       "operator": "=",
       "value": 150,
       "unit": "degC",
-      "evidence": "[NON-ENGLISH REDACTED] FEED-MIX（Heater [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 150℃"
+"evidence": "Module FEED-MIX (Heater module): Temperature 150°C"
     },
     {
       "metric": "FEED-MIX pressure",
       "operator": "=",
       "value": 2.3,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] FEED-MIX（Heater [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 2.3 MPa"
+      "evidence": "Module FEED-MIX (Heater module): Pressure 2.3 MPa"
     },
     {
       "metric": "REACT temperature",
       "operator": "=",
       "value": 200,
       "unit": "degC",
-      "evidence": "[NON-ENGLISH REDACTED] REACT（Rstoic [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 200℃"
+"evidence": "Module REACT (Rstoic module): Temperature 200°C"
     },
     {
       "metric": "REACT pressure drop",
       "operator": "=",
       "value": 0.1,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] REACT（Rstoic [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.1 MPa"
+      "evidence": "Module REACT (Rstoic module): pressure drop 0.1 MPa"
     },
     {
       "metric": "benzene conversion in REACT",
       "operator": "=",
       "value": 0.998,
       "unit": "fraction",
-      "evidence": "[NON-ENGLISH REDACTED] 0.998"
+"evidence": "The conversion rate of benzene is 0.998"
     },
     {
       "metric": "VFLOW H2RCY split fraction",
       "operator": "=",
       "value": 0.92,
       "unit": "fraction",
-      "evidence": "[NON-ENGLISH REDACTED] VFLOW（FSplit [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] 92%"
+      "evidence": "Module VFLOW (FSplit module): Stream H2RCY score 92%"
     },
     {
       "metric": "LFLOW CHRCY split fraction",
       "operator": "=",
       "value": 0.3,
       "unit": "fraction",
-      "evidence": "[NON-ENGLISH REDACTED] LFLOW（FSplit [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED] 30%"
+"evidence": "Module LFLOW (FSplit module): Stream CHRCY split fraction is 30%"
     },
     {
       "metric": "HP-SEP temperature",
       "operator": "=",
       "value": 50,
       "unit": "degC",
-      "evidence": "[NON-ENGLISH REDACTED] HP-SEP（Flash2 [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 50℃"
+      "evidence": "Module HP-SEP (Flash2 module): temperature 50°C"
     },
     {
       "metric": "HP-SEP pressure drop",
       "operator": "=",
       "value": 0.05,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] HP-SEP（Flash2 [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.05 MPa"
+"evidence": "Module HP-SEP (Flash2 module): voltage drop 0.05 MPa"
     },
     {
       "metric": "COLUMN theoretical stages",
       "operator": "=",
       "value": 12,
       "unit": "stages",
-      "evidence": "[NON-ENGLISH REDACTED] COLUMN（RadFrac [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 12"
+      "evidence": "Module COLUMN (RadFrac module): Number of theoretical boards 12"
     },
     {
       "metric": "COLUMN reflux ratio",
       "operator": "=",
       "value": 1.2,
       "unit": "dimensionless",
-      "evidence": "[NON-ENGLISH REDACTED] 1.2"
+"evidence": "Reflow ratio 1.2"
     },
     {
       "metric": "COLUMN feed stage",
       "operator": "=",
       "value": 8,
       "unit": "stage",
-      "evidence": "[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]"
+      "evidence": "Feed location: theoretical stage 8"
     },
     {
       "metric": "COLUMN pressure",
       "operator": "=",
       "value": 1.5,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] 1.5 MPa"
+"evidence": "Column pressure 1.5 MPa"
     },
     {
       "metric": "COLUMN distillate rate",
       "operator": "=",
       "value": 99,
       "unit": "kmol/h",
-      "evidence": "[NON-ENGLISH REDACTED] 99 kmol/h"
+      "evidence": "Tower distillate recovery rate 99 kmol/h"
     },
     {
       "metric": "FEEDPUMP pump efficiency",
       "operator": "=",
       "value": 0.6,
       "unit": "fraction",
-      "evidence": "[NON-ENGLISH REDACTED] FEEDPUMP（Pump [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.6"
+"evidence": "Module FEEDPUMP (Pump module): Pump efficiency 0.6"
     },
     {
       "metric": "FEEDPUMP driver efficiency",
       "operator": "=",
       "value": 0.9,
       "unit": "fraction",
-      "evidence": "[NON-ENGLISH REDACTED] FEEDPUMP（Pump [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.9"
+      "evidence": "Module FEEDPUMP (Pump module): driver efficiency 0.9"
     },
     {
       "metric": "PIPE diameter",
       "operator": "=",
       "value": 1,
       "unit": "in",
-      "evidence": "[NON-ENGLISH REDACTED] PIPE（Pipe [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 1 in"
+"evidence": "Module PIPE (Pipe Module): 1 in diameter"
     },
     {
       "metric": "PIPE length",
       "operator": "=",
       "value": 25,
       "unit": "m",
-      "evidence": "[NON-ENGLISH REDACTED] PIPE（Pipe [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 25 m"
+      "evidence": "Module PIPE (Pipe module): length 25 m"
     },
     {
       "metric": "PUMP outlet pressure",
       "operator": "=",
       "value": 2.6,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] PUMP（Pump HI）：[NON-ENGLISH REDACTED] 2.6 MPa"
+"evidence": "Module PUMP (Pump HI): outlet pressure 2.6 MPa"
     },
     {
       "metric": "COMP pressure increment",
       "operator": "=",
       "value": 0.4,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] COMP（Compr [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.4 MPa"
+      "evidence": "Module COMP (Compr module): pressure increase 0.4 MPa"
     },
     {
       "metric": "VALVE outlet pressure",
       "operator": "=",
       "value": 2,
       "unit": "MPa",
-      "evidence": "[NON-ENGLISH REDACTED] VALVE（Valve [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 2 MPa"
+"evidence": "Module VALVE (Valve module): outlet pressure 2 MPa"
     },
     {
       "metric": "product stream cyclohexane mole fraction",
       "operator": "report",
       "value": "Aspen-reported PRODUCT stream C6H12 mole fraction",
       "unit": "mole fraction",
-      "evidence": "[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]"
+      "evidence": "Objective: Find the mole fraction of cyclohexane in the product stream"
     }
   ],
   "component_role_contract": {
@@ -970,29 +970,29 @@ Reason: LLM-selected validation gate contract from task text
       {
         "name": "H2",
         "role": "hydrogen reactant in H2IN and vapor recycle component",
-        "source_text": "[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02; C6H6 + 3H2 -> C6H12"
+"source_text": "Stream H2IN...where the mole fractions of H2, N2, and CH4 are 0.975, 0.005, and 0.02 respectively; C6H6 + 3H2 -> C6H12"
       },
       {
         "name": "N2",
         "role": "inert/light-gas impurity in hydrogen feed",
-        "source_text": "[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
+"source_text": "Stream H2IN...where the mole fractions of H2, N2, and CH4 are 0.975, 0.005, and 0.02 respectively"
       },
       {
         "name": "CH4",
         "role": "light-gas impurity in hydrogen feed",
-        "source_text": "[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
+"source_text": "Stream H2IN...where the mole fractions of H2, N2, and CH4 are 0.975, 0.005, and 0.02 respectively"
       },
       {
         "name": "C6H6",
         "role": "benzene reactant in BZIN",
-        "source_text": "[NON-ENGLISH REDACTED] BZIN...[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 100 kmol/h; C6H6([NON-ENGLISH REDACTED]) + 3H2([NON-ENGLISH REDACTED]) -> C6H12([NON-ENGLISH REDACTED])"
+        "source_text": "Stream BZIN...composition is pure benzene, flow rate 100 kmol/h; C6H6(benzene) + 3H2(hydrogen) -> C6H12(cyclohexane)"
       }
     ],
     "product_components": [
       {
         "name": "C6H12",
         "role": "desired cyclohexane product whose mole fraction in PRODUCT is requested",
-        "source_text": "[NON-ENGLISH REDACTED]...C6H12([NON-ENGLISH REDACTED]); [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]"
+"source_text": "Cyclohexane can be obtained by hydrogenation of benzene...C6H12 (cyclohexane); Objective: Find the mole fraction of cyclohexane in the product stream"
       }
     ],
     "solvents_or_auxiliaries": [],
@@ -1000,12 +1000,12 @@ Reason: LLM-selected validation gate contract from task text
       {
         "name": "H2",
         "role": "hydrogen-rich vapor recycle returned through H2RCY/H2RCY2 to FEED-MIX",
-        "source_text": "[NON-ENGLISH REDACTED]; [NON-ENGLISH REDACTED] VFLOW...[NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] 92%"
+        "source_text": "Part of the light gas is returned to the reactor as recycled hydrogen; module VFLOW... Streams Fraction of H2RCY 92%"
       },
       {
         "name": "C6H12",
         "role": "liquid cyclohexane-rich recycle used to help control reactor temperature",
-        "source_text": "[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]; [NON-ENGLISH REDACTED] LFLOW...[NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED] 30%"
+"source_text": "The remaining liquid phase streams enter the reactor to assist in controlling the temperature; the module LFLOW...the fraction of the stream CHRCY is 30%"
       }
     ],
     "semantic_conflicts": [
@@ -1075,7 +1075,7 @@ Reason: LLM-selected validation gate contract from task text
   "figure_resolved_image_paths": [
     "tasks/test/chn/chapter_05/images/exercise_5_1_flow.png"
   ],
-  "figure_grounding_summary": "## Figure-Derived Supplement\n\nFor topology, visible stream labels, stream types, and figure-shown coupling, the figure evidence below is the highest-priority task source.\nTreat the `labels_and_topology` answer as the visible topology contract. Icon-family candidates are only block-type hints and must not split, remove, rename, or invent visible nodes.\nUse written text/tables for numeric conditions or semantics that are not visible in the figure, but do not silently overwrite a visible figure fact.\nIf any figure note conflicts with the written markdown or a generated split-task description, keep the conflict visible as a blocker until resolved.\n\n### Image: `tasks/test/chn/chapter_05/images/exercise_5_1_flow.png`\n\n- Question `subfigure_scope_and_authority`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] blocking uncertainty，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow；[NON-ENGLISH REDACTED] part_a、part_b [NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Direct answer: [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] part_a、part_b、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”（[NON-ENGLISH REDACTED]）。\n  - Visual evidence: [NON-ENGLISH REDACTED] Aspen Plus [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、PIPE、PUMP、LFLOW、COLUMN。\n  - Visual evidence: [NON-ENGLISH REDACTED]：BZIN、BZIN2、H2IN、H2IN2、H2RCY、H2RCY2、RXIN、RXOUT、VAP、PURGE、PURGE2、LIQ、COLFD、LTENDS、PRODUCT、CHRCY、CHRCY2、CHRCY3。\n  - Visual evidence: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”。\n  - Uncertainty: [NON-ENGLISH REDACTED] blocking uncertainty：[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n- Question `labels_and_topology`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] from -> through/into -> to。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] fan-in/fan-out，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Aspen block type，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] visible_label [NON-ENGLISH REDACTED] type_from_context [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。\n  - Direct answer: {'visible_modules_or_equipment_nodes': [{'visible_label': 'FEEDPUMP', 'type_from_context': 'Pump'}, {'visible_label': 'FEED-MIX', 'type_from_context': 'Heater'}, {'visible_label': 'REACT', 'type_from_context': 'Rstoic'}, {'visible_label': 'HP-SEP', 'type_from_context': 'Flash2'}, {'visible_label': 'VFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'VALVE', 'type_from_context': 'Valve'}, {'visible_label': 'COMP', 'type_from_context': 'Compr'}, {'visible_label': 'PIPE', 'type_from_context': 'Pipe'}, {'visible_label': 'PUMP', 'type_from_context': 'Pump HI'}, {'visible_label': 'LFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'COLUMN', 'type_from_context': 'RadFrac'}], 'visible_stream_labels': ['BZIN', 'BZIN2', 'H2IN', 'H2IN2', 'H2RCY', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'LTENDS', 'PRODUCT', 'CHRCY', 'CHRCY2', 'CHRCY3'], 'direct_visible_connections_topology': [{'stream_label': 'BZIN', 'connection': 'external feed -> FEEDPUMP'}, {'stream_label': 'BZIN2', 'connection': 'FEEDPUMP -> FEED-MIX'}, {'stream_label': 'H2IN', 'connection': 'external feed -> FEED-MIX'}, {'stream_label': 'H2IN2', 'connection': 'appears adjacent to the FEED-MIX inlet area; direct from/to equipment is not clearly distinguishable from the nearby inlet manifold'}, {'stream_label': 'H2RCY2', 'connection': 'COMP -> FEED-MIX'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> FEED-MIX'}, {'stream_label': 'RXIN', 'connection': 'FEED-MIX -> REACT'}, {'stream_label': 'RXOUT', 'connection': 'REACT -> HP-SEP'}, {'stream_label': 'VAP', 'connection': 'HP-SEP -> VFLOW'}, {'stream_label': 'H2RCY', 'connection': 'VFLOW -> COMP'}, {'stream_label': 'PURGE', 'connection': 'VFLOW -> VALVE'}, {'stream_label': 'PURGE2', 'connection': 'VALVE -> external outlet'}, {'stream_label': 'LIQ', 'connection': 'HP-SEP -> LFLOW'}, {'stream_label': 'COLFD', 'connection': 'LFLOW -> COLUMN'}, {'stream_label': 'LTENDS', 'connection': 'COLUMN -> external outlet'}, {'stream_label': 'PRODUCT', 'connection': 'COLUMN -> external outlet'}, {'stream_label': 'CHRCY', 'connection': 'LFLOW -> PUMP'}, {'stream_label': 'CHRCY2', 'connection': 'PUMP -> PIPE'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> FEED-MIX'}], 'visible_node_fan_in_fan_out': [{'node': 'FEEDPUMP', 'fan_in': ['BZIN'], 'fan_out': ['BZIN2']}, {'node': 'FEED-MIX', 'fan_in': ['BZIN2', 'H2IN', 'H2RCY2', 'CHRCY3'], 'fan_out': ['RXIN']}, {'node': 'REACT', 'fan_in': ['RXIN'], 'fan_out': ['RXOUT']}, {'node': 'HP-SEP', 'fan_in': ['RXOUT'], 'fan_out': ['VAP', 'LIQ']}, {'node': 'VFLOW', 'fan_in': ['VAP'], 'fan_out': ['H2RCY', 'PURGE']}, {'node': 'COMP', 'fan_in': ['H2RCY'], 'fan_out': ['H2RCY2']}, {'node': 'VALVE', 'fan_in': ['PURGE'], 'fan_out': ['PURGE2']}, {'node': 'LFLOW', 'fan_in': ['LIQ'], 'fan_out': ['COLFD', 'CHRCY']}, {'node': 'PUMP', 'fan_in': ['CHRCY'], 'fan_out': ['CHRCY2']}, {'node': 'PIPE', 'fan_in': ['CHRCY2'], 'fan_out': ['CHRCY3']}, {'node': 'COLUMN', 'fan_in': ['COLFD'], 'fan_out': ['LTENDS', 'PRODUCT']}]}\n  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：\"FEEDPUMP\"、\"FEED-MIX\"、\"REACT\"、\"HP-SEP\"、\"VFLOW\"、\"VALVE\"、\"COMP\"、\"PIPE\"、\"PUMP\"、\"LFLOW\"、\"COLUMN\"。\n  - Visual evidence: [NON-ENGLISH REDACTED]：\"BZIN\"、\"BZIN2\"、\"H2IN\"、\"H2IN2\"、\"H2RCY\"、\"H2RCY2\"、\"RXIN\"、\"RXOUT\"、\"VAP\"、\"PURGE\"、\"PURGE2\"、\"LIQ\"、\"COLFD\"、\"LTENDS\"、\"PRODUCT\"、\"CHRCY\"、\"CHRCY2\"、\"CHRCY3\"。\n  - Visual evidence: \"FEED-MIX\" [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] \"RXIN\" [NON-ENGLISH REDACTED] \"REACT\"。\n  - Visual evidence: \"REACT\" [NON-ENGLISH REDACTED] \"RXOUT\" [NON-ENGLISH REDACTED] \"HP-SEP\"。\n  - Visual evidence: \"HP-SEP\" [NON-ENGLISH REDACTED] \"VAP\"，[NON-ENGLISH REDACTED] \"LIQ\"。\n  - Visual evidence: \"VFLOW\" [NON-ENGLISH REDACTED] \"PURGE\" [NON-ENGLISH REDACTED] \"VALVE\" [NON-ENGLISH REDACTED] \"PURGE2\"；[NON-ENGLISH REDACTED] \"H2RCY\" [NON-ENGLISH REDACTED] \"COMP\"。\n  - Visual evidence: \"LFLOW\" [NON-ENGLISH REDACTED] \"COLFD\" [NON-ENGLISH REDACTED] \"COLUMN\"；[NON-ENGLISH REDACTED] \"CHRCY\"、\"CHRCY2\"、\"CHRCY3\"，[NON-ENGLISH REDACTED] \"PUMP\"、\"PIPE\" [NON-ENGLISH REDACTED] \"FEED-MIX\"。\n  - Visual evidence: \"COLUMN\" [NON-ENGLISH REDACTED] \"LTENDS\" [NON-ENGLISH REDACTED] \"PRODUCT\"。\n  - Uncertainty: \"H2IN2\" [NON-ENGLISH REDACTED] FEED-MIX [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] \"H2IN\"、\"BZIN2\"、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Uncertainty: [NON-ENGLISH REDACTED] \"CHRCY\"、\"CHRCY2\" [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] LFLOW -> PUMP -> PIPE -> FEED-MIX，[NON-ENGLISH REDACTED]。\n  - Uncertainty: COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n- Question `numbers_and_constraints`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。\n  - Direct answer: {'clearly_visible_numbers_units_stage_numbers_operating_conditions': '[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。', 'visible_caption': '[NON-ENGLISH REDACTED]。', 'visible_product_recycle_purge_labels': {'product': ['PRODUCT'], 'light_ends_or_overhead': ['LTENDS'], 'purge': ['PURGE', 'PURGE2'], 'gas_recycle_related': ['H2RCY', 'H2RCY2'], 'liquid_recycle_related': ['CHRCY', 'CHRCY2', 'CHRCY3'], 'reflux': '[NON-ENGLISH REDACTED] reflux/[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]。'}, 'visible_aspen_modeling_constraints_from_topology': ['[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、PIPE、PUMP、LFLOW、COLUMN。', 'FEED-MIX [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] BZIN2、H2IN、H2RCY2、CHRCY3；[NON-ENGLISH REDACTED] RXIN。', 'REACT [NON-ENGLISH REDACTED] RXIN，[NON-ENGLISH REDACTED] RXOUT。', 'HP-SEP [NON-ENGLISH REDACTED] RXOUT，[NON-ENGLISH REDACTED] VAP [NON-ENGLISH REDACTED] LIQ。', 'VAP [NON-ENGLISH REDACTED] VFLOW；VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE。', 'H2RCY [NON-ENGLISH REDACTED] COMP [NON-ENGLISH REDACTED] H2RCY2，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'PURGE [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] PURGE2 [NON-ENGLISH REDACTED]。', 'LIQ [NON-ENGLISH REDACTED] LFLOW；LFLOW [NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED] CHRCY。', 'COLFD [NON-ENGLISH REDACTED] COLUMN。', 'COLUMN [NON-ENGLISH REDACTED]：LTENDS [NON-ENGLISH REDACTED] PRODUCT。', 'CHRCY [NON-ENGLISH REDACTED] PUMP [NON-ENGLISH REDACTED] CHRCY2，[NON-ENGLISH REDACTED] PIPE [NON-ENGLISH REDACTED] CHRCY3，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'BZIN [NON-ENGLISH REDACTED] FEEDPUMP [NON-ENGLISH REDACTED] BZIN2，[NON-ENGLISH REDACTED] FEED-MIX。', 'H2IN [NON-ENGLISH REDACTED] FEED-MIX [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] H2IN2 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。']}\n  - Visual evidence: [NON-ENGLISH REDACTED] Aspen Plus [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。\n  - Visual evidence: [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED] “LTENDS” [NON-ENGLISH REDACTED] “PRODUCT”。\n  - Visual evidence: [NON-ENGLISH REDACTED] VFLOW [NON-ENGLISH REDACTED] “PURGE” [NON-ENGLISH REDACTED] “VALVE” [NON-ENGLISH REDACTED] “PURGE2”。\n  - Visual evidence: [NON-ENGLISH REDACTED] “H2RCY” [NON-ENGLISH REDACTED] “COMP” [NON-ENGLISH REDACTED] “H2RCY2”，[NON-ENGLISH REDACTED] FEED-MIX。\n  - Visual evidence: [NON-ENGLISH REDACTED] “CHRCY” [NON-ENGLISH REDACTED] “PUMP” [NON-ENGLISH REDACTED] “CHRCY2”，[NON-ENGLISH REDACTED] “PIPE” [NON-ENGLISH REDACTED] “CHRCY3”，[NON-ENGLISH REDACTED] FEED-MIX。\n  - Visual evidence: HP-SEP [NON-ENGLISH REDACTED] “VAP”，[NON-ENGLISH REDACTED] “LIQ”。\n  - Visual evidence: REACT [NON-ENGLISH REDACTED] HP-SEP [NON-ENGLISH REDACTED] “RXOUT”；FEED-MIX [NON-ENGLISH REDACTED] REACT [NON-ENGLISH REDACTED] “RXIN”。\n  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。\n  - Uncertainty: “H2I",
+  "figure_grounding_summary": "## Figure-Derived Supplement\n\nFor topology, visible stream labels, stream types, and figure-shown coupling, the figure evidence below is the highest-priority task source.\nTreat the `labels_and_topology` answer as the visible topology contract. Icon-family candidates are only block-type hints and must not split, remove, rename, or invent visible nodes.\nUse written text/tables for numeric conditions or semantics that are not visible in the figure, but do not silently overwrite a visible figure fact.\nIf any figure note conflicts with the written markdown or a generated split-task description, keep the conflict visible as a blocker until resolved.\n\n### Image: `tasks/test/chn/chapter_05/images/exercise_5_1_flow.png`\n\n- Question `subfigure_scope_and_authority`: Based only on the task figure and task context, determine whether this image contains multiple subfigures/flowsheets. List the title or caption of each visible subfigure and explain which subfigure most likely corresponds to the current task. If a text-derived description conflicts with connections or labels visible in the figure, list the conflict as a blocking uncertainty; do not automatically let the text override the figure. When selecting a subfigure, prioritize explicit process-arrangement terms such as parallel flow, cross-flow, parallel, co-current, or cross-flow; do not treat part_a, part_b, or a generated split id as authoritative. If a split id conflicts with a process-arrangement term, report the conflict and follow the process-arrangement term.\n  - Direct answer: No. The task figure contains only one visible flowsheet/subfigure. It is not divided into multiple parallel subfigures and has no visible process-arrangement titles such as part_a, part_b, parallel flow, cross-flow, parallel, co-current, or cross-flow. The current task most likely corresponds to the sole “Exercise 5.1 Flowsheet” (cyclohexane production flowsheet).\n  - Visual evidence: The figure is one continuous Aspen Plus-style flowsheet, with all equipment and streams connected into a single integrated process.\n  - Visual evidence: Visible equipment/module labels include: FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, PIPE, PUMP, LFLOW, and COLUMN.\n  - Visual evidence: Visible stream labels include: BZIN, BZIN2, H2IN, H2IN2, H2RCY, H2RCY2, RXIN, RXOUT, VAP, PURGE, PURGE2, LIQ, COLFD, LTENDS, PRODUCT, CHRCY, CHRCY2, and CHRCY3.\n  - Visual evidence: No multiple-panel boundaries, subfigure numbers, separate titles, or captions are visible in the figure; the contextual caption is “Exercise 5.1 Flowsheet.”\n  - Uncertainty: No blocking uncertainty: the main connections described in the task text are broadly consistent with the visible flowsheet, with no explicit conflict observed.\n  - Uncertainty: Some small arrow directions and individual stream connections are thin and locally unclear, but this does not affect the determination that the image contains a single flowsheet.\n- Question `labels_and_topology`: Based only on this task figure, list the clearly visible module/equipment labels, stream labels, and directly visible connections between these streams and modules. Treat this section as the topology contract: visible module/equipment labels are nodes and stream labels are edges; for each edge, describe from -> through/into -> to as clearly as possible. If multiple streams converge at or branch from one visible equipment label, record it as one visible node with its fan-in/fan-out; do not split it into nodes not labeled in the figure based on process semantics, multiple reaction equations, or icon candidates. One visible reactor is one node; the main and side reactions in the same equipment still belong to that single node. If the text provides an Aspen block type while the figure only shows an equipment label, record visible_label and type_from_context separately; icon-type candidates must not override, remove, split, or add to the visible labeled nodes here. Do not add names that are illegible or absent from the figure.\n  - Direct answer: {'visible_modules_or_equipment_nodes': [{'visible_label': 'FEEDPUMP', 'type_from_context': 'Pump'}, {'visible_label': 'FEED-MIX', 'type_from_context': 'Heater'}, {'visible_label': 'REACT', 'type_from_context': 'Rstoic'}, {'visible_label': 'HP-SEP', 'type_from_context': 'Flash2'}, {'visible_label': 'VFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'VALVE', 'type_from_context': 'Valve'}, {'visible_label': 'COMP', 'type_from_context': 'Compr'}, {'visible_label': 'PIPE', 'type_from_context': 'Pipe'}, {'visible_label': 'PUMP', 'type_from_context': 'Pump HI'}, {'visible_label': 'LFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'COLUMN', 'type_from_context': 'RadFrac'}], 'visible_stream_labels': ['BZIN', 'BZIN2', 'H2IN', 'H2IN2', 'H2RCY', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'LTENDS', 'PRODUCT', 'CHRCY', 'CHRCY2', 'CHRCY3'], 'direct_visible_connections_topology': [{'stream_label': 'BZIN', 'connection': 'external feed -> FEEDPUMP'}, {'stream_label': 'BZIN2', 'connection': 'FEEDPUMP -> FEED-MIX'}, {'stream_label': 'H2IN', 'connection': 'external feed -> FEED-MIX'}, {'stream_label': 'H2IN2', 'connection': 'appears adjacent to the FEED-MIX inlet area; direct from/to equipment is not clearly distinguishable from the nearby inlet manifold'}, {'stream_label': 'H2RCY2', 'connection': 'COMP -> FEED-MIX'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> FEED-MIX'}, {'stream_label': 'RXIN', 'connection': 'FEED-MIX -> REACT'}, {'stream_label': 'RXOUT', 'connection': 'REACT -> HP-SEP'}, {'stream_label': 'VAP', 'connection': 'HP-SEP -> VFLOW'}, {'stream_label': 'H2RCY', 'connection': 'VFLOW -> COMP'}, {'stream_label': 'PURGE', 'connection': 'VFLOW -> VALVE'}, {'stream_label': 'PURGE2', 'connection': 'VALVE -> external outlet'}, {'stream_label': 'LIQ', 'connection': 'HP-SEP -> LFLOW'}, {'stream_label': 'COLFD', 'connection': 'LFLOW -> COLUMN'}, {'stream_label': 'LTENDS', 'connection': 'COLUMN -> external outlet'}, {'stream_label': 'PRODUCT', 'connection': 'COLUMN -> external outlet'}, {'stream_label': 'CHRCY', 'connection': 'LFLOW -> PUMP'}, {'stream_label': 'CHRCY2', 'connection': 'PUMP -> PIPE'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> FEED-MIX'}], 'visible_node_fan_in_fan_out': [{'node': 'FEEDPUMP', 'fan_in': ['BZIN'], 'fan_out': ['BZIN2']}, {'node': 'FEED-MIX', 'fan_in': ['BZIN2', 'H2IN', 'H2RCY2', 'CHRCY3'], 'fan_out': ['RXIN']}, {'node': 'REACT', 'fan_in': ['RXIN'], 'fan_out': ['RXOUT']}, {'node': 'HP-SEP', 'fan_in': ['RXOUT'], 'fan_out': ['VAP', 'LIQ']}, {'node': 'VFLOW', 'fan_in': ['VAP'], 'fan_out': ['H2RCY', 'PURGE']}, {'node': 'COMP', 'fan_in': ['H2RCY'], 'fan_out': ['H2RCY2']}, {'node': 'VALVE', 'fan_in': ['PURGE'], 'fan_out': ['PURGE2']}, {'node': 'LFLOW', 'fan_in': ['LIQ'], 'fan_out': ['COLFD', 'CHRCY']}, {'node': 'PUMP', 'fan_in': ['CHRCY'], 'fan_out': ['CHRCY2']}, {'node': 'PIPE', 'fan_in': ['CHRCY2'], 'fan_out': ['CHRCY3']}, {'node': 'COLUMN', 'fan_in': ['COLFD'], 'fan_out': ['LTENDS', 'PRODUCT']}]}\n  - Visual evidence: Clearly visible equipment/module labels include: \"FEEDPUMP\", \"FEED-MIX\", \"REACT\", \"HP-SEP\", \"VFLOW\", \"VALVE\", \"COMP\", \"PIPE\", \"PUMP\", \"LFLOW\", and \"COLUMN\".\n  - Visual evidence: Clearly visible stream labels include: \"BZIN\", \"BZIN2\", \"H2IN\", \"H2IN2\", \"H2RCY\", \"H2RCY2\", \"RXIN\", \"RXOUT\", \"VAP\", \"PURGE\", \"PURGE2\", \"LIQ\", \"COLFD\", \"LTENDS\", \"PRODUCT\", \"CHRCY\", \"CHRCY2\", and \"CHRCY3\".\n  - Visual evidence: Multiple streams visibly enter the left side of \"FEED-MIX\", and \"RXIN\" is labeled on the right side leading to \"REACT\".\n  - Visual evidence: Stream \"RXOUT\" on the right side of \"REACT\" leads to \"HP-SEP\".\n  - Visual evidence: The upper stream from \"HP-SEP\" is labeled \"VAP\", and the lower stream is labeled \"LIQ\".\n  - Visual evidence: On the right side of \"VFLOW\", \"PURGE\" passes through \"VALVE\" to \"PURGE2\"; on the left side, \"H2RCY\" leads to \"COMP\".\n  - Visual evidence: On the right side of \"LFLOW\", \"COLFD\" leads to \"COLUMN\"; the left liquid recycle loop is labeled \"CHRCY\", \"CHRCY2\", and \"CHRCY3\" and returns to \"FEED-MIX\" through \"PUMP\" and \"PIPE\".\n  - Visual evidence: The upper stream \"LTENDS\" and lower stream \"PRODUCT\" are visible on the right side of \"COLUMN\".\n  - Uncertainty: The \"H2IN2\" label is visible near the feed area on the left side of FEED-MIX, but this area is crowded and its exact direct connection relative to the adjacent \"H2IN\", \"BZIN2\", and recycle lines cannot be determined clearly from the image alone.\n  - Uncertainty: The arrow directions for \"CHRCY\" and \"CHRCY2\" in the liquid recycle branch are small; based on the visible process lines and overall topology, they are recorded as LFLOW -> PUMP -> PIPE -> FEED-MIX, but the local arrow details are not especially clear.\n  - Uncertainty: A small unlabeled circular/accessory symbol appears near the top of COLUMN; because it has no clear equipment label, it is not recorded as a topology node.\n- Question `numbers_and_constraints`: Based only on this task figure, list the clearly visible values, units, stage numbers, captions, operating conditions, product/reflux/recycle notes, and any visible constraints that are important for Aspen modeling but may be absent from the text. Do not guess.\n  - Direct answer: {'clearly_visible_numbers_units_stage_numbers_operating_conditions': 'The figure does not clearly show any values, units, stage numbers, temperatures, pressures, flow rates, split fractions, conversions, reflux ratios, stage counts, or other operating conditions.', 'visible_caption': 'No clear caption or title is visible within the figure itself.', 'visible_product_recycle_purge_labels': {'product': ['PRODUCT'], 'light_ends_or_overhead': ['LTENDS'], 'purge': ['PURGE', 'PURGE2'], 'gas_recycle_related': ['H2RCY', 'H2RCY2'], 'liquid_recycle_related': ['CHRCY', 'CHRCY2', 'CHRCY3'], 'reflux': 'No stream or value clearly labeled as reflux is visible.'}, 'visible_aspen_modeling_constraints_from_topology': ['Visible module/equipment labels include: FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, PIPE, PUMP, LFLOW, and COLUMN.', 'FEED-MIX is a multi-stream junction; visible inlets include BZIN2, H2IN, H2RCY2, and CHRCY3, and the outlet is RXIN.', 'REACT receives RXIN and its outlet is RXOUT.', 'HP-SEP receives RXOUT and splits it into upper VAP and lower LIQ streams.', 'VAP enters VFLOW; VFLOW splits into H2RCY and PURGE.', 'H2RCY becomes H2RCY2 after COMP and returns to FEED-MIX, forming a gas recycle.', 'PURGE becomes PURGE2 after VALVE and exits the process.', 'LIQ enters LFLOW; LFLOW splits into COLFD and CHRCY.', 'COLFD enters COLUMN.', 'COLUMN has two clearly visible outlets: LTENDS and PRODUCT.', 'CHRCY becomes CHRCY2 after PUMP, then becomes CHRCY3 after PIPE and returns to FEED-MIX, forming a liquid recycle.', 'BZIN becomes BZIN2 after FEEDPUMP and then enters FEED-MIX.', 'H2IN is visibly a feed stream entering near FEED-MIX; the H2IN2 label is also visible, but its exact connection to adjacent inlet lines is less clear than for the other streams.']}\n  - Visual evidence: All equipment and streams in the figure are Aspen Plus-style boxes/icons and connecting lines; no tables, numerical annotations, or unit text are shown.\n  - Visual evidence: Stream labels “LTENDS” and “PRODUCT” are visible near COLUMN on the right.\n  - Visual evidence: On the right side of upper VFLOW, “PURGE” passes through “VALVE” to “PURGE2”.\n  - Visual evidence: In the upper loop, “H2RCY” passes through “COMP” and connects to “H2RCY2”, then returns to FEED-MIX.\n  - Visual evidence: In the lower loop, “CHRCY” passes through “PUMP” to “CHRCY2”, then through “PIPE” to “CHRCY3”, and returns to FEED-MIX.\n  - Visual evidence: The upper stream from HP-SEP is labeled “VAP”, and the lower stream is labeled “LIQ”.\n  - Visual evidence: The stream between REACT and HP-SEP is labeled “RXOUT”; the stream between FEED-MIX and REACT is labeled “RXIN”.\n  - Uncertainty: The figure contains no readable operating-condition values, so temperature, pressure, flow rate, split fraction, stage count, reflux ratio, and similar quantities cannot be confirmed from the figure itself.\n  - Uncertainty: “H2I",
   "source": "LLM gate contract",
   "model": "gpt-5.5",
   "analysis_policy_version": "analysis_optional_bonus_v2",
@@ -1107,73 +1107,73 @@ Reason: LLM-selected validation gate contract from task text
 ### FILE: docs/hardcoded_script_plan/guide-for-hardcoded-script.md
 Reason: core hardcoded script/runtime contract
 ```text
-# Hardcoded Script [NON-ENGLISH REDACTED]
+# Hardcoded Script Writing Guide
 
-## [NON-ENGLISH REDACTED]
+## Target
 
-[NON-ENGLISH REDACTED] `hardcoded script` [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
+This guide is used to unify the writing, modification, verification and delivery methods of `hardcoded script`. The goal is not to "run it once", but to form a formal script asset that can be reused, verified, and migrated in batches.
 
-[NON-ENGLISH REDACTED]：
+Each production script should satisfy the following objectives wherever possible:
 
-- [NON-ENGLISH REDACTED] session [NON-ENGLISH REDACTED] checkpoint [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]：`REP`、`APW`、`BKP`。
-- [NON-ENGLISH REDACTED] `hardcoded-script-[NON-ENGLISH REDACTED].md`。
-- [NON-ENGLISH REDACTED] `PER_ERROR`，[NON-ENGLISH REDACTED] completion / warning / [NON-ENGLISH REDACTED]。
+- Stable rebuild process from a blank session or explicit checkpoint starting point.
+- Output ordered evidence after running: `REP`, `APW`, `BKP`.
+- Results can be backfilled into `hardcoded-script-trace-document.md`.
+- Eliminate `PER_ERROR` wherever possible, and record completion / warning / residual risk information.
 
-## [NON-ENGLISH REDACTED]
+## General principles
 
-### 1. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+### 1. Transform existing assets first, don’t prioritize writing new ones from scratch.
 
-[NON-ENGLISH REDACTED]：
+Default reuse order:
 
 1. `tool_side_generation/healthcheck/full_evaluation/*.py`
 2. `tool_side_generation/healthcheck/full_example/*.py`
 3. `tool_side_generation/healthcheck/full_example/homework/*.py`
 4. `scripts/*.py`
-5. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+5. Create a new script only when the existing assets are clearly unsuitable
 
-[NON-ENGLISH REDACTED]：
+Three questions must be answered before transformation:
 
-- [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]？
-- [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]？
-- [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]？[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+- What process topologies, components, modules, and physical methods have been covered in the existing scripts?
+- What is the first real choke point where the current script fails: naming, units, topology, module specs, tool capabilities, or result bias?
+- Is it faster to “fix the script” or to “extend the shared foundation”? If the issue is in a tool, fix the tool first, then return to the task script for verification.
 
-### 2. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+### 2. The question and picture shall prevail, not the old script.
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
+Old scripts are assets, not authority. The problem statement, problem figure, table, and given conditions are the ultimate source of truth value.
 
-[NON-ENGLISH REDACTED]：
+In particular, check the following:
 
-- [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] Aspen-safe [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] setter / readback / REP [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]”。
+- Whether the flowsheet topology matches the task figure.
+- Whether stream/block names need to be converted to Aspen-safe runtime names.
+- Is the unit system consistent with setter/readback/REP conventions.
+- Does the question require "modeling and solving" or "analysis and comparison" or "parameter scanning/optimization".
 
-### 3. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+### 3. Make the Model Correct Before Optimizing the Results
 
-[NON-ENGLISH REDACTED]：
+Priority suggestions:
 
-1. [NON-ENGLISH REDACTED]
-2. completion [NON-ENGLISH REDACTED]
-3. `PER_ERROR` [NON-ENGLISH REDACTED]
-4. [NON-ENGLISH REDACTED]
-5. [NON-ENGLISH REDACTED]
-6. [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
+1. Able to achieve stable modeling
+2. completion normal
+3. Reduce `PER_ERROR` to zero
+4. Export evidence is complete
+5. The result is consistent with the problem requirements
+6. Improve convergence quality, analysis charts, and readability
 
-## [NON-ENGLISH REDACTED]
+## Production Script Structure
 
-[NON-ENGLISH REDACTED] hardcoded script [NON-ENGLISH REDACTED] `healthcheck/full_evaluation` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+The official hardcoded script uses the existing skeleton of `healthcheck/full_evaluation` as much as possible to avoid parallel systems.
 
-[NON-ENGLISH REDACTED]：
+Suggested structure:
 
-1. [NON-ENGLISH REDACTED]：`TASK_SET`、`TASK_ID`、`SCRIPT_STEM`
-2. [NON-ENGLISH REDACTED]
-3. [NON-ENGLISH REDACTED]
-4. `_build_*` / `_configure_*` / `_run_*` [NON-ENGLISH REDACTED]
+1. Constant area: `TASK_SET`, `TASK_ID`, `SCRIPT_STEM`
+2. Unit conversions and input-data constants
+3. Small utility functions
+4. `_build_*` / `_configure_*` / `_run_*` main process function
 5. `main_async()`
-6. [NON-ENGLISH REDACTED] `summary.json`
+6. Evidence export and `summary.json`
 
-[NON-ENGLISH REDACTED]：
+Recommended for reuse:
 
 - `default_task_output_dir_for_script`
 - `default_task_bkp_subdir_for_script`
@@ -1182,116 +1182,116 @@ Reason: core hardcoded script/runtime contract
 - `resolve_server_url`
 - `check_server_health_or_exit`
 
-## [NON-ENGLISH REDACTED]
+## Output and evidence specifications
 
-[NON-ENGLISH REDACTED]：
+The production script must be placed in the following directory:
 
 ```text
 data/file/output/hardcoded/tasks/<task_set>/<task_id>/<script_stem>/
 ```
 
-[NON-ENGLISH REDACTED]：
+Must be exported:
 
 - `REP`
 - `APW`
 - `BKP`
 - `summary.json`
 
-`summary.json` [NON-ENGLISH REDACTED]：
+`summary.json` should contain at least:
 
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- completion [NON-ENGLISH REDACTED]
+- Enter conditions
+- Key modeling choices
+- completion status
 - `PER_ERROR`
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
+- Final key numerical values
+- Evidence file path
+- Known assumptions and residual risks
 
-## [NON-ENGLISH REDACTED]
+## Comment specifications
 
-### 1. [NON-ENGLISH REDACTED]
+### 1. Function Entry Points Must Have Structured Block Comments
 
-[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] builder、[NON-ENGLISH REDACTED] readback [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] JSDoc，[NON-ENGLISH REDACTED] JSDoc [NON-ENGLISH REDACTED]；Python [NON-ENGLISH REDACTED] docstring，[NON-ENGLISH REDACTED]：
+The externally exposed main function, key builder, and complex readback function must write structured descriptions. If the script language supports JSDoc, the JSDoc style is preferred; Python scripts use the equivalent multi-line docstring, which at least states:
 
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
+- What is this function responsible for?
+- What are the key inputs?
+- Why the model/readback is implemented this way
+- What is the most important field in the return value?
 
-### 2. [NON-ENGLISH REDACTED] inline comment
+### 2. Operation logic and variable functions must be written inline comment
 
-[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+This is a new mandatory requirement. Not all lines need to be commented, but the following situations must be commented:
 
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] workaround [NON-ENGLISH REDACTED] Aspen/MCP [NON-ENGLISH REDACTED]
+- Which process action in the task statement a given operation represents
+- Why choose this Aspen specification path instead of another path?
+- The physical meaning, control effect or conversion basis of a variable
+- Why is a certain reading taken from this node and not from another node?
+- Which Aspen/MCP limitation a workaround is intended to bypass
 
-[NON-ENGLISH REDACTED]：
+Unqualified comments:
 
-- “[NON-ENGLISH REDACTED]”
-- “[NON-ENGLISH REDACTED]”
-- “[NON-ENGLISH REDACTED] Aspen”
+- "Set temperature"
+- "Create flow stream"
+- “Run Aspen”
 
-[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED]：
+Qualified comments should explain "why" and "which part of the question it corresponds to", for example:
 
-- “[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `PRES` [NON-ENGLISH REDACTED] `DELT`。”
-- “[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `FSplit` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。”
-- “[NON-ENGLISH REDACTED] REP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。”
+- "The problem gives the pump outlet pressure, so choose `PRES` specification instead of `DELT`."
+- "This variable represents the liquid phase circulation branch split ratio in the question diagram and must be explicitly solidified on `FSplit` to avoid default value drift."
+- “Final results are read from the REP first here, ensuring that the manual verification basis matches the exported report.”
 
-## Aspen [NON-ENGLISH REDACTED]
+## Aspen native analysis tool priority
 
-### 1. [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] sweep
+### 1. Prioritize using Aspen’s built-in tools instead of defaulting to handwritten sweep
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+As long as the meaning of the question allows, the order of priority is as follows:
 
 1. `Sensitivity Analysis`
 2. `Design Spec`
 3. `Optimization`
-4. [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]
-5. [NON-ENGLISH REDACTED] Python [NON-ENGLISH REDACTED] sweep
+4. Direct solve + readback
+5. Handwritten Python loop sweep
 
-[NON-ENGLISH REDACTED]：
+reason:
 
-- [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] UI / MCP / [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] Aspen”[NON-ENGLISH REDACTED]
+- More in line with Aspen’s native modeling ideas
+- Results are easier to verify manually
+- More conducive to subsequent migration to UI / MCP / teaching examples
+- Can reduce the fragile logic of "external control Aspen" in scripts
 
-### 2. [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+### 2. Treat analysis tools as the main path to “achieve the question goal” rather than as an auxiliary display
 
-[NON-ENGLISH REDACTED] hardcoded script [NON-ENGLISH REDACTED]：
+Future hardcoded scripts should proactively evaluate by default whether these three types of tools can directly serve the task objective:
 
-- `Sensitivity Analysis`：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
-- `Design Spec`：[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”
-- `Optimization`：[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”
+- `Sensitivity Analysis`: Suitable for trend, scanning, response surface, and parameter impact analysis
+- `Design Spec`: Suitable for "solve backward for a setpoint to meet the target result"
+- `Optimization`: suitable for "finding the best operating point under constraints"
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+Importantly, do not treat them as auxiliary features for “adding a chart after the model has run.” The actual objective of many tasks is inherently to:
 
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
+- Find patterns by scanning
+- Achieve a certain target indicator through goal-seeking
+- Find the best conditions through optimization
 
-[NON-ENGLISH REDACTED] Python [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+If this type of task is completed only with handwritten Python loops, external bisection, and repeated manual parameter trials, the following problems usually arise:
 
-- [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] GUI / REP [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] MCP、[NON-ENGLISH REDACTED] UI [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
+- The script expresses "external control logic" rather than Aspen's native solution intent
+- Results are difficult to manually review directly in the GUI/REP
+- When subsequently migrating to MCP, tutorial cases or UI automation, the reuse value decreases
+- Large numbers of fragile exploratory control branches can easily accumulate in the code
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] hardcoded script [NON-ENGLISH REDACTED]：
+Therefore, formally hardcoded scripts should first ask themselves:
 
-1. [NON-ENGLISH REDACTED]？[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `Sensitivity Analysis`
-2. [NON-ENGLISH REDACTED]？[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `Design Spec`
-3. [NON-ENGLISH REDACTED]？[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `Optimization`
-4. [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+1. Is this question essentially a sweep problem? If yes, give priority to `Sensitivity Analysis`
+2. Is this question essentially about finding the target value inversely? If yes, give priority to `Design Spec`
+3. Is this task fundamentally about finding the optimal operating point? If so, prefer `Optimization`
+4. If the question includes scanning, inversion, and optimal condition comparison, can these three types of tools be used in combination instead of returning to handwritten control logic?
 
-### 3.5 `Design Spec` [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”
+### 3.5 `Design Spec` First verify "whether the variable is really specified in the block"
 
-[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。Design Spec helper [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，**[NON-ENGLISH REDACTED]** Aspen [NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED]。
+This is a high-frequency and costly pitfall. Design Spec helper returns "Manipulated variable written successfully", **not equal** Aspen determines that the variable is already a valid input in the block during subsequent solving.
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED] materialize”，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]：
+When errors of the following type occur, first suspect by default that “the manipulated variable has not materialized in the block,” rather than assuming that the Aspen solver has failed:
 
 ```text
 ERROR WHILE CHECKING INPUT SPECIFICATIONS FOR VARIED VARIABLE IN DESIGN-SPEC
@@ -1299,154 +1299,154 @@ THIS VARIABLE IS NOT SPECIFIED IN THE BLOCK.
 YOU CAN PROVIDE AN INITIAL VALUE IN THE BLOCK OR USE ANOTHER VARIABLE.
 ```
 
-[NON-ENGLISH REDACTED]：
+The following order should be followed in a formal script:
 
-1. [NON-ENGLISH REDACTED]。
-2. [NON-ENGLISH REDACTED] block setter [NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED]**，[NON-ENGLISH REDACTED] flowsheet [NON-ENGLISH REDACTED]。
-3. [NON-ENGLISH REDACTED] `Design Spec` [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field`。
+1. First confirm whether this is the degree of freedom that the problem truly allows for change.
+2. Confirm that the degree of freedom has been actually written into the block input through the block setter or tree node, instead of just staying in the flowsheet flow layer or initialization guessing layer.
+3. Only then connect it to the `Design Spec` `helper-managed manipulated-variable field`.
 
-[NON-ENGLISH REDACTED] `RadFrac` [NON-ENGLISH REDACTED]：
+Especially for `RadFrac`, please pay attention to:
 
-- `Design Spec` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] **Aspen [NON-ENGLISH REDACTED]**，[NON-ENGLISH REDACTED] flowsheet [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] flowsheet [NON-ENGLISH REDACTED] `V1`，[NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED] `MOLE-L1`、`MOLE-VN`、`MOLE-D` [NON-ENGLISH REDACTED] token。
-- [NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED] `Data\Blocks\<BLK>\Input\PROD_FLOW\<stream>`，[NON-ENGLISH REDACTED] `V1` [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED] token** [NON-ENGLISH REDACTED]。
+- The block variable name of `Design Spec` is often the **Aspen internal product slot name**, not the flowsheet flow name.
+- For example, what is seen on the flowsheet is `V1`, but the real corresponding in the `helper-managed manipulated-variable field` may be internal tokens such as `MOLE-L1`, `MOLE-VN`, and `MOLE-D`.
+- If the actual landed input-tree path is `Data\Blocks\<BLK>\Input\PROD_FLOW\<stream>`, do not assume that `V1` itself represents the semantics of the `helper-managed manipulated-variable field`; first identify the **native block-variable token** exposed by Aspen.
 
-[NON-ENGLISH REDACTED]：
+Recommended verification actions:
 
-- [NON-ENGLISH REDACTED] helper readback、`probe_model_state` [NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED] collector，[NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `null` / [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] capability（[NON-ENGLISH REDACTED] `set_prod_flow`、`set_radfrac_distillate_rate`），[NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] `Design Spec` [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] token。
-- [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field`，[NON-ENGLISH REDACTED] `HAP_PROMPT` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] flowsheet [NON-ENGLISH REDACTED] `ID1`。
+- Read the helper readback, `probe_model_state` or block-specific collector to confirm that the corresponding block input has been written successfully and is not `null` / unspecified.
+- If there is a special semantic capability (such as `set_prod_flow`, `set_radfrac_distillate_rate`), call it separately first and read it back.
+- Then check whether the dynamic drop-down for the `Design Spec` `helper-managed manipulated-variable field` contains a native token that maps one-to-one to that specified input.
+- If `helper-managed manipulated-variable field` requires `helper-managed manipulated-variable field`, give priority to filling in `HAP_PROMPT` or known block type experience; do not directly regard the flowsheet flow name as `ID1`, which is of course correct.
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED] `LOWER/UPPER`、`ASKED` [NON-ENGLISH REDACTED] sweep。[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]“Design Spec [NON-ENGLISH REDACTED]”。
+If any of the above steps cannot be self-verified, please stop at "Variable Write Verification" first, and do not rush to continue adjusting `LOWER/UPPER`, `ASKED` or the outer sweep. Otherwise, it is easy to misjudge "Variable not specified" as "Design Spec not activated".
 
-### 3. [NON-ENGLISH REDACTED]
+### 3. Native analysis tools should be considered formal solution capabilities
 
-[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，hardcoded script [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
+When the task semantics call for scanning, inverse solving, or optimization, the hardcoded script should integrate Aspen's native analysis tools into the main task workflow and retain configuration, participation, and result evidence.
 
-[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED]：
+The significance of this experience is not that "every question must use three tools at the same time", but that:
 
-- `Sensitivity Analysis` / `Design Spec` / `Optimization` [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] hardcoded script [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] sweep [NON-ENGLISH REDACTED]
+- `Sensitivity Analysis` / `Design Spec` / `Optimization` should no longer be considered distant or special abilities
+- They should become the default arsenal for subsequent hardcoded scripts
+- When the task objective naturally matches scanning, inverse solving, or optimization, first try to incorporate these three tool types into the production solution path
+- Even if you only use one of them in the end, you should think about it at the tool level first, instead of defaulting to handwritten sweep or manual parameter adjustment.
 
-[NON-ENGLISH REDACTED]：
+It is recommended to adopt the following default mentality:
 
-- [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”
-- [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]”
+- Not "Can this question be hard-written without using analysis tools?"
+- Instead ask, “Which Aspen native analysis tool is best suited to completing this task?”
 
-### 4. [NON-ENGLISH REDACTED]
+### 4. The combined use of the three types of tools is encouraged
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+If subsequent scripts are suitable for the purpose of the problem, they are clearly encouraged to be used in combination:
 
-1. [NON-ENGLISH REDACTED] `Sensitivity Analysis` [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
-2. [NON-ENGLISH REDACTED] `Design Spec` [NON-ENGLISH REDACTED]
-3. [NON-ENGLISH REDACTED] `Optimization` [NON-ENGLISH REDACTED]
+1. First use `Sensitivity Analysis` to find the direction of variable influence, sensitive interval or candidate operation interval
+2. Then use `Design Spec` to back-calculate the setting that satisfies the target constraint
+3. Finally, use `Optimization` to find a better operating point within the feasible region
 
-[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”。[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+And think of this combination as "more mature formal script design" rather than "overcomplication." As long as it is closer to the problem requirements, easier to review, and has a better chain of evidence, it is better than externally scripted control.
 
-### 5. [NON-ENGLISH REDACTED] sweep
+### 5. When can I handwrite sweep?
 
-[NON-ENGLISH REDACTED] sweep：
+A handwritten sweep is allowed only under the following conditions:
 
-- [NON-ENGLISH REDACTED] MCP / HTTP [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] sweep [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
+- The current MCP/HTTP capabilities cannot be fully configured with the Aspen native analysis tool.
+- The native analysis tool cannot stably read back the target results after being configured.
+- The question only requires drawing a trend chart, and the handwritten sweep is more stable and transparent
 
-[NON-ENGLISH REDACTED] sweep，[NON-ENGLISH REDACTED] `summary.json` [NON-ENGLISH REDACTED]：
+If a handwritten sweep is used, the code comments and `summary.json` must state:
 
-- [NON-ENGLISH REDACTED] `Sensitivity Analysis` / `Design Spec` / `Optimization`
-- [NON-ENGLISH REDACTED] sweep [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]
+- Why `Sensitivity Analysis` / `Design Spec` / `Optimization` are not used
+-Manually scripted sweep's variables, range, number of steps, and reset strategy
+- Limitations compared to Aspen's native analysis tools
 
-## Headless [NON-ENGLISH REDACTED]
+## Headless Execution Guidelines
 
-### 1. [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED]
+### 1. The default target is to run without GUI
 
-[NON-ENGLISH REDACTED] hardcoded script [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] Aspen GUI”。[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
+The default target for hardcoded scripts should be "Don't show the Aspen GUI". This is more suitable for batch processing, regression verification and background execution.
 
-### 2. [NON-ENGLISH REDACTED]
+### 2. Current mechanism
 
-[NON-ENGLISH REDACTED] `session/start` [NON-ENGLISH REDACTED] `show_gui` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] CLI [NON-ENGLISH REDACTED]。
+The current server-side `session/start` already supports the `show_gui` parameter; there is no need to invent an additional server CLI parameter.
 
-[NON-ENGLISH REDACTED]：
+Confirmed behavior:
 
-- `show_gui=true`：[NON-ENGLISH REDACTED] Aspen GUI
-- `show_gui=false`：[NON-ENGLISH REDACTED] session
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+- `show_gui=true`: Show Aspen GUI
+- `show_gui=false`: run the session with the main window hidden
+- If the script does not pass an explicit value, the server's default policy determines the behavior
 
-[NON-ENGLISH REDACTED] `AspenHttpClient.ensure_session()` [NON-ENGLISH REDACTED]：
+Public base `AspenHttpClient.ensure_session()` now supports:
 
-- [NON-ENGLISH REDACTED] `show_gui=false`
-- [NON-ENGLISH REDACTED] `ASPEN_HARDCODED_SHOW_GUI=0/1` [NON-ENGLISH REDACTED] hardcoded [NON-ENGLISH REDACTED] session [NON-ENGLISH REDACTED]
+- Explicitly pass `show_gui=false` to the server
+- Uniformly override the session visibility of hardcoded scripts through the environment variable `ASPEN_HARDCODED_SHOW_GUI=0/1`
 
-### 3. [NON-ENGLISH REDACTED] GUI
+### 3. When the GUI May Be Opened
 
-[NON-ENGLISH REDACTED] GUI：
+The following scenarios allow opening the GUI explicitly:
 
-- [NON-ENGLISH REDACTED] `ui_check_next_completion_status`
-- [NON-ENGLISH REDACTED] `Sensitivity Analysis / Design Spec / Optimization` [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED] UI [NON-ENGLISH REDACTED]
+- Need to call `ui_check_next_completion_status`
+- Some `Sensitivity Analysis / Design Spec / Optimization` steps currently still rely on GUI assisted closing
+- Manual observation of Aspen pop-ups, location of the completion page, or diagnosis of UI-related issues is required
 
-[NON-ENGLISH REDACTED]：
+It is recommended that the scripts be provided uniformly:
 
 ```text
 --show-gui
 ```
 
-[NON-ENGLISH REDACTED]：
+And call it as follows:
 
 ```python
 client.ensure_session(show_gui=bool(args.show_gui) or None)
 ```
 
-[NON-ENGLISH REDACTED] headless [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `False`，[NON-ENGLISH REDACTED] GUI。
+If a question confirms that headless is required for official delivery, you should explicitly pass `False` instead and open the GUI only in debug mode.
 
-## [NON-ENGLISH REDACTED]
+## Recommended Migration Steps
 
-[NON-ENGLISH REDACTED]：
+It is recommended to deal with each question in the following order:
 
-1. [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-2. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]”。
-3. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-4. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-5. [NON-ENGLISH REDACTED] Aspen-safe [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
-6. [NON-ENGLISH REDACTED]。
-7. [NON-ENGLISH REDACTED] `completion`、`PER_ERROR`、`REP/APW/BKP`。
-8. [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `Sensitivity Analysis` / `Design Spec` / `Optimization`。
-9. [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-9. [NON-ENGLISH REDACTED] `summary.json`。
-10. [NON-ENGLISH REDACTED] `hardcoded-script-[NON-ENGLISH REDACTED].md`。
+1. Read the problem statement, problem figure, and table to clarify the task objectives.
+2. Search existing assets and determine "from which script to change."
+3. Run the baseline first and capture the first real blocker.
+4. Give priority to solving the public ability questions, and then fix the question scripts.
+5. Corrected Aspen-safe naming, units, topology and key specifications.
+6. Run-through modeling and solution.
+7. Complete the `completion`, `PER_ERROR`, and `REP/APW/BKP` evidence.
+8. If the question requires analysis, priority will be given to access `Sensitivity Analysis` / `Design Spec` / `Optimization`.
+9. If the problem objective naturally corresponds to scanning/reverse/optimization, give priority to Aspen’s native analysis tool to take on the main analysis responsibility instead of just displaying it.
+9. Update `summary.json`.
+10. Update `hardcoded-script-tracking-document.md`.
 
-## [NON-ENGLISH REDACTED]
+## Common pitfalls
 
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] recycle、purge、pressure-change [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]、setter [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] `INSET=SI`、REP [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]”。
-- [NON-ENGLISH REDACTED] sweep [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。
-- GUI [NON-ENGLISH REDACTED] headless [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+- Long stream names/block names in old scripts do not comply with Aspen naming rules.
+- The topology of the question graph is inconsistent with the old script, especially the recycle, purge, and pressure-change branches.
+- Inconsistent unit bases: the task units, setter units, global `INSET=SI`, and REP readback basis do not agree.
+- As a result, the readback path was selected incorrectly, resulting in "it seems to have a value, but it is not the value required by the question".
+- Manually scripted sweep was mistakenly used as the default scheme, bypassing Aspen's native analysis tools.
+- GUI accessibility conflicts with the headless goal but is not explicitly stated in the script.
 
-## [NON-ENGLISH REDACTED]
+## Delivery Checklist
 
-[NON-ENGLISH REDACTED]：
+Before submitting, confirm at least:
 
-- [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] inline comment
-- [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] sweep
-- [NON-ENGLISH REDACTED] `Sensitivity Analysis` / `Design Spec` / `Optimization` [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED]
-- `REP/APW/BKP` [NON-ENGLISH REDACTED]
-- `completion` [NON-ENGLISH REDACTED]
-- `PER_ERROR` [NON-ENGLISH REDACTED]
-- [NON-ENGLISH REDACTED] `summary.json`
-- [NON-ENGLISH REDACTED]
+- Prioritized checking and reusing existing script assets
+- The question map/topology is consistent with the script topology
+- Key logic and key variables have inline comments
+- Prioritize trying Aspen's native analysis tools instead of the default handwritten sweep
+- It has been clearly evaluated whether `Sensitivity Analysis` / `Design Spec` / `Optimization` can achieve the problem objective more directly
+- The output directory complies with the specification
+- `REP/APW/BKP` files have been written to disk
+- `completion` recorded
+- `PER_ERROR` recorded
+- The final key results have been written to `summary.json`
+- The tracking document has been updated
 
-## [NON-ENGLISH REDACTED]
+## in conclusion
 
-[NON-ENGLISH REDACTED] hardcoded script [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] Aspen”，[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+The core of the production hardcoded script is not "being able to adjust Aspen", but unifying "reuse of existing assets, alignment of question meanings, tool priority, evidence retention, and batch operation" into a set of stable methods. All subsequent new questions will be converged according to this guide to avoid the situation of starting from fragmented scripts again.
 
 ```
 
@@ -2677,106 +2677,106 @@ single structured result.
 ### FILE: docs/hardcoded_script_plan/block_type_inject/streams_globals.md
 Reason: generic stream/global Aspen surface
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：Streams & Globals（[NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED]）
+# Block-Type injection: Streams & Globals (stream/global/engine)
 
-- **[NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]）
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] `docs/hardcoded_script_plan/block_type_inject/heat_stream.md`。
+- **Block type**: cross-block (not a unit-operation block)
+- **Aspen semantics**: material flow, global physical properties, engine operation and completion checks. See `docs/hardcoded_script_plan/block_type_inject/heat_stream.md` for details of hot stream.
 
 ---
 
 ## 0. Helper
 
-| Helper | [NON-ENGLISH REDACTED] |
+| Helper | When to use |
 |--------|--------|
-| `configure_block_property_method(...)` | [NON-ENGLISH REDACTED]（block-wise property） |
-| `ensure_property_method(...)` / `read_global_property_method(...)` | [NON-ENGLISH REDACTED] ensure + readback |
-| `configure_inset_unit_system(...)` | [NON-ENGLISH REDACTED] INSET（**[NON-ENGLISH REDACTED]**；**Python-only**，[NON-ENGLISH REDACTED] `client.execute(...)`） |
-| [NON-ENGLISH REDACTED] helper | `set_mixed_spec_mixed` + `set_basis_mixed` + [NON-ENGLISH REDACTED]/TP [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] material stream MCP） |
+|`configure_block_property_method(...)` | block-wise property method |
+| `ensure_property_method(...)` / `read_global_property_method(...)` | Global property package ensure + readback |
+| `configure_inset_unit_system(...)` | Global unit system INSET (**the only correct path**; **Python-only**, do not use `client.execute(...)`) |
+| Material flow helper | `set_mixed_spec_mixed` + `set_basis_mixed` + Composition/TP etc. (see material stream MCP) |
 
-**`configure_inset_unit_system` [NON-ENGLISH REDACTED]**：
+**`configure_inset_unit_system` Example**:
 
 ```python
-# [NON-ENGLISH REDACTED] A：session [NON-ENGLISH REDACTED] ensure_session [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]）
-client.ensure_session(show_gui=False, inset="SI")   # [NON-ENGLISH REDACTED] inset="ENG"
+# Method A: Automatically set by ensure_session after the session is started (recommended)
+client.ensure_session(show_gui=False, inset="SI")   # or inset="ENG"
 
-# [NON-ENGLISH REDACTED] B：[NON-ENGLISH REDACTED] helper
+# Method B: Explicit helper
 client.invoke("configure_inset_unit_system",  value="SI")
 # path: Data\Setup\Global\Input\INSET
-# [NON-ENGLISH REDACTED]：SI | ENG | ENGUS | MET | SI-CHEM | MET-CHEM
-# [NON-ENGLISH REDACTED] Data\Setup\System-Options\Input\INSET [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
+# Legal values: SI | ENG | ENGUS | MET | SI-CHEM | MET-CHEM
+# Error path Data\Setup\System-Options\Input\INSET does not exist, do not use it
 ```
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]（CRITICAL）
+## 1. Write sequential gating (CRITICAL)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `set_property_method` / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] TP/[NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] Input | [NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED] |
-| `check_next_completion_status` | `engine_run` | [NON-ENGLISH REDACTED] workflow [NON-ENGLISH REDACTED] |
+| `set_property_method` / components | Stream composition | Global property package + component table |
+| Material flow TP/composition | Block Input | Feed flow completion before connecting blocks |
+|`check_next_completion_status` | `engine_run` | At least one workflow-level check |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-### 2.1 [NON-ENGLISH REDACTED]
+### 2.1 Components and physical properties
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Parameters | Description |
 |---------------|------|------|
-| `add_components_by_cas` | `components: [{cas, component_id}]` | **[NON-ENGLISH REDACTED]** [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] benchmark [NON-ENGLISH REDACTED]） |
-| `set_property_method` | `method: str` | [NON-ENGLISH REDACTED] |
+| `add_components_by_cas` | `components: [{cas, component_id}]` | **Preferred** Component addition (each benchmark entry) |
+|`set_property_method` | `method: str` | Global property method |
 
-### 2.2 [NON-ENGLISH REDACTED]
+### 2.2 Material flow
 
-| MCP operation | Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Aspen variable | Allowed values / parameters | Description |
 |---------------|------------|---------------|------|
-| `create_material_stream` | — | `stream_name` | [NON-ENGLISH REDACTED] |
-| `set_mixed_spec_mixed` | [NON-ENGLISH REDACTED] | `TP`/`TV`/`PV`/… | [NON-ENGLISH REDACTED] T/P/[NON-ENGLISH REDACTED] |
-| `set_basis_mixed` | [NON-ENGLISH REDACTED] | `MOLE-FLOW`/`MASS-FLOW`/… | [NON-ENGLISH REDACTED] |
-| `set_temp_mixed` | TEMP | float + unit | [NON-ENGLISH REDACTED] |
-| `set_pres_mixed` | PRES | float + unit | [NON-ENGLISH REDACTED] |
-| `set_flow_mixed` | [NON-ENGLISH REDACTED] | component + value + unit | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
-| `set_vfrac_mixed` | VFRAC | float | [NON-ENGLISH REDACTED]（TV/PV [NON-ENGLISH REDACTED]） |
+| `create_material_stream` | — | `stream_name` | Create a material stream |
+| `set_mixed_spec_mixed` | Mixed specifications | `TP`/`TV`/`PV`/… | Must be composed before T/P/ |
+|`set_basis_mixed` | Basis | `MOLE-FLOW`/`MASS-FLOW`/… | Flow Basis |
+| `set_temp_mixed` | TEMP | float + unit | temperature |
+| `set_pres_mixed` | PRES | float + unit | Pressure |
+| `set_flow_mixed` | component flow | component + value + unit | composition/flow |
+|`set_vfrac_mixed` | VFRAC | float | Vapor phase fraction (TV/PV, etc.) |
 
-### 2.3 [NON-ENGLISH REDACTED]
+### 2.3 Hot stocks
 
-[NON-ENGLISH REDACTED]：`docs/hardcoded_script_plan/block_type_inject/heat_stream.md`。[NON-ENGLISH REDACTED] heat stream / heat duty / utility heat topology / [NON-ENGLISH REDACTED]。
+Heat streams have been moved to a separate injection document: `docs/hardcoded_script_plan/block_type_inject/heat_stream.md`. This document must be loaded when the task requires a heat stream / heat duty / utility heat topology / heat cascade.
 
-### 2.4 [NON-ENGLISH REDACTED]
+### 2.4 Global and Engine
 
-| MCP operation | [NON-ENGLISH REDACTED] |
+| MCP operation | Description |
 |---------------|------|
-| `set_property_method` | [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] §2.1） |
-| `engine_reinit` / `engine_run` | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
-| `ui_check_next_completion_status` | Next/completion [NON-ENGLISH REDACTED] |
-| `export_rep` / `export_bkp` | [NON-ENGLISH REDACTED] |
-| `table_dump` / `table_insert_label` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
+|`set_property_method` | Global property method (see also §2.1) |
+| `engine_reinit` / `engine_run` | Recalculate / run |
+| `ui_check_next_completion_status` | Next/completion workflow |
+| `export_rep` / `export_bkp` | Evidence export |
+|`table_dump` / `table_insert_label` | Components/Measurement Tables |
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology and other MCPs
 
-[NON-ENGLISH REDACTED] inject；[NON-ENGLISH REDACTED] `list_block_ports`、`connect_stream`。
+See each unit block inject; all blocks share `list_block_ports`, `connect_stream`.
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 4. Read back the results
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED] T/P/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `Data\Streams\<S>\Output\...` [NON-ENGLISH REDACTED] REP |
-| [NON-ENGLISH REDACTED] | `ensure_property_method` / `read_global_property_method` readback payload |
-| INSET | `safe.configure_inset_unit_system(client, value=...)` readback；[NON-ENGLISH REDACTED] `client.ensure_session(..., inset="SI")` |
+| Stream T/P/flow/composition | `Data\Streams\<S>\Output\...` or REP |
+| Global physical properties | `ensure_property_method` / `read_global_property_method` readback payload |
+|INSET | `safe.configure_inset_unit_system(client, value=...)` readback; or `client.ensure_session(..., inset="SI")` |
 
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] inject [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] stream setter [NON-ENGLISH REDACTED] core |
+| Purpose | Bucket with unit block inject; do not count stream setter into block core |
 
 ```
 
@@ -2853,76 +2853,76 @@ common reusable IDs and generic usage rules.
 ### FILE: docs/hardcoded_script_plan/block_type_inject/property_methods.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：Property Methods（[NON-ENGLISH REDACTED]）
+# Block-Type Injection: Property Methods
 
-- **[NON-ENGLISH REDACTED]**：`PROPERTY_METHODS`（[NON-ENGLISH REDACTED]）
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
+- **Block Type**: `PROPERTY_METHODS` (cross-block capability)
+- **Aspen Semantics**: global or block-level thermodynamic/property method selection and comparison.
 
 ---
 
 ## 0. Helper
 
-| Helper | [NON-ENGLISH REDACTED] |
+| Helper | When to use |
 |--------|--------|
-| `ensure_property_method(...)` | [NON-ENGLISH REDACTED] ensure + readback |
-| `read_global_property_method(...)` | [NON-ENGLISH REDACTED] GBASEOPSET/GOPSETNAME |
-| `configure_block_property_method(...)` | [NON-ENGLISH REDACTED] UNIQUAC/NRTL/WILSON [NON-ENGLISH REDACTED]；**Python-only**，[NON-ENGLISH REDACTED] `client.execute(...)` |
+| `ensure_property_method(...)` | Global property ensure + readback |
+| `read_global_property_method(...)` | Read-only access to global GBASEOPSET/GOPSETNAME |
+| `configure_block_property_method(...)` | Specify the block to use UNIQUAC/NRTL/WILSON, etc., which are different from the global method; **Python-only**, do not `client.execute(...)` |
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]（CRITICAL）
+## 1. Write sequential gating (CRITICAL)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| [NON-ENGLISH REDACTED] `set_property_method` | [NON-ENGLISH REDACTED] run | [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | cas-lookup → add_components |
-| [NON-ENGLISH REDACTED] OPSETNAME | [NON-ENGLISH REDACTED] Input | block-wise [NON-ENGLISH REDACTED] |
+|Global `set_property_method` | First run | Default property package |
+| component addition | streams/reactions | cas-lookup → add_components |
+| Block-level OPSETNAME | Input of that block | block-wise comparison tasks |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Aspen variable | Allowed values / parameters | Description |
 |---------------|------------|---------------|------|
-| `set_property_method` | [NON-ENGLISH REDACTED] | NRTL/UNIQUAC/WILSON/… | Setup [NON-ENGLISH REDACTED] |
-| `set_opsetname` | `OPSETNAME` | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] Property Specification |
+| `set_property_method` | Global methods | NRTL/UNIQUAC/WILSON/… | Setup-level properties |
+|`set_opsetname` | `OPSETNAME` | Method name | Block-level Property Specification |
 
-[NON-ENGLISH REDACTED] ensure/readback [NON-ENGLISH REDACTED] `safe.configure_block_property_method(client, block_name=..., method=...)`，[NON-ENGLISH REDACTED] §0。
-
----
-
-## 3. [NON-ENGLISH REDACTED] MCP
-
-[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] **distinct configured cases** + [NON-ENGLISH REDACTED] REP。
+Block-level ensure/readback takes precedence over `safe.configure_block_property_method(client, block_name=..., method=...)`, see §0.
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 3. Topology and other MCPs
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+The property method does not change port topology; comparison tasks require **distinct configured cases** + trusted REP evidence.
+
+---
+
+## 4. Read back the results
+
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED] | block/global readback |
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] case REP，[NON-ENGLISH REDACTED] bkp [NON-ENGLISH REDACTED] |
+| Method implementation | block/global readback |
+|Comparative evidence | separate case REP, it is prohibited to mix the same bkp to pretend to be two methods |
 
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
-| [NON-ENGLISH REDACTED] helper | `configure_block_property_method` |
-| [NON-ENGLISH REDACTED] skill | block-wise-property-methods |
+| Recommended helper | `configure_block_property_method` |
+| Related skill | block-wise-property-methods |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/heater.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：HEATER（[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]）
+# Block-Type injection: HEATER (heater/cooler)
 
-- **[NON-ENGLISH REDACTED]**：`HEATER`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] TP / PV [NON-ENGLISH REDACTED]。
+- **Block Type**: `HEATER`
+- **Aspen semantics**: single-strand material heating/cooling; outlet TP/PV and other specifications.
 
 ---
 
@@ -2930,158 +2930,158 @@ Generated public capability names in this document are family-specific. The unde
 
 ## 0. Helper
 
-[NON-ENGLISH REDACTED] helper；[NON-ENGLISH REDACTED] §2 MCP operation。
+No dedicated helper; use §2 MCP operation.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]
+## 1. Write sequential gating
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `set_heater_flash_spec` | `TEMP` / `PRES` / `VFRAC` | [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | Input | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
+| `set_heater_flash_spec` | `TEMP` / `PRES` / `VFRAC` | Set the mode before the value |
+| Topology | Input | Write specifications after import/export connection |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|MCP operation | Variables | Allowed values/parameters | Description |
 |---------------|------|---------------|------|
-| `set_heater_flash_spec` | `SPEC_OPT` | [NON-ENGLISH REDACTED] §2.1 | [NON-ENGLISH REDACTED] gate |
-| `set_heater_temperature` | `TEMP` | float + unit | [NON-ENGLISH REDACTED] |
-| `set_heater_pressure` | `PRES` | float + unit | [NON-ENGLISH REDACTED]（>0 [NON-ENGLISH REDACTED]；≤0 [NON-ENGLISH REDACTED]） |
-| `set_heater_vapor_fraction` | `VFRAC` | float | **`SPEC_OPT=PV`** [NON-ENGLISH REDACTED] |
-| `set_heater_duty` | `DUTY` | float + unit | `TQ`/`PQ`/`TD`/`PD` [NON-ENGLISH REDACTED] duty/heat [NON-ENGLISH REDACTED] |
+|`set_heater_flash_spec` | `SPEC_OPT` | See §2.1 | Export specification mode gate |
+| `set_heater_temperature` | `TEMP` | float + unit | outlet temperature |
+| `set_heater_pressure` | `PRES` | float + unit | Outlet pressure (>0 absolute pressure; ≤0 pressure drop) |
+| `set_heater_vapor_fraction` | `VFRAC` | float | **`SPEC_OPT=PV`** Hourly vapor phase fraction |
+|`set_heater_duty` | `DUTY` | float + unit | `TQ`/`PQ`/`TD`/`PD` and other duty/heat class modes |
 
 ### 2.1 `SPEC_OPT` / Operating Specification
 
-**[NON-ENGLISH REDACTED] `set_heater_flash_spec`，[NON-ENGLISH REDACTED]**；selector [NON-ENGLISH REDACTED] setter [NON-ENGLISH REDACTED]。
+**You must first `set_heater_flash_spec`, and then write the variables matching the pattern**; the selector and subsequent setter must be paired.
 
-| `SPEC_OPT` | [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]） | [NON-ENGLISH REDACTED] |
+| `SPEC_OPT` | Paired specification (semantics) | Typical downstream variables |
 |------------|-----------------|-------------|
 | `TP` | Temperature + pressure | `TEMP` + `PRES` |
 | `TV` | Temperature + vapor fraction | `TEMP` + `VFRAC` |
 | `TD` | Temperature + heat duty | `TEMP` + `DUTY` |
-| `TDPPARM` | Temperature + duty parameter | `TEMP` + duty-parameter [NON-ENGLISH REDACTED]/leaf |
+| `TDPPARM` | Temperature + duty parameter | `TEMP` + duty-parameter table/leaf |
 | `PV` | Pressure + vapor fraction | `PRES` + `VFRAC` |
 | `PD` | Pressure + heat duty | `PRES` + `DUTY` |
-| `PDT` | Pressure + temperature change | `PRES` + [NON-ENGLISH REDACTED] leaf |
-| `PDEGSUP` | Pressure + degrees superheat | `PRES` + [NON-ENGLISH REDACTED] |
-| `PDEGSUB` | Pressure + degrees subcooling | `PRES` + [NON-ENGLISH REDACTED] |
+|`PDT` | Pressure + temperature change | `PRES` + temperature change leaf |
+| `PDEGSUP` | Pressure + degrees superheat | `PRES` + degrees of superheat |
+| `PDEGSUB` | Pressure + degrees subcooling | `PRES` + degrees subcooling |
 | `VDPPARM` | Vapor fraction + duty parameter | `VFRAC` + duty-parameter |
-| `DDPPARM` | Duty parameter（[NON-ENGLISH REDACTED] duty [NON-ENGLISH REDACTED]） | duty-parameter [NON-ENGLISH REDACTED] leaf |
-| `DTV` | Temperature change + vapor fraction | [NON-ENGLISH REDACTED] + `VFRAC` |
-| `DTD` | Temperature change + heat duty | [NON-ENGLISH REDACTED] + `DUTY` |
-| `DTDPPARM` | Temperature change + duty parameter | [NON-ENGLISH REDACTED] + duty-parameter |
-| `DEGSUPDPPARM` | Degrees superheat + duty parameter | [NON-ENGLISH REDACTED] + duty-parameter |
-| `DEGSUBDPPARM` | Degrees subcooling + duty parameter | [NON-ENGLISH REDACTED] + duty-parameter |
+| `DDPPARM` | Duty parameter (double parameter duty specification) | duty-parameter related leaf |
+|`DTV` | Temperature change + vapor fraction | Temperature change + `VFRAC` |
+| `DTD` | Temperature change + heat duty | Temperature change + `DUTY` |
+| `DTDPPARM` | Temperature change + duty parameter | temperature change + duty-parameter |
+| `DEGSUPDPPARM` | Degrees superheat + duty parameter | Superheat + duty-parameter |
+|`DEGSUBDPPARM` | Degrees subcooling + duty parameter | Degrees of subcooling + duty-parameter |
 | `PQ` | Pressure + heat/duty | `PRES` + heat stream / `DUTY` |
 | `TQ` | Temperature + heat/duty | `TEMP` + heat stream / `DUTY` |
-| `DTQ` | Temperature change + heat/duty | [NON-ENGLISH REDACTED] + heat stream / `DUTY` |
+| `DTQ` | Temperature change + heat/duty | Temperature change + heat stream / `DUTY` |
 | `DPPARMQ` | Duty parameter + heat/duty | duty-parameter + heat/duty path |
 
-**[NON-ENGLISH REDACTED]**：
+**Selection rules**:
 
-- [NON-ENGLISH REDACTED] T、P → `TP`；[NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] → `PV` + `set_vfrac=0` + `set_heater_pressure`。
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] → `PDEGSUP` / `PDEGSUB` [NON-ENGLISH REDACTED] `DEGSUP*` / `DEGSUB*` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `TP`。
-- [NON-ENGLISH REDACTED] duty/[NON-ENGLISH REDACTED] → `TD`/`PD`/`TQ`/`PQ`/`DTQ` [NON-ENGLISH REDACTED] **Q [NON-ENGLISH REDACTED] D [NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] P* [NON-ENGLISH REDACTED] `TEMP`，[NON-ENGLISH REDACTED] T* [NON-ENGLISH REDACTED] `PRES`。
-- `*PPARM` / `DPPARMQ` [NON-ENGLISH REDACTED] parameterized duty [NON-ENGLISH REDACTED]。
+- Fixed outlet T, P → `TP`; interstage cooling is common.
+- Condensation → `PV` + `set_vfrac=0` + `set_heater_pressure`.
+- Questions give superheat/subcooling → `PDEGSUP` / `PDEGSUB` or `DEGSUP*` / `DEGSUB*` variants, do not mix with ordinary `TP`.
+- If the task provides duty/heat load → use a **Q- or D-class** mode such as `TD`/`PD`/`TQ`/`PQ`/`DTQ`; do not select P* and then write `TEMP`, and do not select T* and then write `PRES`.
+- `*PPARM` / `DPPARMQ` are only used when the task explicitly uses parameterized duty tables.
 
-**[NON-ENGLISH REDACTED]**：`set_spec_opt=TP` [NON-ENGLISH REDACTED] `set_heater_temperature` [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] Heater）。
+**Interstage cooling**: `set_spec_opt=TP` or only `set_heater_temperature` fixed outlet temperature (two-stage compression middle heater).
 
-**[NON-ENGLISH REDACTED]**：`set_spec_opt=PV` + `set_vfrac=0` + `set_heater_pressure`。
+**Condensation**: `set_spec_opt=PV` + `set_vfrac=0` + `set_heater_pressure`.
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology MCP
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Operations | Parameters |
 |------|------|
 | `create_heater` | `block_name` |
-| `connect_stream` | [NON-ENGLISH REDACTED] `F(IN)` / `P(OUT)`；[NON-ENGLISH REDACTED] `HS(IN)`/`HS(OUT)` [NON-ENGLISH REDACTED] |
+| `connect_stream` | Material: `F(IN)` / `P(OUT)`; optional `HS(IN)`/`HS(OUT)` for heat streams |
 | `engine_run` | — |
 
-Live `list_block_ports` [NON-ENGLISH REDACTED]：
+Live `list_block_ports` common returns:
 
 ```text
 F(IN), HS(IN), P(OUT), WD(OUT), HS(OUT)
 ```
 
-- `HS(IN): []` / `HS(OUT): []` [NON-ENGLISH REDACTED] heat port [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] heat stream。
-- [NON-ENGLISH REDACTED] Heater [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] block duty，[NON-ENGLISH REDACTED] block-owned setter（`set_heater_flash_spec` + `set_heater_temperature`/`set_heater_pressure`/`set_heater_vapor_fraction`/`set_heater_duty`）[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Q stream。
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `create_heat_stream` [NON-ENGLISH REDACTED] live `HS(IN)`/`HS(OUT)`，[NON-ENGLISH REDACTED] heat stream readback [NON-ENGLISH REDACTED] block duty/enthalpy change [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] Heater；[NON-ENGLISH REDACTED] energy topology，[NON-ENGLISH REDACTED] heat stream [NON-ENGLISH REDACTED] native duty path [NON-ENGLISH REDACTED] run，[NON-ENGLISH REDACTED] outlet temperature narrative。
+- `HS(IN): []` / `HS(OUT): []` means that the heat port exists but is not connected; the heat stream can be connected according to the port name.
+- If the question only fixes Heater outlet temperature, pressure, vapor phase fraction or block duty, use block-owned setter (`set_heater_flash_spec` + `set_heater_temperature`/`set_heater_pressure`/`set_heater_vapor_fraction`/`set_heater_duty`). Do not create an isolated Q stream.
+- If the task requires a real energy stream between two units, call `create_heat_stream` and connect it to live `HS(IN)`/`HS(OUT)` ports, then use heat-stream readback together with the block duty/enthalpy change on both sides to prove that the energy participates in the calculation.
+- The material side in/out connection only proves that the material passes through the Heater; if the question requires energy topology, it must also be proved that the heat stream or native duty path participates in the same final run, and outlet temperature narrative cannot be used.
 
 ---
 
-## 5. [NON-ENGLISH REDACTED]
+## 5. Related Blocks
 
-- [NON-ENGLISH REDACTED] Heater [NON-ENGLISH REDACTED] heat stream [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] duty / enthalpy change [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] **Compr** [NON-ENGLISH REDACTED]（`compr.md`）。
+- When expressing energy exchange through heat stream in a pair of Heaters, it is necessary to prove that the duty / enthalpy change energy closure on both sides is required.
+- Interstage cooling in **Compr** chain (`compr.md`).
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core setter | 4 |
-| [NON-ENGLISH REDACTED] helper | — |
+| Recommended helper | — |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/rstoic.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：RSTOIC（[NON-ENGLISH REDACTED]）
+# Block-Type Injection: RSTOIC (Stoichiometric Reactor)
 
-- **[NON-ENGLISH REDACTED]**：`RSTOIC`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
+- **Block Type**: `RSTOIC`
+- **Aspen Semantics**: Stoichiometric reaction + conversion/flash operating conditions.
 
 ---
 
 Generated public capability names in this document are family-specific. The underlying Aspen variable tokens remain unchanged; do not replace these names with generic native setters from another block family.
 
-## 0. Helper（`script_agent_exp.safe_aspen_calls`）
+## 0. Helper(`script_agent_exp.safe_aspen_calls`)
 
-| Helper | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Helper | Main parameters | Purpose |
 |--------|----------|------|
-| `configure_rstoic_stoichiometry(...)` | `block_name`, [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] inline [NON-ENGLISH REDACTED] |
-| `configure_rstoic_fractional_conversions(...)` | `block_name`, conversion rows | [NON-ENGLISH REDACTED] |
-| `configure_rstoic_calculated_heat_reference(...)` | `block_name`, reaction rows, reference state | [NON-ENGLISH REDACTED] reference-condition bundle |
-| `configure_rstoic_flash(...)` | `block_name`, [NON-ENGLISH REDACTED] `SPEC_OPT` [NON-ENGLISH REDACTED] | TP/TD/TV/PD/PV/DV |
+| `configure_rstoic_stoichiometry(...)` | `block_name`, reaction rows | Write inline stoichiometry |
+| `configure_rstoic_fractional_conversions(...)` | `block_name`, conversion rows | Conversion rate rows |
+|`configure_rstoic_calculated_heat_reference(...)` | `block_name`, reaction rows, reference state | reaction heat reference-condition bundle |
+| `configure_rstoic_flash(...)` | `block_name`, valid `SPEC_OPT` pair | TP/TD/TV/PD/PV/DV |
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]
+## 1. Write sequential gating
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `configure_rstoic_stoichiometry(...)` | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
-| `SPEC_OPT` | [NON-ENGLISH REDACTED] TP/TD/TV/PD/PV/DV | [NON-ENGLISH REDACTED] PQ/TQ/VQ |
+| `configure_rstoic_stoichiometry(...)` | Conversion | Materialize stoichiometry first |
+| `SPEC_OPT` | TP/TD/TV/PD/PV/DV only | PQ/TQ/VQ prohibited |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
+| MCP operation | Variables | Allowed values/parameters |
 |---------------|------|---------------|
-| `set_rstoic_flash_spec` | `SPEC_OPT` | [NON-ENGLISH REDACTED] §2.1（**[NON-ENGLISH REDACTED]**） |
+|`set_rstoic_flash_spec` | `SPEC_OPT` | See §2.1 (**Only six pairs are legal**) |
 | `set_rstoic_temperature` | `TEMP` | float + unit |
 | `set_rstoic_pressure` | `PRES` | float + **unit required**. Legal tokens include **`bar`**, `bara`, `barg`, `MPa`, `kPa`, `psia`, `mmHg`, … |
-| `set_rstoic_duty` | `DUTY` | float + unit（`PD`/`DV` [NON-ENGLISH REDACTED]） |
-| `set_heatopt` | `HEATOPT` | [NON-ENGLISH REDACTED] §2.2 |
-| `set_heat_of_reac` | `HEAT_OF_REAC` | [NON-ENGLISH REDACTED] §2.3 |
+| `set_rstoic_duty` | `DUTY` | float + unit (`PD`/`DV`, etc.) |
+| `set_heatopt` | `HEATOPT` | See §2.2 |
+| `set_heat_of_reac` | `HEAT_OF_REAC` | See §2.3 |
 | `set_opt_ext_conv` | `OPT_EXT_CONV` | **`CONVERSION`** \| `EXTENT` |
-| `set_key_cid` | `KEY_CID` | [NON-ENGLISH REDACTED] ID（[NON-ENGLISH REDACTED]） |
+|`set_key_cid` | `KEY_CID` | Key reactant component ID (conversion basis) |
 | `set_conv` | `CONV` | float (0–1) |
 
 ### 2.1 `SPEC_OPT` / Flash Operating Specification
 
-**[NON-ENGLISH REDACTED]**（Aspen RStoic Setup → Specifications）；**[NON-ENGLISH REDACTED]** `PQ` / `TQ` / `VQ` [NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED] token：
+**Only six pairs are legal** (Aspen RStoic Setup → Specifications); **Prohibited** `PQ` / `TQ` / `VQ` and other Flash2 style tokens:
 
-| token | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| token | meaning | required subsequent variables |
 |-------|------|-------------|
 | `TP` | Temperature + pressure | `TEMP` + `PRES` |
 | `TD` | Temperature + duty | `TEMP` + `DUTY` |
@@ -3090,13 +3090,13 @@ Generated public capability names in this document are family-specific. The unde
 | `PV` | Pressure + vapor fraction | `PRES` + `VFRAC` |
 | `DV` | Duty + vapor fraction | `DUTY` + `VFRAC` |
 
-Pressure + duty [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]「0.3 MPa + 0 kW duty」）[NON-ENGLISH REDACTED] **`PD`**，[NON-ENGLISH REDACTED] `PQ`。[NON-ENGLISH REDACTED] COM [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] HTTP `ui_set_rstoic_flash_spec_pq`（legacy [NON-ENGLISH REDACTED]）[NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] `PD`。
+For pressure + duty tasks (such as “0.3 MPa + 0 kW duty”), use **`PD`**, not `PQ`. If COM writes disagree with the GUI, use HTTP `ui_set_rstoic_flash_spec_pq` (legacy name) to drive the GUI to a legal pair such as `PD`.
 
-**Bar-scale `PRES`（[NON-ENGLISH REDACTED] INSET [NON-ENGLISH REDACTED]）**：`set_pres(..., unit="bar")` [NON-ENGLISH REDACTED]。Meta [NON-ENGLISH REDACTED] `PRES = -0.1` [NON-ENGLISH REDACTED] **`unit="bar"`**（absolute bar [NON-ENGLISH REDACTED] = [NON-ENGLISH REDACTED]）。[NON-ENGLISH REDACTED] bar [NON-ENGLISH REDACTED] MPa。[NON-ENGLISH REDACTED] `aspen-custom-unit-set` [NON-ENGLISH REDACTED] `bar_pressure_write_probe.py`。
+**Bar-scale `PRES` (not related to INSET)**: `set_pres(..., unit="bar")` is legal. Meta common `PRES = -0.1` with **`unit="bar"`** (absolute bar negative value = pressure drop). Do not rewrite bar magnitude as MPa. See `aspen-custom-unit-set` and `bar_pressure_write_probe.py`.
 
 ### 2.2 `HEATOPT` / Heat Transfer Option
 
-| token | [NON-ENGLISH REDACTED] |
+| token | Meaning |
 |-------|------|
 | `CONST-DUTY` | Constant duty |
 | `CONST-TEMP` | Constant temperature |
@@ -3107,11 +3107,11 @@ Pressure + duty [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]「0.3 MPa + 0 kW
 
 ### 2.3 `HEAT_OF_REAC` / Heat of Reaction
 
-| token | [NON-ENGLISH REDACTED] |
+| token | Meaning |
 |-------|------|
-| `CALCULATE` | Aspen [NON-ENGLISH REDACTED] |
-| `SPECIFY` | [NON-ENGLISH REDACTED] |
-| `NO-CALC-SPEC` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
+|`CALCULATE` | Aspen Calculate Heat of Reaction |
+| `SPECIFY` | User specified heat of reaction |
+| `NO-CALC-SPEC` | Do not calculate/do not specify |
 
 When calculated heat is needed, do not call low-level reference-condition
 setters directly. Use `configure_rstoic_calculated_heat_reference(...)` after
@@ -3120,9 +3120,9 @@ the Heat of Reaction page.
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology MCP
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Operations | Parameters |
 |------|------|
 | `create_rstoic` | `block_name` |
 | `connect_stream` | F(IN), P(OUT) |
@@ -3130,22 +3130,22 @@ the Heat of Reaction page.
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core setter | §2 |
-| [NON-ENGLISH REDACTED] helper | §0 [NON-ENGLISH REDACTED] |
+| Recommended helper | §0 Four |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/flash2.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：FLASH2（[NON-ENGLISH REDACTED]）
+# Block-Type injection: FLASH2 (two-phase flash)
 
-- **[NON-ENGLISH REDACTED]**：`FLASH2`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]；`SPEC_OPT` [NON-ENGLISH REDACTED] TP/TV/PV/TD/PD/TQ [NON-ENGLISH REDACTED]。
+- **Block Type**: `FLASH2`
+- **Aspen semantics**: two-phase flash; `SPEC_OPT` determines specification pairs such as TP/TV/PV/TD/PD/TQ.
 
 ---
 
@@ -3153,33 +3153,33 @@ Generated public capability names in this document are family-specific. The unde
 
 ## 0. Helper
 
-[NON-ENGLISH REDACTED] helper；[NON-ENGLISH REDACTED] §2 MCP operation。
+No dedicated helper; use §2 MCP operation.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]
+## 1. Write sequential gating
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `set_flash2_flash_spec` | T/P/Duty | [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | Input | F(IN), V(OUT), L(OUT)；heat stream [NON-ENGLISH REDACTED] live `HS(IN)`/`HS(OUT)` |
+| `set_flash2_flash_spec` | T/P/Duty | The mode must be determined first |
+|Topology | Input | F(IN), V(OUT), L(OUT); heat stream only connects to live `HS(IN)`/`HS(OUT)` |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
+| MCP operation | Variables | Allowed values/parameters |
 |---------------|------|---------------|
-| `set_flash2_flash_spec` | `SPEC_OPT` | [NON-ENGLISH REDACTED] §2.1 |
-| `set_flash2_temperature` | `TEMP` | float + unit（`TP`/`TD`/`TQ`） |
+| `set_flash2_flash_spec` | `SPEC_OPT` | See §2.1 |
+| `set_flash2_temperature` | `TEMP` | float + unit(`TP`/`TD`/`TQ`) |
 | `set_flash2_pressure` | `PRES` | float + **unit required**. Legal tokens include **`bar`**, `bara`, `barg`, `MPa`, `kPa`, `psia`, `mmHg`, `atm`, … (`TP`/`PD`) |
-| `set_flash2_duty` | `DUTY` | float + unit（`TD`/`PD`/`TQ` [NON-ENGLISH REDACTED] duty/heat [NON-ENGLISH REDACTED]） |
-| `set_flash2_vapor_fraction` | `VFRAC` | float（`TV`/`PV`） |
+| `set_flash2_duty` | `DUTY` | float + unit (`TD`/`PD`/`TQ` and other duty/heat modes) |
+| `set_flash2_vapor_fraction` | `VFRAC` | float(`TV`/`PV`) |
 | `set_energy_bal` | `ENERGY_BAL` | `YES` \| `NO` |
 
-### 2.1 `SPEC_OPT` option [NON-ENGLISH REDACTED]
+### 2.1 `SPEC_OPT` option semantics
 
-| token | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| token | meaning | required subsequent variables |
 |-------|------|-------------|
 | `TP` | Temperature + pressure | `TEMP` + `PRES` |
 | `TV` | Temperature + vapor fraction | `TEMP` + `VFRAC` |
@@ -3188,51 +3188,51 @@ Generated public capability names in this document are family-specific. The unde
 | `PD` | Pressure + duty | `PRES` + `DUTY` |
 | `TQ` | Temperature + heat/duty | `TEMP` + connected heat stream / duty path |
 
-**[NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED] T+P [NON-ENGLISH REDACTED] `TP` [NON-ENGLISH REDACTED] `TEMP`+`PRES`；[NON-ENGLISH REDACTED] P+duty [NON-ENGLISH REDACTED] `PD` [NON-ENGLISH REDACTED] `PRES`+`DUTY`；**[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] `PRES+DUTY` [NON-ENGLISH REDACTED] `PQ`（Flash2 [NON-ENGLISH REDACTED] `PQ` token）。
+**Pairing rules**: For T+P, keep `TP` and write `TEMP`+`PRES`; for P+duty, use `PD` and write `PRES`+`DUTY`; **Don't** mistakenly write `PRES+DUTY` as `PQ` (Flash2 does not have `PQ` token).
 
 ### 2.2 Bar-scale / near-atmospheric `PRES`
 
-- **`unit="bar"` [NON-ENGLISH REDACTED]**（[NON-ENGLISH REDACTED] INSET [NON-ENGLISH REDACTED]）；`set_flash2_pressure` [NON-ENGLISH REDACTED] Literal [NON-ENGLISH REDACTED] `bar` / `bara` / `barg`。
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：meta [NON-ENGLISH REDACTED] **`PRES = -0.05`** [NON-ENGLISH REDACTED] **`unit="bar"`**（absolute bar [NON-ENGLISH REDACTED] = [NON-ENGLISH REDACTED]）。
-- **[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] bar [NON-ENGLISH REDACTED] **`MPa`**（[NON-ENGLISH REDACTED] `-0.05 bar` → `2.15 MPa` [NON-ENGLISH REDACTED]）。
-- [NON-ENGLISH REDACTED] readback [NON-ENGLISH REDACTED]；readback [NON-ENGLISH REDACTED] display unit [NON-ENGLISH REDACTED] `psia` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] display label [NON-ENGLISH REDACTED] `unit=`。
+- **`unit="bar"` is available** (independent of global INSET); the Literal of `set_flash2_pressure` contains `bar` / `bara` / `barg`.
+- Atmospheric/slightly sub-atmospheric flash: the meta commonly uses **`PRES = -0.05`** with **`unit="bar"`** (a negative value under an absolute-bar basis represents a pressure drop).
+- **It is forbidden** to rewrite the bar magnitude number as **`MPa`** (for example, `-0.05 bar` → `2.15 MPa` is an order of magnitude error).
+- Use readback to check the value after writing; the display unit of readback may be `psia`, etc., and the display label should not be used to replace `unit=` when writing.
 
 ```python
 client.invoke("set_flash2_pressure", block_name="F", value=-0.05, unit="bar")
 ```
 
-[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED] `set_flash2_temperature` + `set_flash2_pressure`。[NON-ENGLISH REDACTED] `SPEC_OPT` [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、duty、vapor fraction [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、utility requirement [NON-ENGLISH REDACTED]。
+Multi-level ordinary flash chain: Each level of Flash2 can write independent `set_flash2_temperature` + `set_flash2_pressure`. When selecting `SPEC_OPT`, it is necessary to distinguish between operating conditions and result objectives: the temperature, pressure, duty, and vapor fraction given in the question can be used as specifications; the result objectives such as product composition, recovery rate, evaporation volume, and utility requirement cannot be proved by directly setting equivalent result variables.
 
-### 2.1 Heat Stream / Duty [NON-ENGLISH REDACTED]
+### 2.1 Heat Stream / Duty Basis
 
-Flash2 [NON-ENGLISH REDACTED] live `list_block_ports` [NON-ENGLISH REDACTED] `HS(IN)` / `HS(OUT)`，[NON-ENGLISH REDACTED]：
+Flash2's live `list_block_ports` can return `HS(IN)` / `HS(OUT)`, for example:
 
 ```text
 F(IN), HS(IN), V(OUT), L(OUT), WD(OUT), HS(OUT)
 ```
 
-- `HS(IN): []` [NON-ENGLISH REDACTED] `HS(OUT): []` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] heat port。
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `create_heat_stream(<heat_stream>)`，[NON-ENGLISH REDACTED] `connect_stream(block_name=<flash>, stream_name=<heat_stream>, port_name="HS(IN)")` [NON-ENGLISH REDACTED] live [NON-ENGLISH REDACTED] heat port。[NON-ENGLISH REDACTED] port readback、heat stream duty/readback、REP/APW [NON-ENGLISH REDACTED] run。
-- [NON-ENGLISH REDACTED] duty / fixed heat balance [NON-ENGLISH REDACTED] Flash2，[NON-ENGLISH REDACTED] heat stream；[NON-ENGLISH REDACTED] block-owned `set_flash2_flash_spec` + `set_flash2_duty` / `set_flash2_temperature` / `set_flash2_pressure`。
-- `TQ` [NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED] + heat/duty [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] heat stream / duty path [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/heat stream [NON-ENGLISH REDACTED]，`set_spec_opt(..., "TQ")` + `set_temp(...)`，[NON-ENGLISH REDACTED] heat stream / block duty path [NON-ENGLISH REDACTED] run [NON-ENGLISH REDACTED]。
-- `set_flash2_vapor_fraction` [NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] heat/duty path [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `set_flash2_vapor_fraction` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] heat stream [NON-ENGLISH REDACTED] native duty path [NON-ENGLISH REDACTED] run。
-- [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `TQ` [NON-ENGLISH REDACTED] **Flash2** [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] RStoic [NON-ENGLISH REDACTED] block family；[NON-ENGLISH REDACTED] RStoic [NON-ENGLISH REDACTED] `SPEC_OPT` [NON-ENGLISH REDACTED] `TQ`。
+- `HS(IN): []` or `HS(OUT): []` means the port exists but is not connected yet; do not interpret an empty array as no heat port.
+- When explicit heat stream topology is required, first use `create_heat_stream(<heat_stream>)`, and then use `connect_stream(block_name=<flash>, stream_name=<heat_stream>, port_name="HS(IN)")` or the corresponding heat port returned by live. After connection, port readback, heat stream duty/readback, REP/APW must be used to prove that it participates in the final run.
+- For an ordinary Flash2 with only a fixed duty / fixed heat balance, do not create an isolated heat stream; use block-owned `set_flash2_flash_spec` + `set_flash2_duty` / `set_flash2_temperature` / `set_flash2_pressure`.
+- `TQ` is the temperature + heat/duty specification caliber available for Flash2, which is suitable for scenarios where the task gives the temperature and the degree of phase change is determined by the heat stream/duty path. The configuration sequence is usually after connecting the material/heat stream topology, `set_spec_opt(..., "TQ")` + `set_temp(...)`, and then the connected heat stream/block duty path is closed in the final run.
+- `set_flash2_vapor_fraction` is one of the operating specifications of Flash2; it can only be used as the final specification when the vapor phase fraction itself is the operating condition given by the problem. If the problem requires the heat/duty path to produce results, you cannot only use `set_flash2_vapor_fraction` as evidence that the results meet the standards. You must prove that the heat stream or native duty path participates in the same final run.
+- Note: `TQ` here is the **Flash2** specification. Do not generalize this to other block families such as RStoic; for example, RStoic's legal `SPEC_OPT` set does not contain `TQ`.
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology MCP
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Operations | Parameters |
 |------|------|
 | `create_flash2` | `block_name` |
-| `connect_stream` | [NON-ENGLISH REDACTED]：`F(IN)`, `V(OUT)`, `L(OUT)`；[NON-ENGLISH REDACTED]：live `HS(IN)`/`HS(OUT)` |
+| `connect_stream` | Material: `F(IN)`, `V(OUT)`, `L(OUT)`; heat stream: live `HS(IN)`/`HS(OUT)` |
 | `engine_run` | — |
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core setter | 5 |
 
@@ -3241,23 +3241,23 @@ F(IN), HS(IN), V(OUT), L(OUT), WD(OUT), HS(OUT)
 ### FILE: docs/hardcoded_script_plan/block_type_inject/fsplit.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：FSPLIT（[NON-ENGLISH REDACTED]）
+# Block-Type injection: FSPLIT (shunt)
 
-- **[NON-ENGLISH REDACTED]**：`FSPLIT`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]。
+- **Block Type**: `FSPLIT`
+- **Aspen Semantics**: Divide one share into multiple shares according to the split ratio.
 
 ---
 
-## 0. Helper（`script_agent_exp.safe_aspen_calls`）
+## 0. Helper(`script_agent_exp.safe_aspen_calls`)
 
-| Helper | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Helper | Main parameters | Purpose |
 |--------|----------|------|
-| `configure_fsplit_shared_outlets(...)` | `block_name`, `inlet_stream`, `outlet_streams`, `split_fractions` | **Python-only** helper；[NON-ENGLISH REDACTED] `P(OUT)`，[NON-ENGLISH REDACTED] `set_frac` |
+| `configure_fsplit_shared_outlets(...)` | `block_name`, `inlet_stream`, `outlet_streams`, `split_fractions` | **Python-only** helper; connects all products to shared `P(OUT)`, then writes `set_frac` |
 
-`configure_fsplit_shared_outlets(...)` [NON-ENGLISH REDACTED] Aspen HTTP operation。[NON-ENGLISH REDACTED]
-`safe.configure_fsplit_shared_outlets(client, ...)` [NON-ENGLISH REDACTED]
-`call_helper("configure_fsplit_shared_outlets", client, ...)` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]**
-`client.execute("configure_fsplit_shared_outlets", ...)` [NON-ENGLISH REDACTED]
+`configure_fsplit_shared_outlets(...)` is not an Aspen HTTP operation. The build script must pass
+`safe.configure_fsplit_shared_outlets(client, ...)` or
+`call_helper("configure_fsplit_shared_outlets", client, ...)` call; **forbidden**
+`client.execute("configure_fsplit_shared_outlets", ...)` or
 `do_op(client, "configure_fsplit_shared_outlets", ...)`.
 
 ```python
@@ -3269,179 +3269,179 @@ client.invoke("configure_fsplit_shared_outlets",
 )
 ```
 
-[NON-ENGLISH REDACTED]：
+rule:
 
-- [NON-ENGLISH REDACTED] **`inlet_stream`**，[NON-ENGLISH REDACTED] `feed_stream`。
-- [NON-ENGLISH REDACTED] **`outlet_streams`**（[NON-ENGLISH REDACTED]）[NON-ENGLISH REDACTED] **`split_fractions`**（dict），[NON-ENGLISH REDACTED] `outlet_fractions`。
-- `outlet_streams` [NON-ENGLISH REDACTED] 2 [NON-ENGLISH REDACTED]；`split_fractions` [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED] 1 [NON-ENGLISH REDACTED] closure stream [NON-ENGLISH REDACTED]** [NON-ENGLISH REDACTED]。Aspen [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] HTTP [NON-ENGLISH REDACTED] `connect_stream` + `set_frac`；[NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED] HTTP op。
+- The parameter name is **`inlet_stream`**, not `feed_stream`.
+- Parameter names are **`outlet_streams`** (list) and **`split_fractions`** (dict), not `outlet_fractions`.
+- `outlet_streams` must contain at least 2 streams; write `split_fractions` for every outlet **except one closure stream**. Aspen closes the unwritten stream.
+- The underlying HTTP operation is only `connect_stream` + `set_frac`; do not use the helper name as HTTP op.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]（CRITICAL）
+## 1. Write sequential gating (CRITICAL)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| [NON-ENGLISH REDACTED] | Input | [NON-ENGLISH REDACTED] `list_block_ports` + helper [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `set_frac` |
+|Topology | Input | First connect `list_block_ports` + helper, then write `set_frac` |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Aspen variable | Allowed values / parameters | Description |
 |---------------|------------|---------------|------|
-| `set_frac` | `FRAC` | float 0..1 | [NON-ENGLISH REDACTED] outlet stream [NON-ENGLISH REDACTED]；closure stream [NON-ENGLISH REDACTED] |
+| `set_frac` | `FRAC` | float 0..1 | Specify the split ratio of the outlet stream; do not write the closure stream |
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology and other MCPs
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Operation | Parameters | Description |
 |------|------|------|
-| `create_fsplit` | `block_name` | [NON-ENGLISH REDACTED] FSPLIT [NON-ENGLISH REDACTED] |
-| `create_material_stream` | `stream_name` | [NON-ENGLISH REDACTED] |
-| `list_block_ports` | `block_name` | [NON-ENGLISH REDACTED] |
-| `connect_stream` | `block_name`, `stream_name`, `port_name` | [NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED] |
-| `check_block_completion` | `block_name` | [NON-ENGLISH REDACTED] completion |
-| `check_next_completion_status` | — | run [NON-ENGLISH REDACTED] |
-| `engine_run` | — | [NON-ENGLISH REDACTED] |
+| `create_fsplit` | `block_name` | Create an FSPLIT block |
+| `create_material_stream` | `stream_name` | Create flow streams on demand |
+| `list_block_ports` | `block_name` | Look up port names |
+| `connect_stream` | `block_name`, `stream_name`, `port_name` | Usually done by helper |
+| `check_block_completion` | `block_name` | block completion |
+|`check_next_completion_status` | — | at least once before run |
+| `engine_run` | — | Simulation |
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 4. Read back the results
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | REP、helper readback payload |
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] Input [NON-ENGLISH REDACTED] null |
+| chunk/analysis output | REP, helper readback payload |
+|Input acceptance | Key Input variable is not null |
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core operations | `set_frac` |
-| [NON-ENGLISH REDACTED] helper | `configure_fsplit_shared_outlets(...)` via `safe_aspen_calls` |
+| Recommended helper | `configure_fsplit_shared_outlets(...)` via `safe_aspen_calls` |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/radfrac.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：RADFRAC（[NON-ENGLISH REDACTED]）
+# Block-Type Injection: RADFRAC (Rigorous Distillation Column)
 
-- **[NON-ENGLISH REDACTED]**：`RADFRAC`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED] MESH [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] DSTWU [NON-ENGLISH REDACTED]。
+- **Block Type**: `RADFRAC`
+- **Aspen Semantics**: Strict MESH distillation/absorption/stripping; separated from DSTWU simple block.
 
 ---
 
 Generated public capability names in this document are family-specific. The underlying Aspen variable tokens remain unchanged; do not replace these names with generic native setters from another block family.
 
-## 0. Helper（`script_agent_exp.safe_aspen_calls`）
+## 0. Helper(`script_agent_exp.safe_aspen_calls`)
 
-| Helper | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Helper | Main parameters | Purpose |
 |--------|----------|------|
-| `configure_radfrac_total_condenser(...)` | `block_name`, `feed_stream`, `nstage`, `feed_stage`, `reflux_ratio`, `distillate_flow`, `distillate_flow_unit`, `top_pressure`, `bottom_pressure`, `pressure_unit` | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `BASIS_RR` + `BASIS_D` |
-| `configure_radfrac_bottom_vapor_feed(...)` | `feed_stream`, `nstage`, `feed_stage`, `top_pressure`, `pressure_unit`, `column_dp`, `reflux_ratio`, `distillate_flow`, `d_over_f` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED]**；[NON-ENGLISH REDACTED] `PRES1` + `FEED_CONVEN=ON-STAGE-VAP` |
-| `configure_radfrac_no_condenser_absorber(...)` | `nstage`, `feed_stages: dict`, `feed_conventions: dict`, `top_pressure`, `pressure_unit`, `bottom_pressure`, `column_dp` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `PRES1`，[NON-ENGLISH REDACTED] `PRES2` [NON-ENGLISH REDACTED] `DP_COL`，[NON-ENGLISH REDACTED] |
-| `configure_radfrac_no_condenser_reboiled_bottoms(...)` | `reboiler_type`, `feed_stages`, `top_pressure`, `pressure_unit`, … | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `PRES1` / `PRES2` / `DP_COL` |
-| `configure_radfrac_feed_convention(...)` | `block_name`, `stream_name`, `convention` | **Python-only** helper；[NON-ENGLISH REDACTED] `FEED_CONVEN` + `FEED_CONVE2` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]** `client.execute("configure_radfrac_feed_convention", ...)` |
-| `configure_radfrac_extractive_distillation_pair(...)` | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED] |
-| `connect_radfrac_feed_distillate_bottoms(...)` | `block_name`, `inlet_streams`, `distillate_stream`, `bottoms_stream` | [NON-ENGLISH REDACTED] RadFrac：[NON-ENGLISH REDACTED] `F(IN)`，[NON-ENGLISH REDACTED] `LD(OUT)`，[NON-ENGLISH REDACTED] `B(OUT)`；[NON-ENGLISH REDACTED] evidence |
-| `scan_radfrac_bottoms_for_component_recovery(...)` | `column_block`, `feed_stream`, `bottoms_stream`, `component_name`, `flow_values`, `flow_unit`, `target_recovery` | [NON-ENGLISH REDACTED] RadFrac `BASIS_B` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED] |
-| `collect_radfrac_profile_markdown_evidence(...)` | keyword-only: `rep_text`, `block_name`, `component_ids`, `output_dir`, optional `profile_name`, `source_rep_path` | [NON-ENGLISH REDACTED] REP [NON-ENGLISH REDACTED] canonical Markdown [NON-ENGLISH REDACTED] profile [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `client` [NON-ENGLISH REDACTED] |
+| `configure_radfrac_total_condenser(...)` | `block_name`, `feed_stream`, `nstage`, `feed_stage`, `reflux_ratio`, `distillate_flow`, `distillate_flow_unit`, `top_pressure`, `bottom_pressure`, `pressure_unit` | Total condenser + kettle reboil; write `BASIS_RR` + `BASIS_D` |
+| `configure_radfrac_bottom_vapor_feed(...)` | `feed_stream`, `nstage`, `feed_stage`, `top_pressure`, `pressure_unit`, `column_dp`, `reflux_ratio`, `distillate_flow`, `d_over_f` | **Vapor feed** at the bottom/final stage; writes `PRES1` + `FEED_CONVEN=ON-STAGE-VAP` |
+| `configure_radfrac_no_condenser_absorber(...)` | `nstage`, `feed_stages: dict`, `feed_conventions: dict`, `top_pressure`, `pressure_unit`, `bottom_pressure`, `column_dp` | No condensation/no reboil; write `PRES1`, optional `PRES2` or `DP_COL`, and write multi-feed agreement |
+|`configure_radfrac_no_condenser_reboiled_bottoms(...)` | `reboiler_type`, `feed_stages`, `top_pressure`, `pressure_unit`, … | No condenser + reboiler; pressure semantics are the same as `PRES1` / `PRES2` / `DP_COL` |
+| `configure_radfrac_feed_convention(...)` | `block_name`, `stream_name`, `convention` | **Python-only** helper; write `FEED_CONVEN` + `FEED_CONVE2` same value; **Don’t** `client.execute("configure_radfrac_feed_convention", ...)` |
+| `configure_radfrac_extractive_distillation_pair(...)` | two column names + six stream roles + stage counts/feed stages/reflux ratios | Extractive-distillation main column + solvent-recovery column |
+| `connect_radfrac_feed_distillate_bottoms(...)` | `block_name`, `inlet_streams`, `distillate_stream`, `bottoms_stream` | Connect ordinary RadFrac by role: `F(IN)` for feed, priority for liquid phase distillation `LD(OUT)`, `B(OUT)` for column reactor; return port to read back evidence |
+|`scan_radfrac_bottoms_for_component_recovery(...)` | `column_block`, `feed_stream`, `bottoms_stream`, `component_name`, `flow_values`, `flow_unit`, `target_recovery` | Scan RadFrac `BASIS_B` Column product flow, read back with feed/column component flow to prove recovery; only used for the task "Adjust/Find Column Flow to Meet Recovery" |
+| `collect_radfrac_profile_markdown_evidence(...)` | keyword-only: `rep_text`, `block_name`, `component_ids`, `output_dir`, optional `profile_name`, `source_rep_path` | Generate canonical Markdown plate composition profile evidence from the current REP text; do not pass `client` as a positional argument |
 
 Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distillate_bottoms`. WRONG: `feed_stream=F1`; CORRECT: `inlet_streams=[F1]`.
 
-### 0.1 [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] helper）
+### 0.1 Scenario Selection (Choose the Column Type Before the Helper)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
+| Scenario | Recommended method | Required input/evidence |
 |------|----------|-----------------|
-| [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] | `configure_radfrac_total_condenser(...)` | `set_condenser(TOTAL)`、`set_reboiler(KETTLE)`、`BASIS_RR`、`BASIS_D`、`PRES1` |
-| [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] | `configure_radfrac_no_condenser_absorber(...)` | [NON-ENGLISH REDACTED] `feed_stages` **[NON-ENGLISH REDACTED]** `feed_conventions`；[NON-ENGLISH REDACTED] `VD(OUT)`，[NON-ENGLISH REDACTED] `B(OUT)` |
-| [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `configure_radfrac_no_condenser_reboiled_bottoms(...)` | [NON-ENGLISH REDACTED] absorber [NON-ENGLISH REDACTED] `REBOILER=NONE`；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] / packing-height perturbation | [NON-ENGLISH REDACTED] packed-section/HETP/height [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] stage surrogate，[NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] base [NON-ENGLISH REDACTED] modified [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]；stage surrogate [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] textbook base target [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] base，[NON-ENGLISH REDACTED] | base outlet [NON-ENGLISH REDACTED] target；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] surrogate [NON-ENGLISH REDACTED] |
+|Conventional distillation: total condenser + reboiler, giving reflux ratio and distillate flow rate | `configure_radfrac_total_condenser(...)` | `set_condenser(TOTAL)`, `set_reboiler(KETTLE)`, `BASIS_RR`, `BASIS_D`, `PRES1` |
+| Absorption tower: no condenser, no reboiler, gas enters from the bottom of the tower, solvent enters from the top of the tower | `configure_radfrac_no_condenser_absorber(...)` | `feed_stages` ** and ** `feed_conventions` must be passed; the gas phase product at the top of the tower goes to `VD(OUT)`, and the liquid phase product at the bottom of the tower goes to `B(OUT)` |
+| No condenser but with reboiling/a warm-bottom specification | `configure_radfrac_no_condenser_reboiled_bottoms(...)` | Do not apply the absorber's `REBOILER=NONE`; record the reboiler type, bottoms temperature/heat load/product specification |
+| Packing tower height change / packing-height perturbation | Write the packed-section/HETP/height field first; if only stage surrogate can be used, it must be marked explicitly | Percent height change requires two sets of Aspen evidence, base and modified; stage surrogate can only be used as an approximate model description |
+|After the problem is given to the textbook base target, the perturbation result is required | Calibrate the base first, and then perform the perturbation | The base outlet should be close to the problem target; if it is not calibrated, it can only be reported as a convergence surrogate or diagnostic result |
 
-**[NON-ENGLISH REDACTED]**：
+**Absorption Tower Hard Constraints**:
 
-- `configure_radfrac_no_condenser_absorber(...)` [NON-ENGLISH REDACTED] `feed_conventions` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Bottom Stage / Reboiler=None [NON-ENGLISH REDACTED] Next gate。
-- [NON-ENGLISH REDACTED]，`feed_conventions[gas_stream]` [NON-ENGLISH REDACTED] `ON-STAGE-VAP`；[NON-ENGLISH REDACTED]，`feed_conventions[solvent_stream]` [NON-ENGLISH REDACTED] `ON-STAGE-LIQ`。helper [NON-ENGLISH REDACTED] `FEED_CONVEN` [NON-ENGLISH REDACTED] `FEED_CONVE2`。
-- `REBOILER=NONE` [NON-ENGLISH REDACTED]，Bottom Stage [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `ON-STAGE-VAP`，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] `NSTAGE+1` above-stage vapor/liquid [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] feed stage [NON-ENGLISH REDACTED] convention。
-- [NON-ENGLISH REDACTED] `list_block_ports`。[NON-ENGLISH REDACTED] `VD(OUT)`，[NON-ENGLISH REDACTED] `D(OUT)`。
-- [NON-ENGLISH REDACTED] Aspen / UI Next [NON-ENGLISH REDACTED]：
+- In the signature of `configure_radfrac_no_condenser_absorber(...)`, `feed_conventions` is required, not optional. If omitted, execution stops at the Bottom Stage / Reboiler=None Next gate.
+- When gas enters the final stage, use `ON-STAGE-VAP` for `feed_conventions[gas_stream]`; when liquid enters the top of the tower, use `ON-STAGE-LIQ` for `feed_conventions[solvent_stream]`. The helper will write both `FEED_CONVEN` and `FEED_CONVE2`.
+- When `REBOILER=NONE`, the Bottom Stage must have compliant feed: final stage `ON-STAGE-VAP`, or `NSTAGE+1` above-stage vapor/liquid convention allowed by Aspen. Don't just write feed stage without writing convention.
+- `list_block_ports` first. The top of the non-condensing absorption tower is usually `VD(OUT)`, not `D(OUT)` for standard distillation.
+- If Aspen / UI Next reports:
   - `FEEDS not complete: SID = <stream>`
   - `Stage must be specified.`
   - `A feed or pumparound stream to the top stage must be specified when Condenser=None or condenser duty is zero.`
   - `A feed or pumparound stream to the bottom stage must be specified when Reboiler=None or reboiler duty is zero.`
-  [NON-ENGLISH REDACTED] `FEEDS\<stream>\STAGE` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：`set_feed_stage(...)` + `FEED_CONVEN` + `FEED_CONVE2` + `set_pres1(...)`，[NON-ENGLISH REDACTED] `configure_radfrac_no_condenser_absorber(...)`。
+The repair action is not to guess the `FEEDS\<stream>\STAGE` table path, but to: `set_feed_stage(...)` + `FEED_CONVEN` + `FEED_CONVE2` + `set_pres1(...)`, giving priority to directly calling `configure_radfrac_no_condenser_absorber(...)`.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]
+## 1. Write sequential gating
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `set_radfrac_condenser_type` / `set_radfrac_reboiler_type` | `set_radfrac_stage_count` | [NON-ENGLISH REDACTED] |
-| `set_radfrac_stage_count` | `set_radfrac_feed_stage` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
-| `set_radfrac_feed_stage` | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] `FEED_CONVEN` + `FEED_CONVE2` |
-| [NON-ENGLISH REDACTED] profile | [NON-ENGLISH REDACTED] `set_pres_mixed` | [NON-ENGLISH REDACTED] ≥ feed [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | Input | `list_block_ports` → `D(OUT)` / `VD(OUT)` / `B(OUT)` |
+|`set_radfrac_condenser_type` / `set_radfrac_reboiler_type` | `set_radfrac_stage_count` | Tower type is determined in advance |
+| `set_radfrac_stage_count` | `set_radfrac_feed_stage` | The number of stages includes condensation/reboiling stage |
+| `set_radfrac_feed_stage` | Feed convention | Write `FEED_CONVEN` + `FEED_CONVE2` for each feed |
+| Pressure profile | Feed flow `set_pres_mixed` | Feed pressure ≥ feed stage plate pressure |
+|Topology | Input | `list_block_ports` → `D(OUT)` / `VD(OUT)` / `B(OUT)` |
 
-### 1.1 [NON-ENGLISH REDACTED] profile（[NON-ENGLISH REDACTED] `PRES1`，[NON-ENGLISH REDACTED]）
+### 1.1 Pressure profile (write `PRES1` first, then select the second pressure path)
 
-| [NON-ENGLISH REDACTED] | MCP | [NON-ENGLISH REDACTED] |
+| Mode | MCP | Applicable scenario |
 |------|-----|----------|
-| [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | `set_radfrac_top_pressure` | [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] RadFrac [NON-ENGLISH REDACTED]；`PRES1` [NON-ENGLISH REDACTED] Stage 1 / Condenser / top reference pressure |
-| TOP-BOTTOM | `set_radfrac_top_pressure` + `set_radfrac_bottom_pressure` | [NON-ENGLISH REDACTED] top/bottom pressure，[NON-ENGLISH REDACTED]；`PRES2` [NON-ENGLISH REDACTED] pressure anchor / bottom-side pressure，[NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED] |
-| DP-COL | `set_opt_pres(DP-COL)` + `set_radfrac_top_pressure` + `set_radfrac_column_pressure_drop` | [NON-ENGLISH REDACTED]；`DP_COL = bottom_pressure - top_pressure` |
+| Single column pressure / no pressure drop approximation | `set_radfrac_top_pressure` | Absorption tower, atmospheric tower, only give one column pressure in the question, or let RadFrac input completely first; `PRES1` is Stage 1 / Condenser / top reference pressure |
+|TOP-BOTTOM | `set_radfrac_top_pressure` + `set_radfrac_bottom_pressure` | The problem clearly indicates top/bottom pressure, or the second pressure anchor point needs to be fixed directly; `PRES2` is the second pressure anchor/bottom-side pressure, and must use the same unit basis as `PRES1` |
+| DP-COL | `set_opt_pres(DP-COL)` + `set_radfrac_top_pressure` + `set_radfrac_column_pressure_drop` | The question gives the total column pressure drop; `DP_COL = bottom_pressure - top_pressure` |
 
-[NON-ENGLISH REDACTED] BKP / APW [NON-ENGLISH REDACTED] RadFrac [NON-ENGLISH REDACTED] `P-SPEC2: PRES1=... PRES2=...`，
-[NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED] recycle、feed stage [NON-ENGLISH REDACTED] solver。`PRES2`
-[NON-ENGLISH REDACTED] probe [NON-ENGLISH REDACTED]；`configure_radfrac_total_condenser(...)`
-[NON-ENGLISH REDACTED] `bottom_pressure_mode="pres2"` [NON-ENGLISH REDACTED] TOP-BOTTOM/P-SPEC2 [NON-ENGLISH REDACTED]。
+If the RadFrac input in a reference BKP / APW explicitly contains `P-SPEC2: PRES1=... PRES2=...`,
+Don't just write `PRES1` and attribute the failure to the recycle, feed stage, or solver. `PRES2`
+Must enter initial configuration or next round of probe axis; `configure_radfrac_total_condenser(...)`
+This TOP-BOTTOM/P-SPEC2 semantics can be preserved with `bottom_pressure_mode="pres2"`.
 
-`PRES1` [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Next / completion [NON-ENGLISH REDACTED]
+`PRES1` must be materialized first. If Next / completion returns
 `Top Stage Pressure must be specified when Top/Bottom or Section Pressure Drop is selected.`
-[NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] `Stage 1 / Condenser pressure`，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]
-`set_pres1(block_name=<BLK>, value=<top pressure>, unit=<unit>)`。
+Or the GUI falls at `Stage 1 / Condenser pressure`, the repair action is write/readback
+`set_pres1(block_name=<BLK>, value=<top pressure>, unit=<unit>)`.
 
-[NON-ENGLISH REDACTED]：
+When selecting the second pressure path:
 
-- [NON-ENGLISH REDACTED] **bottom pressure**，[NON-ENGLISH REDACTED] `set_radfrac_bottom_pressure`，[NON-ENGLISH REDACTED] `DP_COL`
-  [NON-ENGLISH REDACTED] DP-COL；[NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] **column pressure drop**，[NON-ENGLISH REDACTED] `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop`。
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `PRES1`；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] bottom”[NON-ENGLISH REDACTED]。
-- `bottom_pressure >= top_pressure` [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。`psig/barg/kPag`
-  [NON-ENGLISH REDACTED] `psia/bar/kPa` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `kPa`。
-- [NON-ENGLISH REDACTED]：`kPa`, `bar`, `atm`, `mmHg`, `MPa`, `psi`, `psia`, `psig`。
-  [NON-ENGLISH REDACTED] `set_radfrac_top_pressure` / `set_radfrac_bottom_pressure` [NON-ENGLISH REDACTED]；`set_radfrac_column_pressure_drop`
-  [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `kPa`, `bar`, `psi`, `mmHg`, `MPa` [NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] `set_radfrac_top_pressure` / `set_radfrac_bottom_pressure` / `set_radfrac_column_pressure_drop`。[NON-ENGLISH REDACTED] RadFrac [NON-ENGLISH REDACTED]、helper [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] live option/readback [NON-ENGLISH REDACTED]。
+- If the question gives **bottom pressure**, you can use `set_radfrac_bottom_pressure`, or convert to `DP_COL`
+  use DP-COL; do not mix the two paths without readback.
+- If the question is **column pressure drop**, give priority to `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop`.
+- If there is no clear voltage drop, just write `PRES1` first; do not make up the false voltage drop or bottom pressure in order to "make up for the bottom".
+- `bottom_pressure >= top_pressure` should be judged under the same unit and the same absolute pressure/gauge pressure standard. `psig/barg/kPag`
+  cannot be compared directly with `psia/bar/kPa`; convert to absolute `kPa` when necessary.
+- Common safety units: `kPa`, `bar`, `atm`, `mmHg`, `MPa`, `psi`, `psia`, `psig`.
+The value passed to `set_radfrac_top_pressure` / `set_radfrac_bottom_pressure` must match the unit literal; `set_radfrac_column_pressure_drop`
+What is transmitted is the pressure difference, usually in `kPa`, `bar`, `psi`, `mmHg`, `MPa` and other pressure difference units.
+- The curated operations for fixed column pressure are `set_radfrac_top_pressure` / `set_radfrac_bottom_pressure` / `set_radfrac_column_pressure_drop`. Before writing any other RadFrac input, consult this file, the helper signature, or live options/readback.
 
-[NON-ENGLISH REDACTED]：
+Troubleshooting sequence:
 
-1. `read_pressure_state(block_name, unit=<same_unit>)` [NON-ENGLISH REDACTED]
-   `Data\Blocks\<BLK>\Input\PRES1`, `PRES2`, `OPT_PRES`, `DP_COL`。
-2. [NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `set_radfrac_top_pressure`。
-3. [NON-ENGLISH REDACTED] `OPT_PRES=DP-COL`，[NON-ENGLISH REDACTED] `DP_COL` [NON-ENGLISH REDACTED] bottom absolute pressure。
-4. [NON-ENGLISH REDACTED] `set_radfrac_bottom_pressure`，[NON-ENGLISH REDACTED] `PRES2` [NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED]。
-5. [NON-ENGLISH REDACTED]；feed stream pressure [NON-ENGLISH REDACTED] feed stage [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] REP/PER_ERROR [NON-ENGLISH REDACTED] feed pressure too low。
+1. `read_pressure_state(block_name, unit=<same_unit>)` or read directly
+   `Data\Blocks\<BLK>\Input\PRES1`, `PRES2`, `OPT_PRES`, `DP_COL`.
+2. If `PRES1` is empty or the unit is not trustworthy, rewrite `set_radfrac_top_pressure` first.
+3. If `OPT_PRES=DP-COL`, confirm that `DP_COL` is a pressure drop rather than the bottom absolute pressure.
+4. If using `set_radfrac_bottom_pressure`, confirm that `PRES2` and `PRES1` have the same unit and the second pressure is not lower than the top pressure.
+5. After writing the pressure, align the feed stream pressure; the feed stream pressure should not be lower than its feed stage pressure to avoid subsequent REP/PER_ERROR reports of feed pressure too low.
 
-### 1.2 [NON-ENGLISH REDACTED]（Python helper，[NON-ENGLISH REDACTED] HTTP operation）
+### 1.2 Feeding convention (Python helper, not HTTP operation)
 
-`configure_radfrac_feed_convention(...)` [NON-ENGLISH REDACTED] `script_agent_exp.safe_aspen_calls`
-[NON-ENGLISH REDACTED] **Python helper**，[NON-ENGLISH REDACTED] Aspen HTTP `/execute` operation。[NON-ENGLISH REDACTED]
-`safe.configure_radfrac_feed_convention(client, ...)` [NON-ENGLISH REDACTED]
-`call_helper("configure_radfrac_feed_convention", client, ...)` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]**
-`client.execute("configure_radfrac_feed_convention", ...)` [NON-ENGLISH REDACTED]
-`do_op(client, "configure_radfrac_feed_convention", ...)`。
+`configure_radfrac_feed_convention(...)` is in `script_agent_exp.safe_aspen_calls`
+The **Python helper** in it is not the Aspen HTTP `/execute` operation. The build script must pass
+`safe.configure_radfrac_feed_convention(client, ...)` or
+`call_helper("configure_radfrac_feed_convention", client, ...)` call; **forbidden**
+`client.execute("configure_radfrac_feed_convention", ...)` or
+`do_op(client, "configure_radfrac_feed_convention", ...)`.
 
-| helper | token [NON-ENGLISH REDACTED] |
+| helper | token example |
 |--------|-------------|
-| `configure_radfrac_feed_convention(client, block_name=..., stream_name=..., convention=...)` | `ON-STAGE`, `ABOVE-STAGE`, `VAPOR`, `LIQUID`, `ON-STAGE-VAP`, `ON-STAGE-LIQ`（[NON-ENGLISH REDACTED] live legal values [NON-ENGLISH REDACTED]；UI [NON-ENGLISH REDACTED] Vapor/Liquid，[NON-ENGLISH REDACTED] `ON-STAGE-VAP`/`ON-STAGE-LIQ`） |
-| [NON-ENGLISH REDACTED] `FEED_CONVEN` + `FEED_CONVE2` **[NON-ENGLISH REDACTED]** | [NON-ENGLISH REDACTED] `legal_values` |
+|`configure_radfrac_feed_convention(client, block_name=..., stream_name=..., convention=...)` | `ON-STAGE`, `ABOVE-STAGE`, `VAPOR`, `LIQUID`, `ON-STAGE-VAP`, `ON-STAGE-LIQ` (subject to live legal values; UI may show Vapor/Liquid, generation tool may accept `ON-STAGE-VAP`/`ON-STAGE-LIQ`) |
+| Internally write `FEED_CONVEN` + `FEED_CONVE2` **Same value** | Return on failure `legal_values` |
 
 ```python
 client.invoke("configure_radfrac_feed_convention",
@@ -3451,14 +3451,14 @@ client.invoke("configure_radfrac_feed_convention",
 )
 ```
 
-[NON-ENGLISH REDACTED] RadFrac feed stage [NON-ENGLISH REDACTED] `Data\Blocks\<BLK>\Input\FEEDS\<stream>\STAGE` [NON-ENGLISH REDACTED] `...\FEEDS\<stream>\FEED_STAGE` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] surface。[NON-ENGLISH REDACTED] **stage** [NON-ENGLISH REDACTED] HTTP `set_feed_stage(...)`；[NON-ENGLISH REDACTED] **convention** [NON-ENGLISH REDACTED] Python helper。
+Do not write the RadFrac feed stage to guessed paths such as `Data\Blocks\<BLK>\Input\FEEDS\<stream>\STAGE` or `...\FEEDS\<stream>\FEED_STAGE`; these paths do not exist or are not writable surfaces in many models. Set the feed **stage** with HTTP `set_feed_stage(...)`; set the feed **convention** with the Python helper above.
 
-[NON-ENGLISH REDACTED] RadFrac probe [NON-ENGLISH REDACTED] `PER_ERROR=1` [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-`feed_stage` [NON-ENGLISH REDACTED]。`ABOVE-STAGE` / `ON-STAGE` / `VAPOR` / `LIQUID`
-（[NON-ENGLISH REDACTED] `ON-STAGE-VAP` / `ON-STAGE-LIQ` [NON-ENGLISH REDACTED] token）[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]、
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] L1 [NON-ENGLISH REDACTED] stage [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] bundle，
-[NON-ENGLISH REDACTED] `(stage=40, convention=ON-STAGE)`、`(stage=40, convention=ABOVE-STAGE)`、
-`(stage=40, convention=VAPOR)`、`(stage=40, convention=LIQUID)`，[NON-ENGLISH REDACTED] stage。
+When the RadFrac probe is all `PER_ERROR=1` or there is an abnormality near the traffic/feed stage in the tower, do not just scan
+The number `feed_stage`. `ABOVE-STAGE` / `ON-STAGE` / `VAPOR` / `LIQUID`
+(or `ON-STAGE-VAP` / `ON-STAGE-LIQ` and other tool tokens) may change Aspen’s feed drop point,
+Interpretation of phase state and material balance should be bundle-tested as L1 axes together with the stage number. Prefer a small number of bundles,
+For example `(stage=40, convention=ON-STAGE)`, `(stage=40, convention=ABOVE-STAGE)`,
+`(stage=40, convention=VAPOR)`, `(stage=40, convention=LIQUID)`, and then extended to adjacent stages.
 
 ### 1.2.1 Bottom-vapor-feed operating specs
 
@@ -3474,15 +3474,15 @@ switch; do not guess selector paths or suppress a selected setter failure.
 A saturated-vapor bottom feed does not imply `CONDENSER=NONE`: preserve a stated
 total condenser and its `LD(OUT)` product role.
 
-### 1.3 [NON-ENGLISH REDACTED]
+### 1.3 Port
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Role | Common port | Description |
 |------|----------|------|
-| [NON-ENGLISH REDACTED] | `F(IN)` | [NON-ENGLISH REDACTED] material feed collection；[NON-ENGLISH REDACTED] `F2(IN)` |
-| [NON-ENGLISH REDACTED] | `LD(OUT)` / `D(OUT)` | [NON-ENGLISH REDACTED] `LD(OUT)`；[NON-ENGLISH REDACTED] live ports [NON-ENGLISH REDACTED] `D(OUT)` [NON-ENGLISH REDACTED] `D(OUT)` |
-| [NON-ENGLISH REDACTED] | `VD(OUT)` / `V(OUT)` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] vapor overhead [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `LD(OUT)` |
-| [NON-ENGLISH REDACTED] | `B(OUT)` | [NON-ENGLISH REDACTED] bottoms material outlet |
-| [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `CHS(OUT)`, `CWS(IN/OUT)`, `HS(IN/OUT)` [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] material stream |
+| Feed | `F(IN)` | Multiple feeds usually share this material feed collection; do not invent `F2(IN)` for the second feed |
+|Standard liquid phase distillation | `LD(OUT)` / `D(OUT)` | Conventional full condenser distillation gives priority to `LD(OUT)`; if live ports only have `D(OUT)`, use `D(OUT)` |
+| Overhead vapor products | `VD(OUT)` / `V(OUT)` | No condensation absorption/stripping or vapor overhead service use; do not connect vapor overhead products to `LD(OUT)` |
+| Bottoms product | `B(OUT)` | Conventional bottoms material outlet |
+| Condensation/reboiling heat streams | `CHS(OUT)`, `CWS(IN/OUT)`, `HS(IN/OUT)`, etc. | Heat/utility/special ports, not ordinary material streams |
 
 Generated slim source treats `list_block_ports` as opaque cross-iteration evidence: record it directly in `runtime.stage(..., required=False)` and do not assign, normalize, parse, or branch on the payload. Use a registered role-aware RadFrac topology capability for connection work; framework internals own any port normalization. Complete topology before product-rate, pressure, condenser, or reboiler specifications.
 
@@ -3490,33 +3490,33 @@ Generated slim source treats `list_block_ports` as opaque cross-iteration eviden
 
 ## 2. Core MCP / HTTP Operations
 
-### 2.1 [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]
+### 2.1 Tower type, number of stages, pressure
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
+| MCP operation | Variables | Allowed values/parameters |
 |---------------|------|---------------|
 | `set_radfrac_condenser_type` | `CONDENSER` | `NONE` \| `TOTAL` \| `PARTIAL-V` \| `PARTIAL-V-L` |
 | `set_radfrac_reboiler_type` | `REBOILER` | `NONE` \| `KETTLE` \| `THERMOSYPHON` |
 | `set_radfrac_stage_count` | `NSTAGE` | int |
-| `set_radfrac_top_pressure` | `PRES1` | Stage 1 / Condenser / top reference pressure；float + pressure unit |
-| `set_radfrac_bottom_pressure` | `PRES2` | [NON-ENGLISH REDACTED] pressure anchor / bottom-side pressure；float + pressure unit；[NON-ENGLISH REDACTED] |
-| `set_radfrac_pressure_mode` | `OPT_PRES` | `DP-STAGE` \| `DP-COL`；[NON-ENGLISH REDACTED] `DP-COL` |
-| `set_radfrac_column_pressure_drop` | `DP_COL` | [NON-ENGLISH REDACTED]；**float + unit [NON-ENGLISH REDACTED]**（[NON-ENGLISH REDACTED] `atm`, `kPa`, `bar`）；[NON-ENGLISH REDACTED] = bottom pressure − top pressure；[NON-ENGLISH REDACTED] `unit` [NON-ENGLISH REDACTED] HTTP [NON-ENGLISH REDACTED] |
-| `read_pressure_state` | `OPT_PRES/PRES1/PRES2/DP_COL/...` | [NON-ENGLISH REDACTED] pressure mode [NON-ENGLISH REDACTED] |
+| `set_radfrac_top_pressure` | `PRES1` | Stage 1 / Condenser / top reference pressure;float + pressure unit |
+| `set_radfrac_bottom_pressure` | `PRES2` | Second pressure anchor / bottom-side pressure; float + pressure unit; do not write it as pressure drop |
+| `set_radfrac_pressure_mode` | `OPT_PRES` | `DP-STAGE` \| `DP-COL`; prefer `DP-COL` for total column pressure drop |
+| `set_radfrac_column_pressure_drop` | `DP_COL` | Total column pressure drop; **float + unit required** (such as `atm`, `kPa`, `bar`); value = bottom pressure − top pressure; HTTP will fail directly when `unit` is missing |
+|`read_pressure_state` | `OPT_PRES/PRES1/PRES2/DP_COL/...` | Read back the current pressure mode and unit before repairing the pressure error |
 
-### 2.2 [NON-ENGLISH REDACTED]
+### 2.2 Incoming materials and product specifications
 
 Generated code must use the family-specific semantic names below. Native names `set_basis_d` and `set_basis_b` are framework-internal because they collide with PetroFrac/MultiFrac signatures.
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
+| MCP operation | Variables | Allowed values/parameters |
 |---------------|------|---------------|
 | `set_radfrac_feed_stage` | `FEED_STAGE` | exact kwargs: `block_name`, `stream_name`, `value`; `value` is the Aspen stage int (including condenser/reboiler stages). **Do not use `stage=`, `stage_number=`, or `feed_stage=`.** |
 | `set_radfrac_reflux_ratio` | `BASIS_RR` | float |
-| `set_radfrac_distillate_rate` | `BASIS_D` | float + unit（**[NON-ENGLISH REDACTED]**：`kmol/hr`, `mol/hr`） |
+| `set_radfrac_distillate_rate` | `BASIS_D` | float + unit (**molar**: `kmol/hr`, `mol/hr`) |
 | `set_radfrac_bottoms_rate` | `BASIS_B` | float + unit |
-| `set_basis_br` | `BASIS_BR` | float（[NON-ENGLISH REDACTED]） |
+| `set_basis_br` | `BASIS_BR` | float (reboil ratio) |
 | `set_d_f` | `D:F` | float |
-| `set_prod_phase` | **`(block_name, value, stream_name)`** | [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `set_reactor_prod_phase` |
-| `set_prod_stage` / `set_prod_flow` | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / **[NON-ENGLISH REDACTED]** |
+|`set_prod_phase` | **`(block_name, value, stream_name)`** | Side line phase; or `set_reactor_prod_phase` |
+| `set_prod_stage` / `set_prod_flow` | side line | stage / **flow** |
 
 Exact direct-call form for an additional or special RadFrac feed:
 
@@ -3531,40 +3531,40 @@ client.invoke(
 
 The public capability retains the native setter's generic numeric keyword `value`. The semantic name does **not** imply a `stage` keyword. Prefer `configure_radfrac_total_condenser(..., feed_stage=...)` for the standard single-feed bundle; use the direct capability above only for per-feed additions.
 
-### 2.2.0 Partial-Vapor + Distillate rate [NON-ENGLISH REDACTED]
+### 2.2.0 Actual Writable Surface for Partial-Vapor + Distillate Rate
 
-[NON-ENGLISH REDACTED] GUI/[NON-ENGLISH REDACTED] `Condenser = Partial-Vapor`、`Reboiler = Kettle`，[NON-ENGLISH REDACTED]
-Operating specifications [NON-ENGLISH REDACTED] `Reflux ratio` + `Distillate rate` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-`Distillate rate` [NON-ENGLISH REDACTED] RadFrac [NON-ENGLISH REDACTED]：
+When the GUI/question combination is `Condenser = Partial-Vapor`, `Reboiler = Kettle`, and
+Operating specifications When displaying `Reflux ratio` + `Distillate rate`, the second line
+`Distillate rate` must write the RadFrac native product flow variable:
 
 ```python
 Application.Tree.FindNode(r"\Data\Blocks\D1\Input\BASIS_D")
 ```
 
-[NON-ENGLISH REDACTED] MCP/helper [NON-ENGLISH REDACTED] `client.invoke("set_radfrac_distillate_rate", block_name="D1", value=<rate>, unit=<molar-flow-unit>)`。
-[NON-ENGLISH REDACTED] `BASIS_RDV` / `set_basis_rdv`，[NON-ENGLISH REDACTED] `D:F` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-live UI [NON-ENGLISH REDACTED] vapor distillate fraction / D:F [NON-ENGLISH REDACTED]。
-[NON-ENGLISH REDACTED] `BASIS_RR` [NON-ENGLISH REDACTED] `BASIS_D`；`BASIS_D` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] operating specs
-[NON-ENGLISH REDACTED]。
+At the MCP/helper layer, this corresponds to `client.invoke("set_radfrac_distillate_rate", block_name="D1", value=<rate>, unit=<molar-flow-unit>)`.
+Do not write this combination as `BASIS_RDV` / `set_basis_rdv`, nor rewrite it as `D:F` fraction, unless
+The live UI or the problem clearly changed the operation specification line to a specification of vapor distillate fraction / D:F.
+After completion, `BASIS_RR` and `BASIS_D` must be read back; when `BASIS_D` is empty, the operating specs of the tower
+It is still incomplete.
 
-### 2.2.1 [NON-ENGLISH REDACTED] vs [NON-ENGLISH REDACTED]
+### 2.2.1 Fixed product flow vs recovery rate adjustment
 
-- [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] `50 mol/hr bottoms is required`），[NON-ENGLISH REDACTED]
-  RadFrac [NON-ENGLISH REDACTED]：write `BASIS_B` or `BASIS_D` through `set_radfrac_bottoms_rate` / `set_radfrac_distillate_rate`，[NON-ENGLISH REDACTED] converged REP /
-  stream readback [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“report recovery”[NON-ENGLISH REDACTED]
-  [NON-ENGLISH REDACTED] Design Spec。
-- [NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED]，
-  [NON-ENGLISH REDACTED] `scan_radfrac_bottoms_for_component_recovery(...)` [NON-ENGLISH REDACTED] active native
-  Design Spec。scan [NON-ENGLISH REDACTED] converged [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]
-  [NON-ENGLISH REDACTED]，scan [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-- [NON-ENGLISH REDACTED] `BASIS_B` seed [NON-ENGLISH REDACTED] proof-only recovery [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]
-  workflow”。[NON-ENGLISH REDACTED] scan/DS [NON-ENGLISH REDACTED] post-adjustment run；[NON-ENGLISH REDACTED]
-  [NON-ENGLISH REDACTED] final run [NON-ENGLISH REDACTED] native spec readback [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] evidence。
+- If the problem clearly gives the product flow rate (for example, `50 mol/hr bottoms is required`), this is
+RadFrac native product specifications: write `BASIS_B` or `BASIS_D` through `set_radfrac_bottoms_rate` / `set_radfrac_distillate_rate`, and finally converged REP /
+  use stream readback to prove product flow, composition, and recovery. Do not add another one merely to “report recovery”
+Artificially constructed Design Spec.
+- If the problem requires **adjusting/finding** the column product flow rate within a flow window to meet the recovery rate of a certain component,
+Use `scan_radfrac_bottoms_for_component_recovery(...)` or active native
+  Design Spec. After the scan, the selected converged row must be used as the decision basis; if the task requires a fixed
+Product flow, scan can only be used as a diagnostic, and the fixed specifications of the question must still be reset and run in the end.
+- Do not treat the fixed `BASIS_B` seed with subsequent proof-only recovery instructions as "adjustment"
+workflow". The adjustment task requires scan/DS to participate in the same post-adjustment run; fixed specifications
+  the task only needs native-spec readback from the final run and product/component-flow evidence.
 
 ### 2.2.2 RadFrac profile Markdown evidence
 
-`collect_radfrac_profile_markdown_evidence(...)` [NON-ENGLISH REDACTED] helper，[NON-ENGLISH REDACTED]
-Aspen client。[NON-ENGLISH REDACTED] trusted REP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] keyword-only [NON-ENGLISH REDACTED]：
+`collect_radfrac_profile_markdown_evidence(...)` is a plain text helper and does not receive
+Aspen client. When calling, first read the text from the current trusted REP, and then use the keyword-only parameter:
 
 ```python
 rep_text = Path(rep_path).read_text(encoding="utf-8", errors="replace")
@@ -3578,13 +3578,13 @@ profile = safe.collect_radfrac_profile_markdown_evidence(
 )
 ```
 
-[NON-ENGLISH REDACTED] `profile_name` [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `MOLE-X-PROFILE`，[NON-ENGLISH REDACTED]
-`MOLE-Y-PROFILE`。[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] §2.4 [NON-ENGLISH REDACTED]
-`export_radfrac_composition_profile_plot`，`basis` [NON-ENGLISH REDACTED] profile [NON-ENGLISH REDACTED]
-（[NON-ENGLISH REDACTED] `mole_y`，[NON-ENGLISH REDACTED] `mole_x`）。[NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED] `row_count=0`，
-[NON-ENGLISH REDACTED] trusted REP [NON-ENGLISH REDACTED] profile，[NON-ENGLISH REDACTED]。
+Select `profile_name` to match the task: use `MOLE-X-PROFILE` for liquid-phase composition and use
+`MOLE-Y-PROFILE`. This only generates a numerical table. If the task requires plotting a curve, also call the §2.4
+`export_radfrac_composition_profile_plot`, `basis` are consistent with this profile
+(Gaseous phase moles are `mole_y`, liquid phase moles are `mole_x`). If the helper returns `row_count=0`,
+First repair the profile of the current trusted REP, and then publish the picture.
 
-[NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]）：
+Absorber example (minimum runnable scaffold):
 
 ```python
 configure_radfrac_no_condenser_absorber(
@@ -3598,40 +3598,40 @@ configure_radfrac_no_condenser_absorber(
 )
 ```
 
-[NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
+If the helper is not available, the equivalent underlying writing sequence is:
 
-1. `set_condenser(D1, NONE)` + `set_reboiler(D1, NONE)` + `set_nstage(D1, 12)`。
-2. `set_pres1(D1, 101.325, "kPa")`，[NON-ENGLISH REDACTED] `set_radfrac_bottom_pressure` [NON-ENGLISH REDACTED] `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop`。
-3. `set_feed_stage(D1, W1, 1)`、`set_feed_stage(D1, G1, 12)`。
-4. `safe.configure_radfrac_feed_convention(client, block_name="D1", stream_name=..., convention=...)`；[NON-ENGLISH REDACTED] `ON-STAGE-VAP`，[NON-ENGLISH REDACTED] `ON-STAGE-LIQ`。
+1. `set_condenser(D1, NONE)` + `set_reboiler(D1, NONE)` + `set_nstage(D1, 12)`.
+2. `set_pres1(D1, 101.325, "kPa")`, then select `set_radfrac_bottom_pressure` or `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop` if necessary.
+3. `set_feed_stage(D1, W1, 1)`, `set_feed_stage(D1, G1, 12)`.
+4. `safe.configure_radfrac_feed_convention(client, block_name="D1", stream_name=..., convention=...)`; gas `ON-STAGE-VAP`, liquid `ON-STAGE-LIQ`.
 
-### 2.3 [NON-ENGLISH REDACTED]
+### 2.3 Convergence and Other Topics
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Variables | Allowed values ​​|
 |---------------|------|--------|
 | `set_conv_meth` | `CONV_METH` | `STANDARD` \| … \| `AZEOTROPIC` |
 | `set_maxol` | `MAXOL` | float |
-| [NON-ENGLISH REDACTED] | helper [NON-ENGLISH REDACTED] | `INIT_OPTION`/`RESTART` [NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED]，agent [NON-ENGLISH REDACTED] raw tree [NON-ENGLISH REDACTED] |
-| `read_pressure_state` | — | `block_name`, `unit` → [NON-ENGLISH REDACTED] |
+|Azeotropic initial value | helper internal | `INIT_OPTION`/`RESTART` is handled by a dedicated helper, the agent should not be written by raw tree |
+| `read_pressure_state` | — | `block_name`, `unit` → Read back pressure at all levels |
 
-### 2.4 [NON-ENGLISH REDACTED]
+### 2.4 Composition-Profile Curves
 
-[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
-`export_radfrac_composition_profile_plot(client, block_name=..., components=[...], basis=...)`。
-`basis` [NON-ENGLISH REDACTED] `mole_y`（[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]「[NON-ENGLISH REDACTED]」）、`mole_x`（[NON-ENGLISH REDACTED]）、`mass_y`、`mass_x`。
-[NON-ENGLISH REDACTED] PNG，[NON-ENGLISH REDACTED] `summary["plots"]`。
-`MOLE-Y-PROFILE` / `MOLE-X-PROFILE` [NON-ENGLISH REDACTED] Markdown [NON-ENGLISH REDACTED]。
+When the task requires drawing the composition curve in the tower, call
+`export_radfrac_composition_profile_plot(client, block_name=..., components=[...], basis=...)`.
+`basis` takes `mole_y` (gas phase moles, including "gas phase composition"), `mole_x` (liquid phase moles), `mass_y`, and `mass_x`.
+This call reads the current result tree and writes out the English PNG, writing the return path into `summary["plots"]`.
+`MOLE-Y-PROFILE` / `MOLE-X-PROFILE` or a Markdown table serves only as a numerical source on the same basis.
 
-| MCP operation | [NON-ENGLISH REDACTED] |
+| MCP operation | Description |
 |---------------|------|
-| `export_radfrac_composition_profile_plot` | [NON-ENGLISH REDACTED] PNG |
-| `ui_export_radfrac_profile_plot` | [NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] |
+| `export_radfrac_composition_profile_plot` | Draw English composition distribution PNG from current result tree |
+|`ui_export_radfrac_profile_plot` | Aspen window screenshot only, not as a finished curve |
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology MCP
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Operations | Parameters |
 |------|------|
 | `create_radfrac` | `block_name` |
 | `list_block_ports` | `block_name` |
@@ -3640,38 +3640,38 @@ configure_radfrac_no_condenser_absorber(
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 4. Read back
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | REP / stream Output |
-| [NON-ENGLISH REDACTED] | `export_radfrac_composition_profile_plot` [NON-ENGLISH REDACTED] PNG；[NON-ENGLISH REDACTED] `MOLE-X-PROFILE` / `MOLE-Y-PROFILE` |
+| Product purity/flow | REP / stream Output |
+| Tray composition curve | English PNG of `export_radfrac_composition_profile_plot`; the value source is `MOLE-X-PROFILE` / `MOLE-Y-PROFILE` of the same standard |
 
 ---
 
-## 5. [NON-ENGLISH REDACTED]
+## 5. Related Blocks
 
-- [NON-ENGLISH REDACTED] → **DSTWU**（`dstwu.md`）
-- DS/SA/OPT [NON-ENGLISH REDACTED] token → `design_spec.md` / `sensitivity.md` / `optimization.md`
+- Simple initial value → **DSTWU** (`dstwu.md`)
+- DS/SA/OPT manipulation token → `design_spec.md` / `sensitivity.md` / `optimization.md`
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
-| Core setter | §2 [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] helper | §0 [NON-ENGLISH REDACTED] |
+| Core setter | Listed in §2 |
+| Recommended helper | §0 Six Articles |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/pump.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：PUMP（[NON-ENGLISH REDACTED]）
+# Block-Type Injection: PUMP
 
-- **[NON-ENGLISH REDACTED]**：`PUMP`（Aspen [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] “Pump HI” [NON-ENGLISH REDACTED]）
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `OPT_SPEC` [NON-ENGLISH REDACTED]。
+- **Block type**: `PUMP` (Aspen only has this pump family; the title "Pump HI" is not an independent block type)
+- **Aspen semantics**: liquid pressurization; outlet specification `OPT_SPEC` is required.
 
 ---
 
@@ -3679,105 +3679,105 @@ Generated public capability names in this document are family-specific. The unde
 
 ## 0. Helper
 
-[NON-ENGLISH REDACTED] helper；[NON-ENGLISH REDACTED] §2 MCP operation。
+No dedicated helper; use §2 MCP operation directly.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]（CRITICAL）
+## 1. Write sequential gating (CRITICAL)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `set_pump_outlet_spec` | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | **[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED] Outlet Specification must be specified** |
-| [NON-ENGLISH REDACTED] bundle | `USE-CURVE` [NON-ENGLISH REDACTED] | `OPT_CTYPE` → `OPT_CFORMAT` → `DEP_VAR` / `INDEP_VAR` → `set_pump_curve_table` |
-| [NON-ENGLISH REDACTED] | Input | F(IN)/P(OUT) [NON-ENGLISH REDACTED] |
+|`set_pump_outlet_spec` | Outlet Specification/Curve | **If missing, report completion Outlet Specification must be specified** |
+| Curve bundle | `USE-CURVE` selected | `OPT_CTYPE` → `OPT_CFORMAT` → `DEP_VAR` / `INDEP_VAR` → `set_pump_curve_table` |
+| Topology | Input | F(IN)/P(OUT) connections |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Aspen variable | Allowed values / parameters | Description |
 |---------------|------------|---------------|------|
-| `set_pump_outlet_spec` | `OPT_SPEC` | [NON-ENGLISH REDACTED] §2.1 | **[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED] Outlet Specification must be specified** |
-| `set_pump_outlet_pressure` | `PRES` | float + unit | `OPT_SPEC=PRES` [NON-ENGLISH REDACTED] |
-| `set_delp` | `DELP` | float + unit | `OPT_SPEC=DELP` [NON-ENGLISH REDACTED] |
-| `set_pratio` | `PRATIO` | float | `OPT_SPEC=PRATIO` [NON-ENGLISH REDACTED] |
-| `set_power` | `POWER` | float + unit | `OPT_SPEC=POWER` [NON-ENGLISH REDACTED] |
-| `set_eff` | `EFF` | float | [NON-ENGLISH REDACTED] |
-| `set_deff` | `DEFF` | float | [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 1 |
-| `set_opt_ctype` | `OPT_CTYPE` | `SINGLE-OPER` \| `SINGLE-REFE` \| `MULTIP` | [NON-ENGLISH REDACTED] |
-| `set_opt_cformat` | `OPT_CFORMAT` | `TABLE` \| `POLY` \| `USER-CURVES` | [NON-ENGLISH REDACTED] |
-| `set_dep_var` | `DEP_VAR` | `HEAD` \| `HEAD-COEF` \| `POWER` \| `PRES` \| `PRAT` \| `DELP` | [NON-ENGLISH REDACTED] |
-| `set_indep_var` | `INDEP_VAR` | `VOL-FLOW` \| `MASS-FLOW` | [NON-ENGLISH REDACTED] |
-| `set_pump_curve_table` | （[NON-ENGLISH REDACTED]） | [NON-ENGLISH REDACTED] | HEAD_DATA + H_FLOW [NON-ENGLISH REDACTED] |
+| `set_pump_outlet_spec` | `OPT_SPEC` | See §2.1 | **If missing, completion will be reported Outlet Specification must be specified** |
+|`set_pump_outlet_pressure` | `PRES` | float + unit | Outlet pressure at `OPT_SPEC=PRES` |
+| `set_delp` | `DELP` | float + unit | `OPT_SPEC=DELP` time pressure rise |
+| `set_pratio` | `PRATIO` | float | Pressure ratio when `OPT_SPEC=PRATIO` |
+| `set_power` | `POWER` | float + unit | `OPT_SPEC=POWER` Hourly power |
+|`set_eff` | `EFF` | float | pump efficiency |
+| `set_deff` | `DEFF` | float | Driver efficiency, default 1 |
+| `set_opt_ctype` | `OPT_CTYPE` | `SINGLE-OPER` \| `SINGLE-REFE` \| `MULTIP` | Curve control type |
+| `set_opt_cformat` | `OPT_CFORMAT` | `TABLE` \| `POLY` \| `USER-CURVES` | Curve data format |
+|`set_dep_var` | `DEP_VAR` | `HEAD` \| `HEAD-COEF` \| `POWER` \| `PRES` \| `PRAT` \| `DELP` | Performance curve vertical axis |
+| `set_indep_var` | `INDEP_VAR` | `VOL-FLOW` \| `MASS-FLOW` | Performance curve horizontal axis flow type |
+| `set_pump_curve_table` | (curve table) | See description | Write HEAD_DATA + H_FLOW tables |
 
 ### 2.1 `OPT_SPEC` / Outlet Specification
 
-| token | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| token | meaning | subsequent writing |
 |-------|------|----------|
 | `PRES` | Discharge pressure | `set_pres(..., unit=...)` |
 | `DELP` | Pressure increase | `set_delp` |
 | `PRATIO` | Pressure ratio | `set_pratio` |
 | `POWER` | Power required | `set_power` |
-| `USE-CURVE` | Performance curve | [NON-ENGLISH REDACTED] bundle（§2.2） |
+| `USE-CURVE` | Performance curve | Curve bundle (§2.2) |
 
-**[NON-ENGLISH REDACTED] `USE-CURVE`。**
+**`USE-CURVE` must be selected first to configure the characteristic curve. **
 
-### 2.2 [NON-ENGLISH REDACTED]（`OPT_SPEC=USE-CURVE`）
+### 2.2 Recommended order of curve mode (`OPT_SPEC=USE-CURVE`)
 
 1. `set_opt_spec(USE-CURVE)`
-2. `set_opt_ctype(SINGLE-OPER)`（[NON-ENGLISH REDACTED]）
+2. `set_opt_ctype(SINGLE-OPER)` (or as specified by the task)
 3. `set_opt_cformat(TABLE)`
 4. `set_dep_var(HEAD)` + `set_indep_var(VOL-FLOW)`
 5. `set_pump_curve_table(curve_points=[{flow, head}, ...])`
-6. [NON-ENGLISH REDACTED] `set_eff` / `set_deff`
+6. Optional `set_eff` / `set_deff`
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology and other MCPs
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Operation | Parameters | Description |
 |------|------|------|
-| `create_pump` | `block_name` | [NON-ENGLISH REDACTED] PUMP [NON-ENGLISH REDACTED] |
-| `create_material_stream` | `stream_name` | [NON-ENGLISH REDACTED] |
-| `list_block_ports` | `block_name` | [NON-ENGLISH REDACTED] |
-| `connect_stream` | `block_name`, `stream_name`, `port_name` | [NON-ENGLISH REDACTED] Input |
-| `check_block_completion` | `block_name` | [NON-ENGLISH REDACTED] completion |
-| `check_next_completion_status` | — | run [NON-ENGLISH REDACTED] |
-| `engine_run` | — | [NON-ENGLISH REDACTED] |
+|`create_pump` | `block_name` | CREATE PUMP BLOCK |
+| `create_material_stream` | `stream_name` | Create flow streams on demand |
+| `list_block_ports` | `block_name` | Look up port names |
+|`connect_stream` | `block_name`, `stream_name`, `port_name` | Write Input after the topology is completed |
+| `check_block_completion` | `block_name` | block completion |
+|`check_next_completion_status` | — | at least once before run |
+| `engine_run` | — | Simulation |
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 4. Read back the results
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | REP、helper readback payload |
-| [NON-ENGLISH REDACTED] | REP [NON-ENGLISH REDACTED] `OPT_SPEC`、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] |
+| chunk/analysis output | REP, helper readback payload |
+| Input acceptance | `OPT_SPEC`, curve points, efficiency in REP |
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core operations | 12+ |
-| [NON-ENGLISH REDACTED] skill | `aspen-pump-outlet-specification` |
+| Recommended skill | `aspen-pump-outlet-specification` |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/compr.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：COMPR（[NON-ENGLISH REDACTED]）
+# Block-Type Injection: COMPR (Compressor)
 
-- **[NON-ENGLISH REDACTED]**：`COMPR`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] **PRES**、**DELP**、[NON-ENGLISH REDACTED]。
+- **Block Type**: `COMPR`
+- **Aspen Semantics**: Compressor; outlet **PRES**, **DELP**, pressure ratio or power specification.
 
 ---
 
 Generated public capability names in this document are family-specific. The underlying Aspen variable tokens remain unchanged; do not replace these names with generic native setters from another block family.
 
-## 0. Helper（`script_agent_exp.safe_aspen_calls`）
+## 0. Helper(`script_agent_exp.safe_aspen_calls`)
 
 ```text
 configure_compr_pressure_rise(
@@ -3788,69 +3788,69 @@ configure_compr_pressure_rise(
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]
+## 1. Write sequential gating
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| `set_type` | `set_compr_outlet_spec` | [NON-ENGLISH REDACTED] |
-| `set_compr_outlet_spec` | `set_compr_outlet_pressure` / `set_delp` / `set_pratio` | [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | `set_peff`, `set_meff`（[NON-ENGLISH REDACTED]/ASME [NON-ENGLISH REDACTED]） |
+| `set_type` | `set_compr_outlet_spec` | Compressor type |
+| `set_compr_outlet_spec` | `set_compr_outlet_pressure` / `set_delp` / `set_pratio` | Specification mode |
+|Efficiency | Numerical specifications | `set_peff`, `set_meff` (variable/ASME type) |
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|MCP operation | Variables | Allowed values/parameters | Description |
 |---------------|------|---------------|------|
-| `set_type` | `TYPE` | [NON-ENGLISH REDACTED] §2.1 | [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `OPT_SPEC` |
-| `set_compr_outlet_spec` | `OPT_SPEC` | [NON-ENGLISH REDACTED] §2.2 | [NON-ENGLISH REDACTED] |
-| `set_compr_outlet_pressure` | `PRES` | float + unit | **`OPT_SPEC=PRES`** [NON-ENGLISH REDACTED] |
-| `set_delp` | `DELP` | float + unit | **`OPT_SPEC=DELP`** [NON-ENGLISH REDACTED] |
-| `set_pratio` | `PRATIO` | float | **`OPT_SPEC=PRATIO`** [NON-ENGLISH REDACTED] |
-| `set_power` | `POWER` | float + unit | **`OPT_SPEC=POWER`** [NON-ENGLISH REDACTED] |
-| `set_peff` | `PEFF` | float (0–1) | [NON-ENGLISH REDACTED] |
-| `set_meff` | `MEFF` | float (0–1) | [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 1.0 |
+| `set_type` | `TYPE` | See §2.1 | Compression model; must precede `OPT_SPEC` |
+| `set_compr_outlet_spec` | `OPT_SPEC` | See §2.2 | Outlet specification type |
+| `set_compr_outlet_pressure` | `PRES` | float + unit | **`OPT_SPEC=PRES`** outlet pressure |
+|`set_delp` | `DELP` | float + unit | **`OPT_SPEC=DELP`** Time pressure rise |
+| `set_pratio` | `PRATIO` | float | **`OPT_SPEC=PRATIO`** Time pressure ratio |
+| `set_power` | `POWER` | float + unit | Power when **`OPT_SPEC=POWER`** |
+| `set_peff` | `PEFF` | float (0–1) | Variable efficiency |
+|`set_meff` | `MEFF` | float (0–1) | Mechanical efficiency, default 1.0 |
 
 ### 2.1 `TYPE` / Compressor Model
 
-| token | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| token | meaning | when to use |
 |-------|------|----------|
-| `ISENTROPIC` | Isentropic | [NON-ENGLISH REDACTED] |
-| `ASME-POLYTROP` | Polytropic (ASME) | [NON-ENGLISH REDACTED]（tya [NON-ENGLISH REDACTED]） |
-| `GPSA-POLYTROP` | Polytropic (GPSA) | GPSA [NON-ENGLISH REDACTED] |
-| `ASME-ISENTROP` | Isentropic (ASME) | ASME [NON-ENGLISH REDACTED] |
-| `GPSA-ISENTROP` | Isentropic (GPSA) | GPSA [NON-ENGLISH REDACTED] |
-| `INT-POLYTROP` | Polytropic, piecewise integration | [NON-ENGLISH REDACTED] |
-| `POS-DISP` | Positive displacement | [NON-ENGLISH REDACTED] |
-| `INT-POS-DISP` | Positive displacement, piecewise | [NON-ENGLISH REDACTED] |
+| `ISENTROPIC` | Isentropic | Isentropic-efficiency tasks |
+| `ASME-POLYTROP` | Polytropic (ASME) | Common two-stage compression chains (tya question) |
+|`GPSA-POLYTROP` | Polytropic (GPSA) | GPSA polytropic method |
+| `ASME-ISENTROP` | Isentropic (ASME) | ASME Isentropic |
+| `GPSA-ISENTROP` | Isentropic (GPSA) | GPSA isentropic |
+| `INT-POLYTROP` | Polytropic, piecewise integration | Piecewise integration is variable |
+|`POS-DISP` | Positive displacement | Volumetric type |
+| `INT-POS-DISP` | Positive displacement, piecewise | Piecewise displacement |
 
 ### 2.2 `OPT_SPEC` / Outlet Specification
 
-| token | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| token | meaning | subsequent writing |
 |-------|------|----------|
 | `PRES` | Discharge pressure | `set_compr_outlet_pressure` |
 | `DELP` | Pressure increase | `set_delp` |
 | `PRATIO` | Pressure ratio | `set_pratio` |
 | `POWER` | Power required | `set_power` |
-| `USE-CURVE` | Performance curve | [NON-ENGLISH REDACTED] |
+| `USE-CURVE` | Performance curve | Curve-table data |
 
-**[NON-ENGLISH REDACTED] `set_compr_outlet_spec`，[NON-ENGLISH REDACTED]**；[NON-ENGLISH REDACTED] Pump [NON-ENGLISH REDACTED] `OPT_SPEC` [NON-ENGLISH REDACTED] token [NON-ENGLISH REDACTED]。
+**`set_compr_outlet_spec` must be written first, and then the corresponding value**; the same token set as `OPT_SPEC` of Pump.
 
-### 2.1 [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]）
+### 2.1 Two-stage compression chain (typical topology)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| block | write |
 |----|------|
 | C1 | `ASME-POLYTROP`, `OPT_SPEC=PRES`, `set_peff`, `set_meff`, `set_compr_outlet_pressure` |
-| IC (Heater) | `set_compr_temperature` [NON-ENGLISH REDACTED] |
-| C2 | [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `set_compr_outlet_pressure` |
+| IC (Heater) | `set_compr_temperature` interstage cooling |
+| C2 | Same as above, final pressure `set_compr_outlet_pressure` |
 
-Sensitivity [NON-ENGLISH REDACTED] **C1 `PRES`**，[NON-ENGLISH REDACTED] **C1/C2 [NON-ENGLISH REDACTED]**（`WNET`/`BRAKEHP` [NON-ENGLISH REDACTED] BLOCK-VAR）。
+Sensitivity often scans **C1 `PRES`**, responds to **C1/C2 axis power** (`WNET`/`BRAKEHP`, etc. BLOCK-VAR).
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology MCP
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Operations | Parameters |
 |------|------|
 | `create_compr` | `block_name` |
 | `connect_stream` | INLET / OUTLET |
@@ -3858,78 +3858,78 @@ Sensitivity [NON-ENGLISH REDACTED] **C1 `PRES`**，[NON-ENGLISH REDACTED] **C1/C
 
 ---
 
-## 5. [NON-ENGLISH REDACTED]
+## 5. Related Blocks
 
-[NON-ENGLISH REDACTED] → **Heater**（`heater.md`），[NON-ENGLISH REDACTED] Compr [NON-ENGLISH REDACTED]。
+Interstage cooling → **Heater** (`heater.md`), not a Compr variable.
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core setter | 6 |
-| [NON-ENGLISH REDACTED] helper | `configure_compr_pressure_rise` |
+| Recommended helper | `configure_compr_pressure_rise` |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/pipe.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：PIPE（[NON-ENGLISH REDACTED]）
+# Block-Type injection: PIPE (pipeline)
 
-- **[NON-ENGLISH REDACTED]**：`PIPE`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]（schedule）[NON-ENGLISH REDACTED]。
+- **Block Type**: `PIPE`
+- **Aspen semantics**: Pipeline pressure drop/length/pipeline schedule (schedule) sizing.
 
 ---
 
 ## 0. Helper
 
-[NON-ENGLISH REDACTED] **`safe.configure_pipe_schedule_sizing(...)`**。Agent [NON-ENGLISH REDACTED] pipe sizing HTTP operation。
+Use only **`safe.configure_pipe_schedule_sizing(...)`** for pipe schedule sizing. Agent scripts must not call the low-level pipe-sizing HTTP operation directly.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]（CRITICAL）
+## 1. Write sequential gating (CRITICAL)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Steps | Instructions |
 |------|------|
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] `list_block_ports` + `connect_stream` |
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] `configure_pipe_schedule_sizing(...)`（helper [NON-ENGLISH REDACTED]） |
+|Topology | First `list_block_ports` + `connect_stream` |
+| Pipe system specifications | Then `configure_pipe_schedule_sizing(...)` (helper internal guarantee order) |
 
 ---
 
-## 2. Agent [NON-ENGLISH REDACTED]
+## 2. Configuration Surface Available to the Agent
 
-### `configure_pipe_schedule_sizing` — [NON-ENGLISH REDACTED]
+### `configure_pipe_schedule_sizing` — Purpose
 
-Aspen **PIPE + OSCHED（[NON-ENGLISH REDACTED]）** [NON-ENGLISH REDACTED] Input [NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED] schedule [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] → [NON-ENGLISH REDACTED] → [NON-ENGLISH REDACTED] → [NON-ENGLISH REDACTED]。Agent [NON-ENGLISH REDACTED] setter，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED]（chn-9-1 [NON-ENGLISH REDACTED]）。
+Aspen **PIPE + OSCHED (pipe system table sizing)** path has **strict sequence dependence** on the Input variable: you must first switch to the schedule mode, and then write the material → serial number → nominal diameter → pipe length. If the Agent calls the underlying setters step by step, the common results are disordered order, silent loss of writing, or completion stuck (issues such as chn-9-1 have been reproduced).
 
-[NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED]：
+Purpose of this helper:
 
-1. **[NON-ENGLISH REDACTED] OSCHED [NON-ENGLISH REDACTED]**，[NON-ENGLISH REDACTED] agent [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] planner/codegen [NON-ENGLISH REDACTED] HTTP op。
-2. **[NON-ENGLISH REDACTED]** `OPT_DIAM` / `MATERIAL` / `SCHEDULE` / `NOMINAL_DIAM` / `LENGTH`，[NON-ENGLISH REDACTED] `check_ok`、`readbacks`、`summary`，[NON-ENGLISH REDACTED] `summary.json` [NON-ENGLISH REDACTED] validator/score [NON-ENGLISH REDACTED]。
-3. **[NON-ENGLISH REDACTED] skill [NON-ENGLISH REDACTED]**：skill [NON-ENGLISH REDACTED] helper，[NON-ENGLISH REDACTED] agent [NON-ENGLISH REDACTED] setter [NON-ENGLISH REDACTED]。
+1. **Consolidate the entire OSCHED bundle into one call**, with a fixed order on the agent side, so the planner/codegen does not split it into multiple HTTP operations.
+2. **Read back after writing** `OPT_DIAM` / `MATERIAL` / `SCHEDULE` / `NOMINAL_DIAM` / `LENGTH`, output `check_ok`, `readbacks`, `summary`, `summary.json` can be directly used as validator/score evidence.
+3. **Align with skill**: Skill only exposes helpers and no longer guides agents to remember the underlying setter names.
 
-### [NON-ENGLISH REDACTED]
+### Coverage
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Dimension | Covered | Not covered |
 |------|------|--------|
-| [NON-ENGLISH REDACTED] | `PIPE` | `Pipeline`、[NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | `OPT_DIAM=OSCHED`（[NON-ENGLISH REDACTED]） | `OINNER` [NON-ENGLISH REDACTED]、`USER-SUBR` |
-| [NON-ENGLISH REDACTED] | `OPT_DIAM`、`MATERIAL`、`SCHEDULE`、`NOMINAL_DIAM`、`LENGTH` | [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] Input [NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | `material`（`CARBON-STEEL` / `STAINLESS`）；`schedule`（10/20/40/80/120/160）；`nominal_diam`（[NON-ENGLISH REDACTED] `1-IN`）；`length` + `length_unit` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] token |
-| [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] `create_pipe` [NON-ENGLISH REDACTED]） | `create_pipe`、`connect_stream`、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
-| [NON-ENGLISH REDACTED] | chn-9-1：`PIPE` [NON-ENGLISH REDACTED] Sch-40、1 in、25 m | [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] schedule [NON-ENGLISH REDACTED] PIPE [NON-ENGLISH REDACTED] |
+| Block type | `PIPE` | `Pipeline`, other blocks |
+|Sizing mode | `OPT_DIAM=OSCHED` (pipe system table) | `OINNER` inner diameter direct feeding, `USER-SUBR` |
+| Write variables | `OPT_DIAM`, `MATERIAL`, `SCHEDULE`, `NOMINAL_DIAM`, `LENGTH` | Friction correlation, insulation, pipe fittings, other Input page |
+| Parameter surface | `material` (`CARBON-STEEL` / `STAINLESS`); `schedule` (10/20/40/80/120/160); `nominal_diam` (such as `1-IN`); `length` + `length_unit` | Material/schedule/nominal-diameter tokens outside the enumerations above |
+| Topology / Lifecycle | None (assuming block is `create_pipe` and import and export are connected) | `create_pipe`, `connect_stream`, delete/replace block |
+|Typical tasks | chn-9-1: `PIPE` carbon steel Sch-40, 1 in, 25 m | PIPE questions with only inner diameter and no schedule |
 
-### [NON-ENGLISH REDACTED]
+### Entrance List
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Entry point | Description |
 |------|------|
-| `configure_pipe_schedule_sizing` | OSCHED [NON-ENGLISH REDACTED]（agent [NON-ENGLISH REDACTED] safe helper） |
+| `configure_pipe_schedule_sizing` | OSCHED pipe system sizing package (agent side safe helper) |
 
-### [NON-ENGLISH REDACTED] option list
+### Parameter option list
 
-helper [NON-ENGLISH REDACTED]：
+helper signature:
 
 ```python
 safe.configure_pipe_schedule_sizing(
@@ -3944,104 +3944,104 @@ safe.configure_pipe_schedule_sizing(
 )
 ```
 
-| [NON-ENGLISH REDACTED] | Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] |
+| Parameter | Aspen variable | Allowed values / description |
 |------|------------|---------------|
-| `block_name` | — | [NON-ENGLISH REDACTED] `PIPE` [NON-ENGLISH REDACTED] |
+| `block_name` | — | Created and wired `PIPE` block name |
 | `material` | `MATERIAL` | `CARBON-STEEL` \| `STAINLESS` |
 | `schedule` | `SCHEDULE` | `10` \| `20` \| `40` \| `80` \| `120` \| `160` |
-| `nominal_diam` | `NOMINAL_DIAM` | [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED] token，[NON-ENGLISH REDACTED] `-IN` [NON-ENGLISH REDACTED]） |
-| `length` | `LENGTH` | [NON-ENGLISH REDACTED] |
-| `length_unit` | `LENGTH` [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] `meter`；[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] |
+|`nominal_diam` | `NOMINAL_DIAM` | See the table below (nominal diameter token, must have the suffix `-IN`) |
+| `length` | `LENGTH` | Positive floating point number |
+| `length_unit` | `LENGTH` unit | Commonly `meter`; any unit consistent with the Aspen dimension is acceptable |
 
-### 2.1 [NON-ENGLISH REDACTED] `OPT_DIAM` [NON-ENGLISH REDACTED]
+### 2.1 Required geometry input and `OPT_DIAM` branch
 
-`PIPE` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] schedule token [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]
-`Data\Blocks\<BLK>\Input\LENGTH`；[NON-ENGLISH REDACTED] `PI` [NON-ENGLISH REDACTED]
-`Data\Blocks\PI\Input\LENGTH`。
+The tube length of `PIPE` is a geometric input and should not be replaced by topology or schedule tokens. The direct tree path is
+`Data\Blocks\<BLK>\Input\LENGTH`; for example, the `PI` block in this type of process is
+`Data\Blocks\PI\Input\LENGTH`.
 
-[NON-ENGLISH REDACTED] `OPT_DIAM`：
+The inside-diameter input depends on `OPT_DIAM`:
 
-| `OPT_DIAM` [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| `OPT_DIAM` Path | Required geometry/sizing input | Description |
 |-----------------|-------------------|------|
-| `OSCHED` schedule [NON-ENGLISH REDACTED] | `MATERIAL`、`SCHEDULE`、`NOMINAL_DIAM`、`LENGTH` | [NON-ENGLISH REDACTED] `configure_pipe_schedule_sizing(...)` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `IN_DIAM` |
-| direct inner-diameter / `OINNER` [NON-ENGLISH REDACTED] | `IN_DIAM`、`LENGTH` | `IN_DIAM` [NON-ENGLISH REDACTED] `Data\Blocks\<BLK>\Input\IN_DIAM`，[NON-ENGLISH REDACTED] `Data\Blocks\PI\Input\IN_DIAM` |
+|`OSCHED` schedule mode | `MATERIAL`, `SCHEDULE`, `NOMINAL_DIAM`, `LENGTH` | Write the whole package through `configure_pipe_schedule_sizing(...)`; do not require additional `IN_DIAM` |
+| direct inner-diameter / `OINNER` mode | `IN_DIAM`, `LENGTH` | `IN_DIAM` direct path is `Data\Blocks\<BLK>\Input\IN_DIAM`, such as `Data\Blocks\PI\Input\IN_DIAM` |
 
-[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED] UI Next [NON-ENGLISH REDACTED] pipe length，[NON-ENGLISH REDACTED] `LENGTH`；[NON-ENGLISH REDACTED]
-`OPT_DIAM` [NON-ENGLISH REDACTED] direct inner-diameter [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `IN_DIAM` [NON-ENGLISH REDACTED]。
+If completion or UI Next points to pipe length, populate `LENGTH` first; only after confirming
+When `OPT_DIAM` is in direct inner-diameter mode, `IN_DIAM` is regarded as a missing required field.
 
-**`nominal_diam` [NON-ENGLISH REDACTED] option list：**
+**`nominal_diam` complete option list:**
 
 `0.25-IN`, `0.375-IN`, `0.5-IN`, `0.75-IN`, `1-IN`, `1.5-IN`, `2-IN`, `3-IN`, `4-IN`, `5-IN`, `6-IN`, `8-IN`, `10-IN`, `12-IN`, `14-IN`, `16-IN`, `18-IN`, `20-IN`, `24-IN`, `30-IN`, `36-IN`, `42-IN`, `48-IN`, `54-IN`, `60-IN`, `66-IN`, `72-IN`, `78-IN`, `84-IN`, `90-IN`, `96-IN`
 
 
-helper [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]）：`OPT_DIAM=OSCHED` → `MATERIAL` → `SCHEDULE` → `NOMINAL_DIAM` → `LENGTH`。
+Helper internal fixed writing order (read-only, do not reproduce in scripts): `OPT_DIAM=OSCHED` → `MATERIAL` → `SCHEDULE` → `NOMINAL_DIAM` → `LENGTH`.
 
-[NON-ENGLISH REDACTED] skill `aspen-pipe-material-and-schedule`。
+See the `aspen-pipe-material-and-schedule` skill for more examples.
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology and other MCPs
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Operation | Parameters | Description |
 |------|------|------|
-| `create_pipe` | `block_name` | [NON-ENGLISH REDACTED] PIPE [NON-ENGLISH REDACTED] |
-| `create_material_stream` | `stream_name` | [NON-ENGLISH REDACTED] |
-| `list_block_ports` | `block_name` | [NON-ENGLISH REDACTED] |
-| `connect_stream` | `block_name`, `stream_name`, `port_name` | [NON-ENGLISH REDACTED] Input |
-| `check_block_completion` | `block_name` | [NON-ENGLISH REDACTED] completion |
-| `check_next_completion_status` | — | run [NON-ENGLISH REDACTED] |
-| `engine_run` | — | [NON-ENGLISH REDACTED] |
+| `create_pipe` | `block_name` | Create PIPE block |
+| `create_material_stream` | `stream_name` | Create flow streams on demand |
+| `list_block_ports` | `block_name` | Look up port names |
+|`connect_stream` | `block_name`, `stream_name`, `port_name` | Write Input after the topology is completed |
+| `check_block_completion` | `block_name` | block completion |
+|`check_next_completion_status` | — | at least once before run |
+| `engine_run` | — | Simulation |
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 4. Read back the results
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED] | REP [NON-ENGLISH REDACTED] `OPT-DIAM`、`MATERIAL`、`SCHEDULE`、`NOMINAL-DIAM`、`LENGTH`；[NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED] `readbacks` / `check_ok` |
-| [NON-ENGLISH REDACTED] | REP [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] |
+|Block input | `OPT-DIAM`, `MATERIAL`, `SCHEDULE`, `NOMINAL-DIAM`, `LENGTH` in REP; or `readbacks` / `check_ok` returned by helper |
+| BLOCK OUTPUT | REP DROP/OUTLET STATUS |
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
-| Agent [NON-ENGLISH REDACTED] | `configure_pipe_schedule_sizing` |
-| [NON-ENGLISH REDACTED] skill | `aspen-pipe-material-and-schedule` |
+| Agent configuration entry point | `configure_pipe_schedule_sizing` |
+| Recommended skill | `aspen-pipe-material-and-schedule` |
 
 ```
 
 ### FILE: docs/hardcoded_script_plan/block_type_inject/valve.md
 Reason: block-family Aspen surface selected from task profile
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：VALVE（[NON-ENGLISH REDACTED]）
+# Block-Type injection: VALVE (valve)
 
-- **[NON-ENGLISH REDACTED]**：`VALVE`
-- **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] vendor preset [NON-ENGLISH REDACTED]。
+- **Block Type**: `VALVE`
+- **Aspen semantics**: pressure-drop/outlet-pressure specification; if the task provides a manufacturer/series/size, use a vendor preset to write all four fields in one operation.
 
 ---
 
-## 0. Helper（`script_agent_exp.safe_aspen_calls`）
+## 0. Helper(`script_agent_exp.safe_aspen_calls`)
 
-| Helper | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Helper | Main parameters | Purpose |
 |--------|----------|------|
-| `configure_valve_pressure_changer_outlet(...)` | `block_name`, `outlet_pressure`, `pressure_unit` | **[NON-ENGLISH REDACTED] / pressure changer**：`MODE=ADIAB-FLASH` → `OPT_DESIGN=P-OUT` → `P_OUT+unit` |
-| `configure_valve_pressure_changer_pressure_drop(...)` | `block_name`, `pressure_drop`, `pressure_unit` | **pressure changer + [NON-ENGLISH REDACTED]**：`MODE=ADIAB-FLASH` → `OPT_DESIGN=P-DROP` → `P_DROP+unit` |
-| `configure_valve_outlet_pressure_design(...)` | `block_name`, `outlet_pressure`, `pressure_unit`, [NON-ENGLISH REDACTED] `vendor_preset_id` | **[NON-ENGLISH REDACTED]**：`MODE=SET-PRESSURE` → `OPT_DESIGN=P-OUT` → `P_OUT+unit`；[NON-ENGLISH REDACTED] vendor [NON-ENGLISH REDACTED] `vendor_preset_id` |
-| `list_valve_vendor_presets(client)` | — | [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `(VAL_TYPE, MFGR, SERIES, SIZE)` [NON-ENGLISH REDACTED] |
-| `apply_valve_vendor_preset(client, block_name=..., preset_id=...)` | `preset_id` | **[NON-ENGLISH REDACTED]** agent [NON-ENGLISH REDACTED] commercial geometry [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] |
+| `configure_valve_pressure_changer_outlet(...)` | `block_name`, `outlet_pressure`, `pressure_unit` | **Interval pressure reduction/pressure changer**: `MODE=ADIAB-FLASH` → `OPT_DESIGN=P-OUT` → `P_OUT+unit` |
+|`configure_valve_pressure_changer_pressure_drop(...)` | `block_name`, `pressure_drop`, `pressure_unit` | **pressure changer + voltage drop specification**: `MODE=ADIAB-FLASH` → `OPT_DESIGN=P-DROP` → `P_DROP+unit` |
+| `configure_valve_outlet_pressure_design(...)` | `block_name`, `outlet_pressure`, `pressure_unit`, optional `vendor_preset_id` | **Valve coefficient design**: `MODE=SET-PRESSURE` → `OPT_DESIGN=P-OUT` → `P_OUT+unit`; when the task has vendor specifications, pass `vendor_preset_id` |
+| `list_valve_vendor_presets(client)` | — | Read-only: returns a table of stable `(VAL_TYPE, MFGR, SERIES, SIZE)` combinations |
+| `apply_valve_vendor_preset(client, block_name=..., preset_id=...)` | `preset_id` | **Unique** Agent writes the path to commercial geometry; internally writes four fields in order and reads them back |
 
-**[NON-ENGLISH REDACTED] helper，[NON-ENGLISH REDACTED] `set_mode` / `set_opt_design` [NON-ENGLISH REDACTED] `P_OUT` [NON-ENGLISH REDACTED] `unit`。**
+** Prioritize the use of helpers when generating scripts. Do not adjust `set_mode` / `set_opt_design` naked and then miss `P_OUT` or `unit`. **
 
-**Pressure changer**（GUI Calculation type = *Adiabatic flash for specified outlet pressure*）：`MODE=ADIAB-FLASH` [NON-ENGLISH REDACTED]，**Pressure specification** [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]+[NON-ENGLISH REDACTED]：
+**Pressure changer** (GUI Calculation type = *Adiabatic flash for specified outlet pressure*): `MODE=ADIAB-FLASH` After selection, **Pressure specification** choose one of the two, and the corresponding value + unit must be written:
 
-| GUI [NON-ENGLISH REDACTED] | `OPT_DESIGN` | [NON-ENGLISH REDACTED] leaf | Helper |
+| GUI option | `OPT_DESIGN` | Required leaf | Helper |
 |----------|--------------|-----------|--------|
 | Outlet pressure | `P-OUT` | `P_OUT + unit` | `configure_valve_pressure_changer_outlet` |
 | Pressure drop | `P-DROP` | `P_DROP + unit` | `configure_valve_pressure_changer_pressure_drop` |
 
-[NON-ENGLISH REDACTED] — [NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED]**（[NON-ENGLISH REDACTED] VA1–VA4 [NON-ENGLISH REDACTED]）：
+Inter-effect pressure reduction - the question is given for **Absolute outlet pressure** (common in multi-effect evaporation VA1–VA4):
 
 ```python
 outlet_pressure_value = ...  # effect pressure basis from task/table
@@ -4052,7 +4052,7 @@ client.invoke("configure_valve_pressure_changer_outlet",
 )
 ```
 
-[NON-ENGLISH REDACTED] — [NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] / ΔP**：
+Inter-effect pressure drop - The problem is valve pressure drop / ΔP**:
 
 ```python
 delta_p_value = ...  # pressure drop from task
@@ -4063,9 +4063,9 @@ client.invoke("configure_valve_pressure_changer_pressure_drop",
 )
 ```
 
-**[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] `set_val_type` / `set_mfgr` / `set_series` / `set_size`：[NON-ENGLISH REDACTED] script-agent **core MCP [NON-ENGLISH REDACTED]**（`main_core.py`），[NON-ENGLISH REDACTED] `apply_valve_vendor_preset` [NON-ENGLISH REDACTED]。
+**Forbidden** Calls to `set_val_type` / `set_mfgr` / `set_series` / `set_size` in build scripts: they are not in the script-agent **core MCP side** (`main_core.py`), only as internal implementations of `apply_valve_vendor_preset`.
 
-[NON-ENGLISH REDACTED] **design**（[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] vendor [NON-ENGLISH REDACTED]，`MODE=SET-PRESSURE`）：
+Valve-coefficient **design** (task provides only outlet pressure and no vendor text, `MODE=SET-PRESSURE`):
 
 ```python
 outlet_pressure_value = ...  # numeric value from the task
@@ -4076,7 +4076,7 @@ client.invoke("configure_valve_outlet_pressure_design",
 )
 ```
 
-[NON-ENGLISH REDACTED] vendor / series / characteristic / nominal size [NON-ENGLISH REDACTED]，**[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] §2.4 catalog [NON-ENGLISH REDACTED] `preset_id`，[NON-ENGLISH REDACTED]：
+When the task is also given vendor / series / characteristic / nominal size, you must select the matching `preset_id` from the §2.4 catalog, do not just write the outlet pressure:
 
 ```python
 outlet_pressure_value = ...  # numeric value from the task
@@ -4089,7 +4089,7 @@ client.invoke("configure_valve_outlet_pressure_design",
 )
 ```
 
-[NON-ENGLISH REDACTED] design [NON-ENGLISH REDACTED] preset：
+Or design first and then preset separately:
 
 ```python
 client.invoke("apply_valve_vendor_preset",
@@ -4098,91 +4098,91 @@ client.invoke("apply_valve_vendor_preset",
 )
 ```
 
-[NON-ENGLISH REDACTED]-only [NON-ENGLISH REDACTED] vendor preset；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、nominal size [NON-ENGLISH REDACTED] commercial geometry [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `vendor_preset_id` [NON-ENGLISH REDACTED] `safe.apply_valve_vendor_preset(...)`。
+Pressure-only cases do not need to write vendor preset; as long as the task has commercial geometry semantics such as manufacturer, series, traffic characteristics, caliber, nominal size, etc., `vendor_preset_id` must be added or `safe.apply_valve_vendor_preset(...)` must be called separately.
 
 ---
 
-## 1. [NON-ENGLISH REDACTED]（CRITICAL）
+## 1. Write sequential gating (CRITICAL)
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| step | must precede | description |
 |------|----------|------|
-| [NON-ENGLISH REDACTED] | Input | [NON-ENGLISH REDACTED] `list_block_ports` + `connect_stream`，[NON-ENGLISH REDACTED] |
-| `MODE` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `MODE` [NON-ENGLISH REDACTED] Valve [NON-ENGLISH REDACTED] calculation type gate，[NON-ENGLISH REDACTED] |
-| `OPT_DESIGN` | `P_OUT` / `P_DROP` | **`P-OUT`** → `set_p_out(..., unit=...)`；**`P-DROP`** → `set_p_drop(..., unit=...)` |
-| [NON-ENGLISH REDACTED] + unit | Fill / run | [NON-ENGLISH REDACTED] `OPT_DESIGN` [NON-ENGLISH REDACTED] leaf [NON-ENGLISH REDACTED] **unit**；[NON-ENGLISH REDACTED] unit [NON-ENGLISH REDACTED] TypeError |
-| commercial geometry | completion [NON-ENGLISH REDACTED] Manufacturer/Series/Size | **[NON-ENGLISH REDACTED]** `list_valve_vendor_presets` → `apply_valve_vendor_preset`；[NON-ENGLISH REDACTED] |
+| Topology | Input | Run `list_block_ports` + `connect_stream` before writing block variables |
+| `MODE` | Pressure/coefficient specifications | `MODE` is Valve’s calculation type gate, the calculation type must be determined first |
+| `OPT_DESIGN` | `P_OUT` / `P_DROP` | **`P-OUT`** → `set_p_out(..., unit=...)`;**`P-DROP`** → `set_p_drop(..., unit=...)` |
+|Pressure value + unit | Fill / run | The leaf matching `OPT_DESIGN` must have **unit**; missing unit will cause TypeError |
+| commercial geometry | completion required Manufacturer/Series/Size | **only** `list_valve_vendor_presets` → `apply_valve_vendor_preset`; disallowing loose four fields |
 
-**Commercial valve geometry [NON-ENGLISH REDACTED]。** Aspen [NON-ENGLISH REDACTED] option list；`apply_valve_vendor_preset` [NON-ENGLISH REDACTED] `VAL_TYPE → MFGR → SERIES → SIZE` [NON-ENGLISH REDACTED]。
+**Commercial valve geometry is a strict gate.** Aspen refreshes each subsequent option list based on the preceding drop-down; `apply_valve_vendor_preset` encapsulates the `VAL_TYPE → MFGR → SERIES → SIZE` sequence.
 
 ---
 
 ## 2. Core MCP / HTTP Operations
 
-| MCP operation | Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| MCP operation | Aspen variable | Allowed values / parameters | Description |
 |---------------|------------|---------------|------|
-| `set_mode` | `MODE` | ADIAB-FLASH / SET-PRESSURE / CALC-PRESSURE | **Calculation type gate**。[NON-ENGLISH REDACTED] §2.1；[NON-ENGLISH REDACTED] pressure/design/rating/vendor [NON-ENGLISH REDACTED]。 |
-| `set_opt_design` | `OPT_DESIGN` | `P-OUT` / `P-DROP` | GUI **Pressure specification**；[NON-ENGLISH REDACTED] §2.2 |
+| `set_mode` | `MODE` | ADIAB-FLASH / SET-PRESSURE / CALC-PRESSURE | **Calculation type gate**. See §2.1; must precede pressure/design/rating/vendor specification. |
+|`set_opt_design` | `OPT_DESIGN` | `P-OUT` / `P-DROP` | GUI **Pressure specification**; see §2.2 |
 | `set_p_out` | `P_OUT` | **`value` + `unit`** | **`OPT_DESIGN=P-OUT`** → `\Data\Blocks\<ID>\Input\P_OUT` |
 | `set_p_drop` | `P_DROP` | **`value` + `unit`** | **`OPT_DESIGN=P-DROP`** → `\Data\Blocks\<ID>\Input\P_DROP` |
-| `set_check_choke` | `CHECK_CHOKE` | NO / YES | [NON-ENGLISH REDACTED] choking [NON-ENGLISH REDACTED] `NO`。 |
-| `set_pdrp_fac` | `PDRP_FAC` | float | [NON-ENGLISH REDACTED] rating factor；[NON-ENGLISH REDACTED]。 |
-| `set_prec_fac` | `PREC_FAC` | float | [NON-ENGLISH REDACTED] rating factor；[NON-ENGLISH REDACTED]。 |
-| `list_valve_vendor_presets` | — | read-only | [NON-ENGLISH REDACTED] preset [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `safe.list_valve_vendor_presets`。 |
-| `apply_valve_vendor_preset` | `VAL_TYPE/MFGR/SERIES/SIZE` | `preset_id` | **[NON-ENGLISH REDACTED]** commercial geometry [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `safe.apply_valve_vendor_preset`。 |
+| `set_check_choke` | `CHECK_CHOKE` | NO / YES | Usually `NO` when the task does not discuss choking. |
+| `set_pdrp_fac` | `PDRP_FAC` | float | Optional rating factor; write it only when explicitly provided by the task or an existing baseline. |
+| `set_prec_fac` | `PREC_FAC` | float | Optional rating factor; only written if the task or existing benchmark is explicitly given. |
+|`list_valve_vendor_presets` | — | read-only | Returns the stable preset table; the generated script takes precedence `safe.list_valve_vendor_presets`. |
+| `apply_valve_vendor_preset` | `VAL_TYPE/MFGR/SERIES/SIZE` | `preset_id` | **only** commercial geometry writing surface; generation script takes precedence `safe.apply_valve_vendor_preset`. |
 
-`vendor_preset_id` [NON-ENGLISH REDACTED] `PDRP_FAC` / `PREC_FAC` [NON-ENGLISH REDACTED]：Aspen [NON-ENGLISH REDACTED] commercial
-Library Valve [NON-ENGLISH REDACTED] pressure/recovery factors [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]
-`configure_valve_outlet_pressure_design(..., vendor_preset_id=...)` [NON-ENGLISH REDACTED]
-`set_pdrp_fac` / `set_prec_fac`；helper [NON-ENGLISH REDACTED] rating factors [NON-ENGLISH REDACTED]
-`rating_factors_skipped_due_to_vendor_preset`。
+`vendor_preset_id` is mutually exclusive with `PDRP_FAC` / `PREC_FAC`: Aspen treats commercial
+Library Valve geometry and pressure/recovery factors are treated as alternative inputs. pass
+Do not write `configure_valve_outlet_pressure_design(..., vendor_preset_id=...)`
+`set_pdrp_fac` / `set_prec_fac`; helper will skip default rating factors and log
+`rating_factors_skipped_due_to_vendor_preset`.
 
 ### 2.1 `MODE` / Calculation Type
 
-`Data\Blocks\<B>\Input\MODE` [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] **Calculation type**，[NON-ENGLISH REDACTED] Valve [NON-ENGLISH REDACTED] function gate：
+`Data\Blocks\<B>\Input\MODE` corresponds to **Calculation type** in the GUI and is the Valve's most important function gate:
 
-| `MODE` [NON-ENGLISH REDACTED] | GUI [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| `MODE` value | GUI copy | When to use | Subsequent specifications |
 | --- | --- | --- | --- |
-| `ADIAB-FLASH` | Adiabatic flash for specified outlet pressure (pressure changer) | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] valve coefficient | [NON-ENGLISH REDACTED] `OPT_DESIGN=P-OUT` + `P_OUT` |
-| `SET-PRESSURE` | Calculate valve flow coefficient for specified outlet pressure (design) | [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `OPT_DESIGN=P-OUT` + `set_p_out(..., unit=...)` + [NON-ENGLISH REDACTED] vendor [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
-| `CALC-PRESSURE` | Calculate outlet pressure for specified valve (rating) | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/flow coefficient，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] rating [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] vendor geometry、`OPT_RATING`、`VAL_POSN` [NON-ENGLISH REDACTED] `FLO_COEF` |
+|`ADIAB-FLASH` | Adiabatic flash for specified outlet pressure (pressure changer) | Only need to do adiabatic flash/pressure change according to the given outlet pressure, no need to calculate valve coefficient | Usually matched with `OPT_DESIGN=P-OUT` + `P_OUT` |
+| `SET-PRESSURE` | Calculate valve flow coefficient for specified outlet pressure (design) | The outlet pressure is known, and Aspen is expected to calculate the valve flow coefficient/design parameters | `OPT_DESIGN=P-OUT` + `set_p_out(..., unit=...)` + When the task has vendor `apply_valve_vendor_preset` |
+| `CALC-PRESSURE` | Calculate outlet pressure for specified valve (rating) | Given valve/opening/flow coefficient, let Aspen back-calculate outlet pressure | Usually follows the rating route, together with vendor geometry, `OPT_RATING`, `VAL_POSN`, or `FLO_COEF` |
 
-`MODE` [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] design [NON-ENGLISH REDACTED] rating，Aspen [NON-ENGLISH REDACTED] valve vendor/size/position；[NON-ENGLISH REDACTED] rating [NON-ENGLISH REDACTED] pressure changer，[NON-ENGLISH REDACTED]。
+`MODE` Wrong writing will change subsequent required fields: for example, if the design task is mistakenly set to rating, Aspen will start to require valve vendor/size/position; if the rating task is mistakenly set to pressure changer, the real valve specifications will not be used.
 
-### 2.2 `OPT_DESIGN` / Pressure Specification（option + value）
+### 2.2 `OPT_DESIGN` / Pressure Specification(option + value)
 
-GUI [NON-ENGLISH REDACTED] **Pressure specification** [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED] radio + [NON-ENGLISH REDACTED]** [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] option，[NON-ENGLISH REDACTED] leaf。
+The GUI panel **Pressure specification** is **choose one of two radio + numerical value** structure: select option first, and then write the corresponding leaf.
 
-| `OPT_DESIGN` | GUI [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] tree leaf | MCP [NON-ENGLISH REDACTED] |
+| `OPT_DESIGN` | GUI options | Required tree leaf | MCP writing method |
 |--------------|---------|---------------|----------|
-| `P-OUT` | Outlet pressure | `\Data\Blocks\<ID>\Input\P_OUT` | `set_opt_design(..., value="P-OUT")` [NON-ENGLISH REDACTED] `set_p_out(..., value=..., unit=...)` |
-| `P-DROP` | Pressure drop | `\Data\Blocks\<ID>\Input\P_DROP` | `set_opt_design(..., value="P-DROP")` [NON-ENGLISH REDACTED] `set_p_drop(..., value=..., unit=...)` |
+| `P-OUT` | Outlet pressure | `\Data\Blocks\<ID>\Input\P_OUT` | Call `set_opt_design(..., value="P-OUT")`, then `set_p_out(..., value=..., unit=...)` |
+| `P-DROP` | Pressure drop | `\Data\Blocks\<ID>\Input\P_DROP` | `set_opt_design(..., value="P-DROP")` then `set_p_drop(..., value=..., unit=...)` |
 
-**[NON-ENGLISH REDACTED]**：
+**rule**:
 
-- [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED]** → `P-OUT` + `P_OUT`（`configure_valve_outlet_pressure_design` [NON-ENGLISH REDACTED]）。
-- [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED]**（inlet − outlet）→ `P-DROP` + `P_DROP`；**[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] `P-DROP` [NON-ENGLISH REDACTED] `P_OUT`。
-- [NON-ENGLISH REDACTED] **unit**（[NON-ENGLISH REDACTED] `bar`、`MPa`）；[NON-ENGLISH REDACTED] float [NON-ENGLISH REDACTED] TypeError。
+- The question is **Outlet Pressure** → `P-OUT` + `P_OUT` (`configure_valve_outlet_pressure_design` defaults to this path).
+- If the task provides **valve pressure drop** (inlet − outlet) → use `P-DROP` + `P_DROP`; **do not** write `P_OUT` in `P-DROP` mode.
+- Both modes must carry **unit** (such as `bar`, `MPa`); passing only float will cause TypeError.
 
-### 2.3 Rating [NON-ENGLISH REDACTED] enum（`MODE=CALC-PRESSURE` [NON-ENGLISH REDACTED]）
+### 2.3 Rating route enum (when `MODE=CALC-PRESSURE`)
 
-| MCP / [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] token | [NON-ENGLISH REDACTED] |
+| MCP / variable | legal token | meaning |
 |------------|-----------|------|
-| `set_opt_rating` / `OPT_RATING` | `VAL-POSN` \| `FLOW-COEF` | Rating [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] |
-| `set_char_eq` / `CHAR_EQ` | `LINEAR` \| `PARABOLIC` \| `HYPERBOLIC` \| `SQUARE-ROOT` \| `QUICK-OPENING` \| `EQUAL-PERCENTAGE` | [NON-ENGLISH REDACTED] |
-| `set_opt_min_pres` / `OPT_MIN_PRES` | `GLOBAL` \| `SPECIFY` \| `CHOKING` | Rating [NON-ENGLISH REDACTED] |
+| `set_opt_rating` / `OPT_RATING` | `VAL-POSN` \| `FLOW-COEF` | Rating operating specification: by opening or flow coefficient |
+| `set_char_eq` / `CHAR_EQ` | `LINEAR` \| `PARABOLIC` \| `HYPERBOLIC` \| `SQUARE-ROOT` \| `QUICK-OPENING` \| `EQUAL-PERCENTAGE` | Valve characteristic curve |
+|`set_opt_min_pres` / `OPT_MIN_PRES` | `GLOBAL` \| `SPECIFY` \| `CHOKING` | Rating minimum outlet pressure specification |
 
-### 2.4 Commercial Geometry Presets（[NON-ENGLISH REDACTED]）
+### 2.4 Commercial Geometry Presets (read-only comparison table)
 
-[NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED]** [NON-ENGLISH REDACTED] agent [NON-ENGLISH REDACTED] MCP [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `preset_id`：
+The four fields **must not** be written individually by the agent through MCP; the table below is only for mapping task text to `preset_id`:
 
-| [NON-ENGLISH REDACTED] | Tree path [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Field | Tree path example | Setting method |
 | --- | --- | --- |
-| `VAL_TYPE` | `Data\Blocks\B1\Input\VAL_TYPE` | [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
-| `MFGR` | `Data\Blocks\B1\Input\MFGR` | [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
-| `SERIES` | `Data\Blocks\B1\Input\SERIES` | [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
-| `SIZE` | `Data\Blocks\B1\Input\SIZE` | [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
+|`VAL_TYPE` | `Data\Blocks\B1\Input\VAL_TYPE` | Only by `apply_valve_vendor_preset` |
+| `MFGR` | `Data\Blocks\B1\Input\MFGR` | Only via `apply_valve_vendor_preset` |
+| `SERIES` | `Data\Blocks\B1\Input\SERIES` | Only through `apply_valve_vendor_preset` |
+| `SIZE` | `Data\Blocks\B1\Input\SIZE` | Only by `apply_valve_vendor_preset` |
 
-[NON-ENGLISH REDACTED]（`data/code/set_valve_variables/set_valve_variables.py` → `_VALVE_VENDOR_PRESETS`）：
+Known stable combination (`data/code/set_valve_variables/set_valve_variables.py` → `_VALVE_VENDOR_PRESETS`):
 
 | `preset_id` | `VAL_TYPE` | `MFGR` | `SERIES` | `SIZE` |
 | --- | --- | --- | --- | --- |
@@ -4193,66 +4193,66 @@ GUI [NON-ENGLISH REDACTED] **Pressure specification** [NON-ENGLISH REDACTED] **[
 | `neles_globe_v810_equal_pct_1p5in` | `GLOBE` | `NELES-JAMESBURY` | `V810_EQUAL_PERCENT_FLOW` | `1.5-IN` |
 | `neles_globe_v810_linear_1p5in` | `GLOBE` | `NELES-JAMESBURY` | `V810_LINEAR_FLOW` | `1.5-IN` |
 
-[NON-ENGLISH REDACTED] → preset [NON-ENGLISH REDACTED]：
+Task text → preset mapping example:
 
-| [NON-ENGLISH REDACTED] | `preset_id` |
+| Task keyword | `preset_id` |
 | --- | --- |
 | V810 equal percent flow globe 1.5 in | `neles_globe_v810_equal_pct_1p5in` |
 | V810 linear flow globe 1.5 in | `neles_globe_v810_linear_1p5in` |
 | V500 equal percent globe 1.5 in | `neles_globe_v500_equal_pct_1p5in` |
 
-Agent [NON-ENGLISH REDACTED]：
+Agent must:
 
-- **Design [NON-ENGLISH REDACTED]**：`configure_valve_outlet_pressure_design(...)`；[NON-ENGLISH REDACTED] `unit`。
-- **[NON-ENGLISH REDACTED] vendor/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED] `vendor_preset_id`，[NON-ENGLISH REDACTED] `apply_valve_vendor_preset`；**[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] `set_val_type` / `set_mfgr` / `set_series` / `set_size`。
-- completion [NON-ENGLISH REDACTED] Manufacturer/Series/Size [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `apply_valve_vendor_preset`，[NON-ENGLISH REDACTED] `MODE` [NON-ENGLISH REDACTED] `CALC-PRESSURE`。
+- **Design outlet pressure**: `configure_valve_outlet_pressure_design(...)`; do not leak `unit`.
+- **Task contains vendor/series/caliber**: The same helper passes `vendor_preset_id`, or `apply_valve_vendor_preset`; **Do not** nakedly adjust `set_val_type` / `set_mfgr` / `set_series` / `set_size`.
+- If completion still reports missing Manufacturer/Series/Size: first confirm that `apply_valve_vendor_preset` was called, then check whether `MODE` was mistakenly set to `CALC-PRESSURE`.
 
 ---
 
-## 3. [NON-ENGLISH REDACTED] MCP
+## 3. Topology and other MCPs
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Operation | Parameters | Description |
 |------|------|------|
-| `create_valve` | `block_name` | [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] |
-| `create_material_stream` | `stream_name` | [NON-ENGLISH REDACTED] |
-| `list_block_ports` | `block_name` | [NON-ENGLISH REDACTED] |
-| `connect_stream` | `block_name`, `stream_name`, `port_name` | [NON-ENGLISH REDACTED] Input |
-| `check_block_completion` | `block_name` | [NON-ENGLISH REDACTED] completion |
-| `check_next_completion_status` | — | run [NON-ENGLISH REDACTED] |
-| `engine_run` | — | [NON-ENGLISH REDACTED] |
+| `create_valve` | `block_name` | CREATE VALVE BLOCK |
+| `create_material_stream` | `stream_name` | Create flow streams on demand |
+| `list_block_ports` | `block_name` | Look up port names |
+|`connect_stream` | `block_name`, `stream_name`, `port_name` | Write Input after the topology is completed |
+| `check_block_completion` | `block_name` | block completion |
+|`check_next_completion_status` | — | at least once before run |
+| `engine_run` | — | Simulation |
 
 ---
 
-## 4. [NON-ENGLISH REDACTED]
+## 4. Read back the results
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Objective | Method |
 |------|------|
-| [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | REP、helper readback payload |
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] Input [NON-ENGLISH REDACTED] null；`P_OUT` [NON-ENGLISH REDACTED] `unit` [NON-ENGLISH REDACTED] |
-| vendor [NON-ENGLISH REDACTED] | `apply_valve_vendor_preset` [NON-ENGLISH REDACTED] `readback` [NON-ENGLISH REDACTED] helper readback on `VAL_TYPE/MFGR/SERIES/SIZE` |
+| chunk/analysis output | REP, helper readback payload |
+|Input acceptance | The key Input variable is not null; the `P_OUT` read response is consistent with `unit` |
+| vendor four fields | `apply_valve_vendor_preset`-returned `readback` or helper readback on `VAL_TYPE/MFGR/SERIES/SIZE` |
 
 ---
 
-## 5. [NON-ENGLISH REDACTED]
+## 5. Common Failures
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+| Symptoms | Root Cause | Fix |
 |------|------|------|
-| completion [NON-ENGLISH REDACTED] Valve Operation，Outlet pressure [NON-ENGLISH REDACTED] | `MODE=ADIAB-FLASH` + `P-OUT` [NON-ENGLISH REDACTED] `P_OUT` | `configure_valve_pressure_changer_outlet(...)` |
-| completion [NON-ENGLISH REDACTED] Valve Operation，Pressure drop [NON-ENGLISH REDACTED] | `MODE=ADIAB-FLASH` + `P-DROP` [NON-ENGLISH REDACTED] `P_DROP` | `configure_valve_pressure_changer_pressure_drop(...)` |
-| `set_p_out() missing 1 required positional argument: 'unit'` | [NON-ENGLISH REDACTED] `set_p_out` [NON-ENGLISH REDACTED] value | [NON-ENGLISH REDACTED] `configure_valve_pressure_changer_outlet` / `configure_valve_outlet_pressure_design` [NON-ENGLISH REDACTED] `unit="MPa"` |
-| completion [NON-ENGLISH REDACTED] Manufacturer/Series/Size | [NON-ENGLISH REDACTED] vendor [NON-ENGLISH REDACTED] preset | [NON-ENGLISH REDACTED] §2.4 [NON-ENGLISH REDACTED] `preset_id`，[NON-ENGLISH REDACTED] `vendor_preset_id` [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
-| completion [NON-ENGLISH REDACTED] Manufacturer/Series/Size | `MODE=CALC-PRESSURE` [NON-ENGLISH REDACTED] rating | [NON-ENGLISH REDACTED] `SET-PRESSURE` + `P-OUT`，[NON-ENGLISH REDACTED] vendor preset |
-| vendor [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | **[NON-ENGLISH REDACTED]** `apply_valve_vendor_preset(preset_id=...)` |
+|completion falls in Valve Operation, Outlet pressure is empty | `MODE=ADIAB-FLASH` + `P-OUT` but `P_OUT` | `configure_valve_pressure_changer_outlet(...)` |
+| completion falls in Valve Operation, Pressure drop is empty | `MODE=ADIAB-FLASH` + `P-DROP` but `P_DROP` is not written | `configure_valve_pressure_changer_pressure_drop(...)` |
+| `set_p_out() missing 1 required positional argument: 'unit'` | Bare call to `set_p_out` passes only value | Use `configure_valve_pressure_changer_outlet` / `configure_valve_outlet_pressure_design`, or add `unit="MPa"` |
+| completion requires Manufacturer/Series/Size | The task has vendor but not preset | Press §2.4 to select `preset_id`, pass `vendor_preset_id` or call `apply_valve_vendor_preset` |
+|completion requirement Manufacturer/Series/Size | `MODE=CALC-PRESSURE` entered rating by mistake | Change back to `SET-PRESSURE` + `P-OUT`, and add vendor preset |
+| The vendor field cannot be written | Four fields are written randomly or in the wrong order | **Only** `apply_valve_vendor_preset(preset_id=...)` |
 
 ---
 
-## 9. [NON-ENGLISH REDACTED]
+## 9. Summary
 
-| [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
+|Item | Content |
 |----|------|
 | Core operations | 6 pressure/design setters + 2 vendor preset helpers |
-| [NON-ENGLISH REDACTED] helper | `configure_valve_pressure_changer_outlet` / `configure_valve_pressure_changer_pressure_drop`（[NON-ENGLISH REDACTED]）；`configure_valve_outlet_pressure_design`（design）；vendor **[NON-ENGLISH REDACTED]** `apply_valve_vendor_preset` |
-| [NON-ENGLISH REDACTED] | `ADIAB-FLASH` [NON-ENGLISH REDACTED] calculation type [NON-ENGLISH REDACTED]；`P-OUT` [NON-ENGLISH REDACTED] `P_OUT+unit`，`P-DROP` [NON-ENGLISH REDACTED] `P_DROP+unit` |
+| Recommended helper | `configure_valve_pressure_changer_outlet` / `configure_valve_pressure_changer_pressure_drop` (inter-effect depressurization); `configure_valve_outlet_pressure_design` (design); vendor **only through** `apply_valve_vendor_preset` |
+| Key Traps | `ADIAB-FLASH` Just changing the calculation type is not enough; `P-OUT` requires `P_OUT+unit`, `P-DROP` requires `P_DROP+unit` |
 
 ```
 
@@ -4873,7 +4873,7 @@ Store the list on `summary["rep_readback_targets"]` before collection.
 
 ## DSTWU reboiler vaporization
 
-DSTWU REP prints `REBOILER HEAT DUTY` and `ACTUAL REFLUX RATIO`. It does not print a line named boilup or [NON-ENGLISH REDACTED]. When the task asks for reboiler vaporization, boilup amount, or [NON-ENGLISH REDACTED]:
+DSTWU REP prints `REBOILER HEAT DUTY` and `ACTUAL REFLUX RATIO`. It does not print a line named boilup or tower kettle evaporation amount. When the task asks for reboiler vaporization, boilup amount, or tower kettle evaporation amount:
 
 1. Read the distillate stream molar `TOTAL FLOW` and `ACTUAL REFLUX RATIO` from the same REP.
 2. For a total condenser (`DISTILLATE VAPOR FRACTION` is 0), the constant-molal-overflow vaporization is `distillate_molar_flow * (1 + actual_reflux_ratio)`.
@@ -9105,7 +9105,7 @@ Reason: planner-selected static block port catalog
 
 ````
 
-### Message 3 — `user` (1,679 characters)
+### Message 3 — `user` (1,679 translated characters)
 
 ````text
 CODEGEN STATIC CONTRACT REPAIR ONLY. The previous complete python_source was rejected before execution. Start from that rejected candidate and change only the exact lines implicated by the listed violation codes; preserve every other declaration, topology edge, object ID, and function body byte-for-byte where possible. Never regenerate or redesign the module to fix one local static violation. Repair only the generic source-contract violations below while preserving the authoritative task and trusted task profile. Do not read or use Aspen, simulations, delivery ZIPs, historical scripts, results, or previously solved values. Return JSON containing one complete replacement module in python_source only; do not return patch_unified_diff. The entire replacement will be checked again by the complete static gate.
