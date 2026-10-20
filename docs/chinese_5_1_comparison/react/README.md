@@ -1,8 +1,19 @@
 # ReAct — CHN51
 
-## Token usage
+## Full-pipeline LLM usage
 
-**10 main-control calls · 1,319,986 total tokens · $6.864980**
+**12 recorded LLM calls · 1,359,419 total tokens · $7.093963**
+
+| Scope | Calls | Tokens | Cost |
+| --- | ---: | ---: | ---: |
+| ReAct action selection | 10 | 1,319,986 | $6.864980 |
+| REP readback | 1 | 20,969 | $0.046438 |
+| Gate validation | 1 | 18,464 | $0.182545 |
+| **Total** | **12** | **1,359,419** | **$7.093963** |
+
+[Full-pipeline machine-readable ledger](pipeline_llm_usage.json)
+
+## Main-control calls
 
 | Call | Input | Output | Total | Cost |
 | ---: | ---: | ---: | ---: | ---: |
@@ -17,7 +28,7 @@
 | [9](calls/call-09.md) | 132,645 | 731 | **133,376** | $0.685155 |
 | [10](calls/call-10.md) | 132,727 | 736 | **133,463** | $0.685715 |
 
-[Download raw LLM calls](../raw/react_main_control_calls.raw.jsonl)
+[Raw control-call JSONL](../raw/react_main_control_calls.raw.jsonl)
 
 ## Result
 

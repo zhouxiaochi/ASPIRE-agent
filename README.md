@@ -28,14 +28,14 @@ The Aspen Plus backup files prepared for the 2026-10-19 submission are available
 
 ## CHN51: Script Agent vs ReAct
 
-The CHN51 comparison is organized under a [single token-first comparison page](docs/chinese_5_1_comparison/).
+The [single token-first comparison page](docs/chinese_5_1_comparison/) uses the same full-pipeline scope as Supplementary Table S11.
 
-| Method | Main-control calls | Input tokens | Output tokens | Total tokens |
-| --- | ---: | ---: | ---: | ---: |
-| [Script Agent](docs/chinese_5_1_comparison/script-agent/) | 2 | 269,475 | 26,976 | **296,451** |
-| [ReAct](docs/chinese_5_1_comparison/react/) | 10 | 1,309,384 | 10,602 | **1,319,986** |
+| Method | All recorded LLM calls | Input tokens | Output tokens | Total tokens | Cost |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| [Script Agent](docs/chinese_5_1_comparison/script-agent/) | 5 | 368,522 | 37,009 | **405,531** | **$2.405207** |
+| [ReAct](docs/chinese_5_1_comparison/react/) | 12 | 1,344,458 | 14,961 | **1,359,419** | **$7.093963** |
 
-**ReAct used 4.45× as many main-control tokens.** The unified comparison directory also contains generated Script Agent code, execution metrics, the ReAct Aspen operation trace, readable per-call pages, and raw JSONL downloads.
+**Script Agent used 70.2% fewer tokens and had 66.1% lower LLM cost.** The comparison directory contains the control-call breakdown, generated Script Agent code, execution metrics, the ReAct Aspen operation trace, readable per-call pages, and raw JSONL downloads.
 
 ## Scope
 

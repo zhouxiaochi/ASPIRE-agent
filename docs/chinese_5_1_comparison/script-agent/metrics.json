@@ -38,7 +38,8 @@
         "tokens": 10833,
         "cost_usd": 0.12629
       }
-    }
+    },
+    "scope": "all_recorded_pipeline_llm_calls"
   },
   "execution": {
     "aspen_http_calls": 251,
@@ -74,8 +75,8 @@
     }
   },
   "privacy": {
-    "raw_model_responses_included": false,
-    "prompts_or_context_included": false,
+    "public_llm_call_inputs_and_outputs_included": true,
+    "chinese_source_passages_translated_to_english": true,
     "local_paths_included": false,
     "raw_aspen_payloads_included": false,
     "proprietary_aspen_artifacts_included": false

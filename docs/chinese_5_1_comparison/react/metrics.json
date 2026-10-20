@@ -7,11 +7,6 @@
   "aspen_http_calls": 325,
   "successful_http_calls": 325,
   "run_duration_seconds": 209.935181,
-  "llm_tokens": {
-    "input": 1309384,
-    "output": 10602,
-    "total": 1319986
-  },
   "aspen_result": {
     "converged": true,
     "per_error": 0
@@ -22,5 +17,35 @@
     "variable": "mole_fraction",
     "value": 0.999122737
   },
-  "trace_file": "aspen_operations.jsonl"
+  "trace_file": "aspen_operations.jsonl",
+  "llm_usage": {
+    "scope": "all_recorded_pipeline_llm_calls",
+    "recorded_calls": 12,
+    "input_tokens": 1344458,
+    "output_tokens": 14961,
+    "total_tokens": 1359419,
+    "provider_cost_usd": 7.093963,
+    "by_scope": {
+      "action_selection": {
+        "calls": 10,
+        "tokens": 1319986,
+        "cost_usd": 6.86498
+      },
+      "rep_readback": {
+        "calls": 1,
+        "tokens": 20969,
+        "cost_usd": 0.046438
+      },
+      "gate_validation": {
+        "calls": 1,
+        "tokens": 18464,
+        "cost_usd": 0.182545
+      }
+    }
+  },
+  "main_control_llm_tokens": {
+    "input": 1309384,
+    "output": 10602,
+    "total": 1319986
+  }
 }

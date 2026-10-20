@@ -1,0 +1,78 @@
+{
+  "schema": "aspire_full_pipeline_llm_usage.v1",
+  "case_id": "chinese_5_1_radfrac",
+  "method": "Script-based ASPIRE",
+  "scope": "All recorded LLM calls in generation, execution-evidence, validation, and reporting pipeline",
+  "call_count": 5,
+  "input_tokens": 368522,
+  "output_tokens": 37009,
+  "total_tokens": 405531,
+  "provider_cost_usd": 2.405207,
+  "calls": [
+    {
+      "call_index": 1,
+      "scope": "own_agent_codegen",
+      "operation": "initial_codegen",
+      "model": "gpt-5.5",
+      "main_control": true,
+      "input_tokens": 134570,
+      "output_tokens": 13482,
+      "total_tokens": 148052,
+      "provider_cost_usd": 1.06003,
+      "recorded_at": "2026-10-15T22:52:47.164",
+      "evidence_source": "private run llm_usage.jsonl; aggregate fields published here"
+    },
+    {
+      "call_index": 2,
+      "scope": "own_agent_codegen",
+      "operation": "static_feedback_retry",
+      "model": "gpt-5.5",
+      "main_control": true,
+      "input_tokens": 134905,
+      "output_tokens": 13494,
+      "total_tokens": 148399,
+      "provider_cost_usd": 0.476849,
+      "recorded_at": "2026-10-15T22:54:44.398",
+      "evidence_source": "private run llm_usage.jsonl; aggregate fields published here"
+    },
+    {
+      "call_index": 3,
+      "scope": "llm_rep_readback",
+      "operation": "extract_rep_readbacks",
+      "model": "openai/gpt-4.1",
+      "main_control": false,
+      "input_tokens": 20953,
+      "output_tokens": 4373,
+      "total_tokens": 25326,
+      "provider_cost_usd": 0.325338,
+      "recorded_at": "2026-10-15T22:57:09.696",
+      "evidence_source": "private run llm_usage.jsonl; aggregate fields published here"
+    },
+    {
+      "call_index": 4,
+      "scope": "gate_validator",
+      "operation": "adjudicate_gates",
+      "model": "gpt-5.5",
+      "main_control": false,
+      "input_tokens": 70146,
+      "output_tokens": 2775,
+      "total_tokens": 72921,
+      "provider_cost_usd": 0.4167,
+      "recorded_at": "2026-10-15T22:57:36.325",
+      "evidence_source": "private run llm_usage.jsonl; aggregate fields published here"
+    },
+    {
+      "call_index": 5,
+      "scope": "report_llm",
+      "operation": "final_markdown_bundle",
+      "model": "gpt-5.5",
+      "main_control": false,
+      "input_tokens": 7948,
+      "output_tokens": 2885,
+      "total_tokens": 10833,
+      "provider_cost_usd": 0.12629,
+      "recorded_at": "2026-10-15T22:57:59.436",
+      "evidence_source": "private run llm_usage.jsonl; aggregate fields published here"
+    }
+  ]
+}
