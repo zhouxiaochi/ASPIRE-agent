@@ -1,25 +1,18 @@
 # Script Agent call 1 of 2
 
-[Script Agent call index](README.md) · [Call 2 →](call-02.md) · [Raw JSONL](../script_agent_main_control_calls.raw.jsonl)
-## Call metadata
+[Script Agent index](README.md) · [Call 2 →](call-02.md) · [Raw JSONL](../script_agent_main_control_calls.raw.jsonl)
 
-| Field | Value |
-| --- | --- |
-| Method | `script_agent` |
-| Operation | `initial_codegen` |
-| Model | `gpt-5.5` |
-| Recorded at | `2026-10-15T22:52:47.164` |
-| Input provenance | `exact_persisted_messages` |
-| Input tokens | **134,570** |
-| Output tokens | **13,482** |
-| Total tokens | **148,052** |
-| Provider cost | **$1.060030** |
+`initial_codegen` · `gpt-5.5` · **134,570 input** + **13,482 output** = **148,052 tokens** · **$1.060030**
 
-## Input messages
+Input provenance: `exact_persisted_messages`
+Recorded at: `2026-10-15T22:52:47.164`
 
-<details><summary>Message 1: <code>system</code> · 28,284 characters</summary>
+## Input
 
-<pre><code>You are a local coding agent embedded in a Python harness, not Cursor.
+### Message 1 — `system` (28,284 characters)
+
+````text
+You are a local coding agent embedded in a Python harness, not Cursor.
 Your job is to write and repair one Aspen hardcoded Python script.  The harness will:
 1. Save your source or patch to disk.
 2. Run static checks.
@@ -28,9 +21,9 @@ Your job is to write and repair one Aspen hardcoded Python script.  The harness 
 
 Rules:
 - Output JSON only. No markdown outside JSON.
-- First iteration should return {&quot;python_source&quot;: &quot;...complete module...&quot;}.
-- Repair iterations should behave like a coding agent: inspect diagnostics plus the current source, then return the smallest correct unified diff. Use {&quot;python_source&quot;: &quot;...complete module...&quot;} only when the current file is structurally unrecoverable.
-- Any `patch_unified_diff` must be a real `git apply` compatible diff with `--- a/&lt;file&gt;`, `+++ b/&lt;file&gt;`, and hunk ranges such as `@@ -10,7 +10,9 @@`. Do not emit Cursor ApplyPatch format, loose search/replace hunks, bare `@@`, or malformed headers like `@@?`.
+- First iteration should return {"python_source": "...complete module..."}.
+- Repair iterations should behave like a coding agent: inspect diagnostics plus the current source, then return the smallest correct unified diff. Use {"python_source": "...complete module..."} only when the current file is structurally unrecoverable.
+- Any `patch_unified_diff` must be a real `git apply` compatible diff with `--- a/<file>`, `+++ b/<file>`, and hunk ranges such as `@@ -10,7 +10,9 @@`. Do not emit Cursor ApplyPatch format, loose search/replace hunks, bare `@@`, or malformed headers like `@@?`.
 - The generated script runs inside the harness sandbox and may import generic repo helpers through the canonical `script_agent_exp` package supplied by the runtime parent.
 - The runtime parent exclusively owns and verifies import roots. Generated source must not mutate `sys.path` or `sys.modules`, set `PYTHONPATH`, scan repository parents, or add fallback paths such as `experiments/script_agent_experiment`. Use ordinary canonical package imports only.
 - Import AspenHttpClient, JsonlRecorder, resolve_server_url, check_server_health_or_exit, and minimal REP utilities (`load_rep`, `parse_problem_status`) from `script_agent_exp.safe_aspen_calls` (re-exports). Do not import REP helpers from `hardcoded_common`; that module does not export them.
@@ -49,27 +42,27 @@ Rules:
 - Treat required input completion as a pre-run gate. Do not call engine_run or export REP/APW until required feed streams, blocks, and flowsheet are input-complete; use `assert_completion_ready(...)` or `run_completion_engine_and_export(..., required_streams=[...], required_blocks=[...])`.
 - For material streams, Aspen requires exactly two of Temperature, Pressure, and Vapor Fraction. Match the selected `mixed_spec`: `TP` needs temperature+pressure, `PV` needs pressure+vapor_fraction, and `TV` needs temperature+vapor_fraction.
 - For REquil blocks, use `configure_requil_equilibrium_reactions(...)` and write `set_block_reaction_stoichiometry` before `set_opt_ext_delt`/`set_delt`; delta rows alone leave the block incomplete.
-- For REquil operating specs, match the task&#x27;s thermodynamic constraint. Use `SPEC_OPT=&quot;TP&quot;` for fixed-temperature equilibrium calculations, but use a pressure/duty style setup such as `SPEC_OPT=&quot;PD&quot;` with `DUTY=0` when the task explicitly says adiabatic and gives a pressure drop/outlet pressure. Do not invent `PD` only for convenience on fixed-temperature comparison tasks.
+- For REquil operating specs, match the task's thermodynamic constraint. Use `SPEC_OPT="TP"` for fixed-temperature equilibrium calculations, but use a pressure/duty style setup such as `SPEC_OPT="PD"` with `DUTY=0` when the task explicitly says adiabatic and gives a pressure drop/outlet pressure. Do not invent `PD` only for convenience on fixed-temperature comparison tasks.
 - For REquil blocks with vapor/liquid material outlet ports, connect both outlet streams and sum the requested component across both product streams. A one-outlet REquil can fail Aspen input translation even when one phase later has zero flow.
-- Preserve the requested Aspen `SRK` method. After `ensure_property_method(..., method=&quot;SRK&quot;)`, use `configure_srk_free_water_steamnbs` to set and verify `GFREE_WATER=STEAMNBS`. The SRK free-water advisory always requires repair and a trusted rerun with raw `PER_ERROR=0`; never accept a historical service&#x27;s effective-zero SRK override or switch methods to hide the warning.
-- For recycle compressor or pressure-rise compressor duties, use a real `compr` block and `configure_compr_pressure_rise(...)` (or the equivalent `set_type` + `set_opt_spec=&quot;DELP&quot;` + `set_delp` calls). Do not substitute a Heater for a named compressor.
+- Preserve the requested Aspen `SRK` method. After `ensure_property_method(..., method="SRK")`, use `configure_srk_free_water_steamnbs` to set and verify `GFREE_WATER=STEAMNBS`. The SRK free-water advisory always requires repair and a trusted rerun with raw `PER_ERROR=0`; never accept a historical service's effective-zero SRK override or switch methods to hide the warning.
+- For recycle compressor or pressure-rise compressor duties, use a real `compr` block and `configure_compr_pressure_rise(...)` (or the equivalent `set_type` + `set_opt_spec="DELP"` + `set_delp` calls). Do not substitute a Heater for a named compressor.
 - When a task gives stagewise column details such as stage count, feed stage, reflux ratio, and pressure profile, use the native stagewise Aspen column family unless the task explicitly allows an equivalent surrogate. `configure_radfrac_total_condenser(...)` writes RadFrac column specs, but its `distillate_flow` is the RadFrac `BASIS_D` molar-flow spec. Convert task mass-flow targets to kmol/hr before calling it; do not pass kg/hr directly to `BASIS_D`.
 - Verify component molecular weights before stream specifications and stoichiometric reactions. If a component ID lands without MW, choose an Aspen-resolvable surrogate that preserves the required formula or molecular weight and record the assumption. For pseudo-products in RStoic reactions, a wrong-formula surrogate can make Aspen reject a chemically intended reaction as not mass-balanced.
 - For reactor conversion/yield/selectivity readbacks, declare derived `conversion` targets with inlet/outlet streams and reactant component in `rep_readback_targets`; LLM REP evidence reads paginated stream tables from the full `.rep` file.
 - Use native Aspen Model Analysis objects only when the task profile/gate contract makes them required, or when the task itself asks for that evidence. Design Spec is mandatory only for explicit/native design-specification deliverables; if a profile marks Design Spec optional, an Aspen-backed manual scan or bounded procedural sweep can satisfy the hard target/result gates only when it varies independent task-visible handles and verifies the target from final Aspen readbacks. A direct specification of a requested result variable, product composition, recovery, required product/utility/feed amount, reflux ratio, L/V, condenser amount, or an analytically implied material-balance value is not final evidence by itself. If the task/profile does **not** require Design Spec, treat adding one as a risky architectural change: first prove the base physical handle responds and that ordinary block specs/sweeps cannot satisfy the target, then keep the case failing rather than adding a proof-only or destabilizing DS. Sensitivity remains mandatory for requested sensitivity tables/trends/curves, and Optimization remains mandatory for requested optimizer-selected optima or constrained objective tradeoffs. Configure any required native analysis only after the base flowsheet, streams, and blocks are input-complete and runnable. If a required Design Spec is used, a trusted base run with converged REP is only a checkpoint: the final evidence must come from the same post-Design-Spec engine run, with target/manipulated readbacks bound to that run. Use optional analysis-tool results as bonus evidence only when they are complete and do not block the main result path.
-- For heat-cascade and multi-effect evaporation tasks, plan material flow, heating/utility or secondary-vapor flow, condensate flow, duty/heat-stream coupling, and inter-effect valve pressure specs as separate obligations. If figure-derived context names heat streams such as Q1-Q4 or shows exchanger -&gt; heat stream -&gt; evaporator effect wiring, create/connect Aspen heat streams (or an equivalent native duty path) into each target effect; when completion reports heat-stream duty incomplete or the Q stream is the sole heat input, write duty with `configure_heat_stream_duty(...)` / `configure_heat_stream_duty_map(...)`. For native Valve blocks used as inter-effect letdown, use `configure_valve_pressure_changer_outlet(...)` when the task gives absolute outlet pressure, or `configure_valve_pressure_changer_pressure_drop(...)` when it gives valve ΔP (`MODE=ADIAB-FLASH` plus `P_OUT` or `P_DROP` with unit); do not stop at calculation type or `OPT_DESIGN` without the matching numeric field. Do not satisfy the task with HeatX cold-side dummy water streams or independent Flash vapor-fraction specs alone.
+- For heat-cascade and multi-effect evaporation tasks, plan material flow, heating/utility or secondary-vapor flow, condensate flow, duty/heat-stream coupling, and inter-effect valve pressure specs as separate obligations. If figure-derived context names heat streams such as Q1-Q4 or shows exchanger -> heat stream -> evaporator effect wiring, create/connect Aspen heat streams (or an equivalent native duty path) into each target effect; when completion reports heat-stream duty incomplete or the Q stream is the sole heat input, write duty with `configure_heat_stream_duty(...)` / `configure_heat_stream_duty_map(...)`. For native Valve blocks used as inter-effect letdown, use `configure_valve_pressure_changer_outlet(...)` when the task gives absolute outlet pressure, or `configure_valve_pressure_changer_pressure_drop(...)` when it gives valve ΔP (`MODE=ADIAB-FLASH` plus `P_OUT` or `P_DROP` with unit); do not stop at calculation type or `OPT_DESIGN` without the matching numeric field. Do not satisfy the task with HeatX cold-side dummy water streams or independent Flash vapor-fraction specs alone.
 - If you model effects with Flash2 plus Heater/condenser blocks, connect actual Aspen heat streams or another native duty path from each heating-side block into the corresponding effect; a material-only sketch with independent flash specs is not enough evidence for heat integration.
-- Do not create a Design Spec unless the task explicitly requests a Design Spec/design specification, or a hard product/utility target cannot be represented by base block specs plus the required Sensitivity/Optimization object. A Design Spec is not a harmless helper: in non-DS tasks it can introduce new completion prompts, mask the real operating handle, and turn a runnable physical model into `not_run`. However, when a validator rejects fixed specs as surrogate behavior for a product-composition / required-utility target, a native Design Spec or explicit Aspen-backed script iteration over a real manipulated handle is the preferred causal repair. Before adding an optional DS, record why direct block specs, response probes, or bounded procedural sweeps are insufficient; if that evidence is absent and no surrogate gate requires target closure, do not add DS. Direct block specifications are not Design Specs: MHeatX branch TEMP/VFRAC/PRES-drop, HeatX outlet-temperature targets, Flash2 operating specs, and column operating specs should be written on the block&#x27;s own input surface when they are task-stated operating conditions, not requested results or target-equivalent variables. For an Optimization task with a parameter sweep, configure Optimization/Sensitivity only; do not add DS just because it is also a Model Analysis object.
+- Do not create a Design Spec unless the task explicitly requests a Design Spec/design specification, or a hard product/utility target cannot be represented by base block specs plus the required Sensitivity/Optimization object. A Design Spec is not a harmless helper: in non-DS tasks it can introduce new completion prompts, mask the real operating handle, and turn a runnable physical model into `not_run`. However, when a validator rejects fixed specs as surrogate behavior for a product-composition / required-utility target, a native Design Spec or explicit Aspen-backed script iteration over a real manipulated handle is the preferred causal repair. Before adding an optional DS, record why direct block specs, response probes, or bounded procedural sweeps are insufficient; if that evidence is absent and no surrogate gate requires target closure, do not add DS. Direct block specifications are not Design Specs: MHeatX branch TEMP/VFRAC/PRES-drop, HeatX outlet-temperature targets, Flash2 operating specs, and column operating specs should be written on the block's own input surface when they are task-stated operating conditions, not requested results or target-equivalent variables. For an Optimization task with a parameter sweep, configure Optimization/Sensitivity only; do not add DS just because it is also a Model Analysis object.
 - For Sensitivity, use high-level operations only. For complex or decision-driving tasks, prefer `configure_sensitivity_exploration_suite(...)` with several named sweeps; the suite owns collection, helper-managed tabulation, `engine_run`, compact-tree dumping, GPT-readable Markdown, and summary evidence recording. Use lower-level configure helpers only as legacy single-Sensitivity building blocks, not as configure-only proof. Use stream-var sweeps when the manipulated variable is a material stream such as feed/solvent/makeup `MOLE-FLOW`; do not force a stream into the block-var helper. Generated scripts must not hand-assemble Sensitivity rows, call raw setup/tabulation operations directly, write activation/request flags field-by-field, or pass CSV/export-only arguments such as `y_labels` to configure helpers. When choosing Sensitivity responses, derive each `response_specs` row from the task objective, constraints, physical target roles, or cost/load diagnostics; do not sample arbitrary readable streams just because they exist. A useful response set usually covers the metric being optimized or targeted, the constraints that decide feasibility, and at least one tradeoff/load/status metric when the task implies cost, utility, rate, yield, temperature, pressure, phase, or convergence tradeoffs. For complex design/optimization tasks, treat Sensitivity as a broad exploration tool: cover multiple task-visible handles, use log- or ratio-spaced candidates for positive scale variables, and include property-method candidates when phase equilibrium or thermodynamic model choice can change the result and the task does not specify a fixed method. A single native Sensitivity variable is only a local probe for a coupled design, not complete task-level exploration. Do not use FSplit/Sep block names as `vary_block` when Aspen reports block-var sweep unavailable; vary the owning split spec or a block with ordinary input variables. If a task inherits a full base flowsheet from an earlier exercise, complete that base topology to input-complete and produce a trusted REP before creating Sensitivity objects. Do not wrap Sensitivity suite/configure helper calls in broad try/except blocks that replace structured helper failures with generic strings; preserve repair_feedback, agent_instruction, cleanup_after_failure, and the full helper payload in summary/stage evidence so Ruff repair or the next iteration can fix the parent/token/configuration issue.
-- The canonical Sensitivity evidence is per-SA GUI Summary Markdown (from `collect_sensitivity_results` / `configure_sensitivity_exploration_suite`) plus a matplotlib curve PNG exported from structured `series_by_label` (not Aspen native chart export). It must include a measurement label map that binds internal `Y1`/`Y2`/`V1` labels back to physical readback coordinates: stream/block, variable, component, unit, and basis. This label map is allowed and required, but it is not a product-role assignment and not decision evidence by itself. Do not walk `probe_output` / `structured_output.scan` trees to manufacture final curve rows: fields like `depth`, `name`, `path`, `value`, or `children_count_total` are diagnostics, not Sensitivity x/y variables. Final decisions should cite per-SA Markdown paths, `plot_path` under `summary[&quot;plots&quot;]` or `artifacts.sensitivity_curves`, large REP excerpts from the same post-analysis run, and soft-validation/LLM-read summaries when used. `summary[&quot;plots&quot;]` is always a list of plot artifact dicts; never write keyed metadata such as `summary.setdefault(&quot;plots&quot;, {})[&quot;sensitivity_expected&quot;] = ...` or `summary[&quot;plots&quot;][&quot;...&quot;] = ...`. Store non-plot notes under `summary[&quot;artifacts&quot;]`, `summary[&quot;analysis_objects&quot;]`, `summary[&quot;results&quot;]`, or `summary[&quot;validation_contract&quot;]`. If canonical Markdown/REP evidence is unavailable, keep the case failing with that blocker instead of substituting a traversal table, final stream readback, or synthetic row.
-- Sensitivity Analysis is exploration evidence, not a one-shot optimizer. First parse the task into a primary decision variable and supporting design variables. For prompts like &quot;determine the optimum auxiliary feed/solvent/reagent amount&quot; plus &quot;determine stages/feed locations&quot;, the auxiliary amount is the primary optimized variable; stages/feed locations/reflux/product-rate handles are supporting design choices unless the task explicitly asks to optimize those too. Do not require independent optimum proof for supporting design variables; require Aspen-backed evidence that the reported supporting configuration works with the selected primary decision. Continuous native SA and discrete procedural probe matrices are complementary: use fact-only probe matrices to discover a reasonable supporting scaffold for discrete or unsupported handles, then use native Sensitivity/Optimization or a one-variable Aspen-backed sweep to optimize the primary amount on that scaffold. If the supporting scaffold is unknown and the task has limited repair/mini-iteration budget, create the coarse probe_sweep_matrix in the first analysis script rather than after repeated native SA failures. Probe matrices should emit faithful per-row facts (applied inputs, run/PER_ERROR evidence, target/product readbacks, transparent derived quantities, execution issues) and normally leave selected_row null; feasibility, product-role, and optimum judgments belong to the validator/final decision contract. A probe iteration must not run final replay/export after the response_table; final replay is a later iteration after a validator/final decision contract selects a target-met or downstream-ready row. A no-feasible-row or no-decision exploration table is not a final design and must not be converted into hard-coded seed values, fixed designs, closest rows, or surrogate optima.
+- The canonical Sensitivity evidence is per-SA GUI Summary Markdown (from `collect_sensitivity_results` / `configure_sensitivity_exploration_suite`) plus a matplotlib curve PNG exported from structured `series_by_label` (not Aspen native chart export). It must include a measurement label map that binds internal `Y1`/`Y2`/`V1` labels back to physical readback coordinates: stream/block, variable, component, unit, and basis. This label map is allowed and required, but it is not a product-role assignment and not decision evidence by itself. Do not walk `probe_output` / `structured_output.scan` trees to manufacture final curve rows: fields like `depth`, `name`, `path`, `value`, or `children_count_total` are diagnostics, not Sensitivity x/y variables. Final decisions should cite per-SA Markdown paths, `plot_path` under `summary["plots"]` or `artifacts.sensitivity_curves`, large REP excerpts from the same post-analysis run, and soft-validation/LLM-read summaries when used. `summary["plots"]` is always a list of plot artifact dicts; never write keyed metadata such as `summary.setdefault("plots", {})["sensitivity_expected"] = ...` or `summary["plots"]["..."] = ...`. Store non-plot notes under `summary["artifacts"]`, `summary["analysis_objects"]`, `summary["results"]`, or `summary["validation_contract"]`. If canonical Markdown/REP evidence is unavailable, keep the case failing with that blocker instead of substituting a traversal table, final stream readback, or synthetic row.
+- Sensitivity Analysis is exploration evidence, not a one-shot optimizer. First parse the task into a primary decision variable and supporting design variables. For prompts like "determine the optimum auxiliary feed/solvent/reagent amount" plus "determine stages/feed locations", the auxiliary amount is the primary optimized variable; stages/feed locations/reflux/product-rate handles are supporting design choices unless the task explicitly asks to optimize those too. Do not require independent optimum proof for supporting design variables; require Aspen-backed evidence that the reported supporting configuration works with the selected primary decision. Continuous native SA and discrete procedural probe matrices are complementary: use fact-only probe matrices to discover a reasonable supporting scaffold for discrete or unsupported handles, then use native Sensitivity/Optimization or a one-variable Aspen-backed sweep to optimize the primary amount on that scaffold. If the supporting scaffold is unknown and the task has limited repair/mini-iteration budget, create the coarse probe_sweep_matrix in the first analysis script rather than after repeated native SA failures. Probe matrices should emit faithful per-row facts (applied inputs, run/PER_ERROR evidence, target/product readbacks, transparent derived quantities, execution issues) and normally leave selected_row null; feasibility, product-role, and optimum judgments belong to the validator/final decision contract. A probe iteration must not run final replay/export after the response_table; final replay is a later iteration after a validator/final decision contract selects a target-met or downstream-ready row. A no-feasible-row or no-decision exploration table is not a final design and must not be converted into hard-coded seed values, fixed designs, closest rows, or surrogate optima.
 - Product role labels inferred by the agent, planner, validator, or an intermediate contract are interpretations, not task requirements, unless the task explicitly binds a requested product identity or target metric to a specific named stream, outlet, or port. Generated scripts may give neutral measurement labels such as `stream=P1, component=MCH, basis=raw_mole_fraction`, and may record `role_hypotheses` with `status=hypothesis|contradicted|unresolved`, but must not turn those hypotheses into product pass/fail checks, selected rows, or handoff roles. Record readbacks that allow the validator to map live outlets to requested products from Aspen evidence rather than from earlier role labels alone. Final target checks must follow the Aspen-backed outlet role mapping supplied by validator/final decision contract: if live stream readbacks show the originally inferred product roles are swapped or otherwise contradicted, preserve the physical readbacks and mark the script-side role mapping unresolved instead of keeping the stale inferred role. For two-product separations with unbound product identities, evaluate purity feasibility by unordered/permutation matching across plausible outlets in the validator/final decision stage, not inside the generated script.
 - When a target metric is affected by components outside the comparison set, compute and report an explicit normalized basis in addition to the raw stream basis. Use the task-stated basis when explicit; otherwise, a physically meaningful normalized basis may be decision evidence if its definition, included components, excluded components, and Aspen-backed readbacks are recorded clearly.
-- For baseline-calibrated perturbation tasks, such as &quot;calibrate original tower y2, then increase the same capacity/height handle by 10%&quot;, first reproduce the baseline target with one task-visible physical handle, record `baseline_calibration`, then apply the requested change to that same calibrated handle and record `modified_case` plus `same_handle_replay`. Do not substitute an uncalibrated surrogate such as `10 stages -&gt; 11 stages` for `+10% packed height` unless the stage-equivalent handle was calibrated against the baseline first.
-- For Optimization, use only high-level helpers such as `configure_optimization_block_var_with_options(...)`, `configure_optimization_block_var(...)`, `configure_optimization_multi_block_var_objective(...)`, `configure_optimization_constrained_stream_var_minimize_flow(...)`, and `collect_optimization_results(...)` after the base flowsheet is runnable. Generated scripts must not call raw Optimization table operations or write analysis rows field-by-field. For total power/duty/cost/profit objectives, use `configure_optimization_multi_block_var_objective(...)`; for solvent/makeup/feed minimization with purity constraints, use `configure_optimization_constrained_stream_var_minimize_flow(...)`. For system-work objectives across multiple serial machines, sample each machine&#x27;s work/power term through helper payloads; optimizing only the first compressor/pump/turbine/heater term plus an equal-ratio or manual calculation is not native Optimization evidence for total system work. Before trusting the optimum, confirm the manipulated variable can affect all objective terms: fixed intermediate pressure, temperature, duty, split, or product-rate specs can decouple downstream blocks and create false boundary optima. When an intermediate unit should pass pressure through, use its pressure-drop semantics rather than a fixed absolute outlet pressure, and record upstream/downstream readbacks. After `collect_optimization_results(...)`, call `attach_optimization_results_to_summary(summary, collected)` and do not overwrite helper `selected_manipulated` or `result_source_contract` with hand-built dicts. Store `collect_optimization_results(...).selected_manipulated` and `result_source_contract`; a bare parent `FINAL_VAL` or seed value is not a reportable optimum. For optimization decisions, add `optimization_decision_contract` with requested/optimized/reported roles and `role_match`, and record `task_spec_inputs` versus `actual_model_inputs` for any task-given fixed feed/temperature/pressure/flow values.
+- For baseline-calibrated perturbation tasks, such as "calibrate original tower y2, then increase the same capacity/height handle by 10%", first reproduce the baseline target with one task-visible physical handle, record `baseline_calibration`, then apply the requested change to that same calibrated handle and record `modified_case` plus `same_handle_replay`. Do not substitute an uncalibrated surrogate such as `10 stages -> 11 stages` for `+10% packed height` unless the stage-equivalent handle was calibrated against the baseline first.
+- For Optimization, use only high-level helpers such as `configure_optimization_block_var_with_options(...)`, `configure_optimization_block_var(...)`, `configure_optimization_multi_block_var_objective(...)`, `configure_optimization_constrained_stream_var_minimize_flow(...)`, and `collect_optimization_results(...)` after the base flowsheet is runnable. Generated scripts must not call raw Optimization table operations or write analysis rows field-by-field. For total power/duty/cost/profit objectives, use `configure_optimization_multi_block_var_objective(...)`; for solvent/makeup/feed minimization with purity constraints, use `configure_optimization_constrained_stream_var_minimize_flow(...)`. For system-work objectives across multiple serial machines, sample each machine's work/power term through helper payloads; optimizing only the first compressor/pump/turbine/heater term plus an equal-ratio or manual calculation is not native Optimization evidence for total system work. Before trusting the optimum, confirm the manipulated variable can affect all objective terms: fixed intermediate pressure, temperature, duty, split, or product-rate specs can decouple downstream blocks and create false boundary optima. When an intermediate unit should pass pressure through, use its pressure-drop semantics rather than a fixed absolute outlet pressure, and record upstream/downstream readbacks. After `collect_optimization_results(...)`, call `attach_optimization_results_to_summary(summary, collected)` and do not overwrite helper `selected_manipulated` or `result_source_contract` with hand-built dicts. Store `collect_optimization_results(...).selected_manipulated` and `result_source_contract`; a bare parent `FINAL_VAL` or seed value is not a reportable optimum. For optimization decisions, add `optimization_decision_contract` with requested/optimized/reported roles and `role_match`, and record `task_spec_inputs` versus `actual_model_inputs` for any task-given fixed feed/temperature/pressure/flow values.
 - For Design Spec auxiliary fields, use the high-level helper as the transaction boundary. Both sides can require extra IDs: Define/FVN (dependent variable) may need helper-managed ID/component fields; Vary (independent variable) may need an ID1 value. Use `safe.configure_design_spec_stream_var_vs_stream_var(...)`, `safe.configure_design_spec_stream_var_vs_block_var(...)`, `safe.configure_design_spec_block_var(...)`, `safe.configure_design_spec_block_var_with_options(...)`, or `safe.configure_design_spec_stream_massfrac_vs_stream_massflow(...)`; do not repair DS rows with raw field-by-field operations. These helpers attempt required Vary-side ID1 writes from live prompt/options plus any `vary_id1_value` or `vary_id1_candidates`, and attempt Define-side aux fields from the canonical `sample_component`, `define_id1_value`, or `define_id1_candidates`. The stream-target/block-vary helper rejects `component_name` and `target_stream`; use `sample_component` and `sample_stream`, and omit component binding for temperature targets. Never infer aliases from **kwargs or submit synonym bundles. Treat missing aux as an in-call transaction failure, not as a next-iteration discovery task: pass the likely stream/component/product candidates on the same helper call. For RadFrac product-stage block variables, let the helper manage the required sentence and product-stream ID candidates such as the connected vapor/bottom product stream IDs; do not run with blank ID1. If `define_aux_resolution.success` or `vary_id1_resolution.success` is false, retry the same helper with better candidates from the helper prompt/options/static catalog; do not rewrite unrelated specs or bypass the helper.
 - For Design Spec Vary streams, seed the manipulated material stream before configuring/running DS: composition fractions, temperature, pressure, and one nonzero total-flow scalar inside the DS bounds. The seed is only an initial guess; final quench/recycle/solvent flow must come from post-run DS/Aspen readbacks.
-- Do not rely on BKP/checkpoint handoff for normal script-agent success unless an explicit &quot;Qualified Shared Base Handoff&quot; context file is provided. In that split-graph fork mode, load the provided `initial_bkp` into a fresh task/session first, prove the inherited base is still complete, then make only the subtask-local changes. REP/APW remain required final evidence; BKP is a starting checkpoint, not a result handoff artifact.
+- Do not rely on BKP/checkpoint handoff for normal script-agent success unless an explicit "Qualified Shared Base Handoff" context file is provided. In that split-graph fork mode, load the provided `initial_bkp` into a fresh task/session first, prove the inherited base is still complete, then make only the subtask-local changes. REP/APW remain required final evidence; BKP is a starting checkpoint, not a result handoff artifact.
 - Final run/export helpers must not pass `export_bkp=True`. Use APW as the evidence handoff artifact, with REP as textual run evidence; BKP/checkpoint export is reserved for explicit qualified base inputs or narrowly documented diagnostic work.
 - `evidence.rep_path` must point to a real textual `.rep` report generated for the run. Never populate `rep_path` with an APW/BKP/checkpoint path, and never treat APW/BKP existence as a substitute for REP evidence.
 - Exit 0 only after the script writes summary.json, engine run succeeded, REP/APW evidence exists, PER_ERROR is exactly 0 or an explicit narrow warning-only exception applies, and the REP/problem status is converged or accepted by that same exception. Prefer `safe.finalize_task_summary(...)` after `run_completion_engine_and_export(...)` instead of hand-assembling top-level `evidence`, `engine_run`, `per_error`, `run_status`, or `self_validation`.
@@ -77,19 +70,19 @@ Rules:
 - Do not write human-readable Markdown artifacts such as answer.md, logic.md, operations.md, issues.md, experience.md, or final_response.md from the generated script. A separate report LLM reads summary/evidence artifacts after execution and owns those files.
 - Include a `validation_contract` object in summary.json as an evidence index, not as script-owned semantic judgment. For final evidence, it may list measurement/readback contracts, source paths, row indexes, and required evidence coordinates. For exploratory SA/probe/scaffold work, set `validation_contract.phase` to a fact-only/exploration value and include measurement/readback requirements plus `validator_decision_pending=true` or `no_script_judgment_policy=true`; do not write product feasibility, semantic pass/fail, selected optimum, or row rejection fields in the script.
 - Include a `self_validation` object in summary.json via `finalize_task_summary(...)` or `build_self_validation(...)`. It should separate hard gates (`engine_run.success`, REP/APW evidence, PER_ERROR=0 or a narrow warning-only exception, converged/accepted REP problem status) from soft sanity checks. In fact-only exploration, soft checks should say whether required readbacks were collected, not whether product roles or target feasibility are satisfied. For an evidence-backed infeasible task, hard gates should remain failed, but the summary should explicitly state that failure is the physical result of the stated inputs, not an invitation to mutate the problem.
-</code></pre>
 
-</details>
+````
 
-<details><summary>Message 2: <code>user</code> · 543,687 characters</summary>
+### Message 2 — `user` (543,687 characters)
 
-<pre><code>Create a new Aspen hardcoded script for case `chinese_5_1`.
+````text
+Create a new Aspen hardcoded script for case `chinese_5_1`.
 
 Target script path:
-&lt;SANDBOX_ROOT&gt;\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\chinese_5_1_own_agent.py
+<SANDBOX_ROOT>\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\chinese_5_1_own_agent.py
 
 Run output directory:
-&lt;SANDBOX_ROOT&gt;\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\script_run
+<SANDBOX_ROOT>\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\script_run
 
 This is the isolated own-agent-slim runtime contract. It overrides generic script-scaffolding,
 summary-building, and final-readback instructions elsewhere in the prompt:
@@ -100,7 +93,7 @@ summary-building, and final-readback instructions elsewhere in the prompt:
   summary inside its own stages/readbacks. Do not copy a live runtime.summary into an artifact.
 - Define only task/model constants, one `TASK_SPEC`, small model-specific setup/analysis functions,
   `configure(runtime)`, and
-  `if __name__ == &quot;__main__&quot;: raise SystemExit(run_slim_task(spec=TASK_SPEC, configure=configure))`.
+  `if __name__ == "__main__": raise SystemExit(run_slim_task(spec=TASK_SPEC, configure=configure))`.
 - `configure(runtime)` receives `runtime.client`. Use registered capabilities or typed
   `script_agent_exp.safe_aspen_calls` helpers for model-specific operations.
 - Runtime parent owns canonical imports from `runtime/script_agent_experiment/script_agent_exp`.
@@ -120,7 +113,7 @@ summary-building, and final-readback instructions elsewhere in the prompt:
 - Legacy `ensure_session(initial_bkp=None, show_gui=None, inset=None)` returns None on success
   and raises on failure; None is not a failed envelope. task_name/task_key are not its arguments:
   invalid identity arguments must fail clearly, never be silently dropped. Runtime uses
-  `client.ensure_runtime_session(*, show_gui=False, inset=&quot;SI&quot;)` for an explicit setup receipt.
+  `client.ensure_runtime_session(*, show_gui=False, inset="SI")` for an explicit setup receipt.
   These restrictions concern common session/setup only; legal model/REP readback wrappers remain allowed.
 
 Slim generated-source boundary (initial and every repair):
@@ -149,15 +142,15 @@ Slim generated-source boundary (initial and every repair):
 
 
 Unified capability invocation (also applies when curated helper context is absent):
-- All generated Aspen model operations use exactly client.invoke(&#x27;&lt;registered capability&gt;&#x27;, **keyword_parameters), where client is runtime.client or its direct alias.
+- All generated Aspen model operations use exactly client.invoke('<registered capability>', **keyword_parameters), where client is runtime.client or its direct alias.
 - Do not call safe_aspen_calls client-first helpers directly. Do not use safe.call, safe.probe_call, client.execute, client.execute_http, local:, or http: in generated slim source.
 - Capability names are static unqualified string literals from the injected registry/catalog. Every client.invoke call site must spell out the literal capability and every keyword. Never pass a capability variable, loop over operation names, create _stage(..., capability, **kwargs) / _invoke(..., operation, **params) wrappers, or forward **kwargs/**params into client.invoke. A stage helper may accept only a zero-argument operation lambda; the client.invoke call itself stays visible with a literal name and explicit keywords.
 - Use family-specific semantic capabilities when native Aspen tokens collide across block families. For example use set_radfrac_distillate_rate / set_petrofrac_distillate_rate / set_multifrac_distillate_rate, never ambiguous set_basis_d; use the analogous family-specific bottoms-rate capability instead of set_basis_b.
 - Generic native setter names such as set_spec_opt, set_pres, set_temp, set_duty, set_nphase, set_condenser, set_reboiler, set_nstage, set_feed_stage, set_pres1/2, set_opt_pres, set_dp_col, set_basis_rr, set_spec/specun/value are framework-internal and generated-forbidden. Use the owning family semantic name shown in the injected block surface (for example set_flash2_pressure, set_heater_temperature, set_pump_outlet_pressure, set_compr_outlet_pressure, set_rstoic_flash_spec, set_requil_pressure, set_ryield_temperature, set_rgibbs_phase_count, set_rplug_pressure, set_rcstr_duty, set_mixer_pressure, set_heatx_spec, set_radfrac_top_pressure). Prefer a high-level configure_* transaction whenever one covers the complete block setup.
-- Correct: runtime.stage(&#x27;distillate&#x27;, lambda: client.invoke(&#x27;set_radfrac_distillate_rate&#x27;, block_name=&#x27;C1&#x27;, value=99.0, unit=&#x27;kmol/hr&#x27;)). Wrong: _stage(runtime, &#x27;distillate&#x27;, capability, **kwargs), client.invoke(capability, **kwargs), or a loop/table containing capability names.
+- Correct: runtime.stage('distillate', lambda: client.invoke('set_radfrac_distillate_rate', block_name='C1', value=99.0, unit='kmol/hr')). Wrong: _stage(runtime, 'distillate', capability, **kwargs), client.invoke(capability, **kwargs), or a loop/table containing capability names.
 - Treat list_block_ports as opaque cross-iteration evidence. Record it only as a direct runtime.stage(..., required=False) call; do not assign or inspect its return, pass it to generated parsers, or choose/retry a port from it in the same execution. Registered high-level topology capabilities own port normalization and selection.
 - validate_material_edge_plan and validate_required_native_blocks_plan are pure offline planning utilities, not Aspen capabilities: import them from safe_aspen_calls and call them directly before mutation, without client.invoke and without runtime.stage. Their arguments are edges/block declarations, not client.
-- Before returning JSON, mentally perform two literal checks: json.loads(response) must succeed, and ast.parse(python_source) must succeed. Never emit literal backslash-n tokens between Python statements, stray backslashes before spaces/newlines, duplicated operators such as &#x27;= =&#x27;, missing assignment operators, or positional arguments after keywords.
+- Before returning JSON, mentally perform two literal checks: json.loads(response) must succeed, and ast.parse(python_source) must succeed. Never emit literal backslash-n tokens between Python statements, stray backslashes before spaces/newlines, duplicated operators such as '= =', missing assignment operators, or positional arguments after keywords.
 - SlimTaskSpec has exact required fields: SlimTaskSpec(script_stem=SCRIPT_STEM, required_streams=tuple(...), required_blocks=tuple(...), ...). Never omit required_blocks and never rename it to required_blocks_blocks, required_blocksblocks, blocks, or another alias. If task_profile.block_families contains any runtime family, required_blocks must be a non-empty static tuple/list, every runtime family must have a statically visible create_* or create_block capability, and created block_name IDs must exactly match required_blocks. PROPERTY_METHODS and analysis-only DS/SA/OPT/CONSTRAINT/BALANCE families do not create this obligation. Planner prose can never waive it; only structured profile metadata.parent_approved_calculation_only=true with non-empty calculation_only_authority and calculation_only_provenance may authorize calculation-only source.
 - client.invoke always returns capability_result.v1 with root success, capability, result, error, diagnostics, and optional audit metadata. Do not unwrap legacy status/result envelopes or choose behavior from implementation_route.
 - Before any complex Sensitivity suite uses collect=True, analysis_handoff must declare a supported base completion/run transaction and generated source must call runtime.run_completion_engine_and_export(...) before constructing that suite. Never pass client, task_key, bkp_subdir, server_subdir, or script_stem; SlimTaskRuntime owns those values. Never invoke run_completion_engine_and_export through client.invoke and never directly call engine/checkpoint capabilities. If no legal runtime base-run method is present, record a blocker and use collect=False instead of collect=True.
@@ -174,7 +167,7 @@ Slim stage and finalization contract:
   does not authorize arbitrary aliases. For a stream target vs block Vary DS use
   `configure_design_spec_stream_var_vs_block_var(client, design_spec_name=..., sample_stream=...,
   sample_variable=..., target_value=..., sample_uom=..., vary_block=..., vary_variable=...,
-  lower=..., upper=..., tolerance=..., max_step_size=...)` with the task&#x27;s unit-safe values
+  lower=..., upper=..., tolerance=..., max_step_size=...)` with the task's unit-safe values
   and exact live VARYVARIABLE token. Do not pass target_stream/component_name aliases;
   a temperature target needs no sample_component. Preserve helper agent_instruction on failure.
 - Use `runtime.attach_artifact(key, payload)` for probe matrices, native-analysis tables, or any
@@ -187,13 +180,13 @@ Slim stage and finalization contract:
   fields, exception persistence, summary writing, and process exit status.
 - Exact supported declarations:
   `SlimTaskSpec(script_stem=..., required_streams=(...), required_blocks=(...), case_id=...,
-  name_mapping=..., rep_readback_targets=(...), phase=&quot;analysis&quot;, inset=&quot;SI&quot;, summary_seed=...)`;
-  `stream_rep_targets((&quot;F1&quot;, &quot;P1&quot;), components=(&quot;H2&quot;,), quantities=(&quot;temperature&quot;,
-  &quot;pressure&quot;, &quot;vapor_fraction&quot;, &quot;total_flow&quot;, &quot;component_flow&quot;))`;
-  `block_rep_targets({&quot;HX&quot;: (&quot;heatx_duty&quot;, &quot;heatx_area&quot;), &quot;H1&quot;: (&quot;block_heat_duty&quot;,)})`.
-  The compatibility form `block_rep_targets((&quot;HX&quot;,), quantities=(&quot;heatx_duty&quot;, &quot;heatx_area&quot;))`
+  name_mapping=..., rep_readback_targets=(...), phase="analysis", inset="SI", summary_seed=...)`;
+  `stream_rep_targets(("F1", "P1"), components=("H2",), quantities=("temperature",
+  "pressure", "vapor_fraction", "total_flow", "component_flow"))`;
+  `block_rep_targets({"HX": ("heatx_duty", "heatx_area"), "H1": ("block_heat_duty",)})`.
+  The compatibility form `block_rep_targets(("HX",), quantities=("heatx_duty", "heatx_area"))`
   is also legal. To append explicit targets, use
-  `(*stream_rep_targets(...), *block_rep_targets(...), {&quot;request_id&quot;: ..., &quot;kind&quot;: ...})`.
+  `(*stream_rep_targets(...), *block_rep_targets(...), {"request_id": ..., "kind": ...})`.
   Do not invent other constructor fields or helper keywords.
 - Use these REP helpers only for ordinary stream/component/state and block-result requests; write
   explicit target dicts only for genuinely derived or profile evidence.
@@ -217,8 +210,8 @@ Current staged-analysis phase: ANALYSIS / FINAL EVIDENCE.
 - For Model Analysis tasks, use the staged base flowsheet as fixed ground truth only when a trusted base checkpoint/summary is actually present; otherwise create a runnable physical base before configuring analysis objects. Configure only the required native Design Spec, Sensitivity, or Optimization object(s). Generated scripts must use high-level helpers from `script_agent_exp.safe_aspen_calls`; they must not call raw Design Spec or Optimization table operations, raw UI/atomic Sensitivity setup, Fill operations, or CSV/export-only options directly. For Design Spec, prefer one `configure_design_spec_suite(...)` call with a complete `kind`-specific spec, stop before `engine_run` unless the suite returns `success=true`, then run/export once and call `collect_design_spec_suite_results(...)` with same-run final target/manipulated readbacks. The lower-level canonical transactions remain `configure_design_spec_stream_var_vs_stream_var(...)`, `configure_design_spec_stream_var_vs_block_var(...)`, `configure_design_spec_block_var(...)`, `configure_design_spec_block_var_with_options(...)`, and `ds_configure_stream_massfrac_vs_stream_massflow(...)`; do not follow them with raw DS writes. For Sensitivity, prefer `configure_sensitivity_exploration_suite(...)`; it owns collection, compact-tree/LLM Markdown generation, and summary evidence recording. Use legacy single-sweep helpers only when the suite cannot express the case. Record helper payloads under `analysis_objects`, collect native output/readbacks, and link those values to `results.decision_basis`, `results.result_source`, or a passed `analysis_results_used_for_decision` check. Do not satisfy required native analysis evidence with a manual sweep, synthetic row, fixed split, or post-processing-only calculation. If the native object cannot be used, record the exact operation/tool boundary and keep the task failing.
 - **Design Spec decision-chain gate (hard):** if context includes `generated/task_profile_design_spec_decision_chain.md`, follow it. Never treat a pre-Design-Spec trusted base REP as final evidence. Complete Design Spec through the high-level helper, run/export again, and bind reported targets and manipulated values to that post-DS run. A DS object created after the final REP, a failed `VARYID1`, or a proof-only/inactive DS shell means the task is still failing even when an older REP converged.
 - When a Design Spec must meet a **bottoms/product stream temperature** target (for example demethanizer/absorber bottoms at 36 C), use `configure_design_spec_stream_var_vs_stream_var(...)` when the manipulated degree is a real operating stream. If the manipulated degree is column-owned, use `configure_design_spec_stream_var_vs_block_var(...)` so the script samples the product/bottoms stream temperature but varies a legal RadFrac block variable, including any required sentence/ID1 in the same helper call. Overhead/product composition is reported from converged REP/stream readbacks after the temperature Design Spec succeeds; it is not the Design Spec sampled variable unless the task explicitly asks for a composition target.
-- For an FSplit-owned manipulated outlet fraction, use a `stream_var_vs_block_var` DS spec with `vary_patterns=[&quot;FLOW/FRAC&quot;, &quot;FRAC&quot;, &quot;SPLIT&quot;]` and the manipulated outlet stream in `vary_id1_value` / `vary_id1_candidates`. Aspen commonly exposes the live token as `FLOW/FRAC`; do not disable the DS merely because task prose or an initial script used `FRAC`.
-- For product-composition targets whose requested product identity is not explicitly bound to a stream/outlet, treat stream-role mapping as a post-run assignment problem. Evaluate all plausible outlet-to-product permutations from Aspen readbacks, record the selected mapping and rejected alternatives, and base final purity checks on that mapping. If T1 is HEP-rich while B1 is MCH-rich, do not keep a stale &quot;MCH=T1 / HEP=B1&quot; validation contract; record the swapped mapping and then judge feasibility, selected design, and optimum evidence separately.
+- For an FSplit-owned manipulated outlet fraction, use a `stream_var_vs_block_var` DS spec with `vary_patterns=["FLOW/FRAC", "FRAC", "SPLIT"]` and the manipulated outlet stream in `vary_id1_value` / `vary_id1_candidates`. Aspen commonly exposes the live token as `FLOW/FRAC`; do not disable the DS merely because task prose or an initial script used `FRAC`.
+- For product-composition targets whose requested product identity is not explicitly bound to a stream/outlet, treat stream-role mapping as a post-run assignment problem. Evaluate all plausible outlet-to-product permutations from Aspen readbacks, record the selected mapping and rejected alternatives, and base final purity checks on that mapping. If T1 is HEP-rich while B1 is MCH-rich, do not keep a stale "MCH=T1 / HEP=B1" validation contract; record the swapped mapping and then judge feasibility, selected design, and optimum evidence separately.
 - For Design Spec stream-flow manipulation, configure the manipulated stream as `MOLE-FRAC` plus one total-flow scalar/readback; component flow rows, feed-spec fallback values, and unverified `TOTFLOW` guesses are not acceptable proof of the final manipulated flow.
 - For Design Spec Vary streams, seed the manipulated material stream before configuring/running DS: composition fractions, temperature, pressure, and one nonzero total-flow scalar inside the DS bounds. The seed is only an initial guess; final quench/recycle/solvent flow must come from post-run DS/Aspen readbacks.
 
@@ -233,7 +226,7 @@ Slim runtime additions:
 - Use probe matrices for unsupported/discrete scaffold facts or capability fallback, not as a silent
   substitute for a task-required native analysis object.
 
-- Vapor/liquid stream IDs are arbitrary. Record native block -&gt; outlet port -&gt; connected stream
+- Vapor/liquid stream IDs are arbitrary. Record native block -> outlet port -> connected stream
   and same-run REP PHASE/vapor_fraction before binding results, component targets or derived formulas.
   Flash2 feed is F(IN), vapor V(OUT), liquid L(OUT); verify actual helper landing, never ordered
   outlets. For Flash3/REquil discover native ports instead of copying unverified Flash2 tokens.
@@ -258,7 +251,7 @@ Slim runtime additions:
   conversions; missing units or unresolved task permission remain blockers, not guessed PASS.
 - Preserve every task-required native block, stream, reaction, topology edge, property method,
   fixed input, target, unit/basis, and required native analysis object.
-- Preserve task-specified feed partitions and each feed&#x27;s composition, amount, T/P, and phase/state;
+- Preserve task-specified feed partitions and each feed's composition, amount, T/P, and phase/state;
   equal T/P does not imply thermodynamic equivalence. Do not replace independent or partially
   vaporized feeds with a summed-composition TP stream. Use verified shared material inlets or an
   adiabatic Mixer retaining the original feed states, without resetting its outlet to a fresh TP
@@ -283,7 +276,7 @@ Forbidden context/solution paths:
 - chinese_5_1_own_agent.py
 
 Return JSON only:
-{&quot;python_source&quot;: &quot;...complete Python module using slim_task_runtime...&quot;}
+{"python_source": "...complete Python module using slim_task_runtime..."}
 
 Curated context (skills and planner context are preserved in full):
 ### FILE: tasks/test/chn/chapter_05/exercise_5_1.md
@@ -297,7 +290,7 @@ Reason: target task statement
 
 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
 
-`C6H6([NON-ENGLISH REDACTED]) + 3H2([NON-ENGLISH REDACTED]) -&gt; C6H12([NON-ENGLISH REDACTED])`
+`C6H6([NON-ENGLISH REDACTED]) + 3H2([NON-ENGLISH REDACTED]) -> C6H12([NON-ENGLISH REDACTED])`
 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] `99.8%`，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
 
 ## [NON-ENGLISH REDACTED]
@@ -338,7 +331,7 @@ Reason: target task statement
 ```
 
 ### FILE: generated/task_figure_grounding.md
-Reason: reused task figure grounding from &lt;SANDBOX_ROOT&gt;\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\figure_grounding.json
+Reason: reused task figure grounding from <SANDBOX_ROOT>\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\figure_grounding.json
 ```text
 ## Figure-Derived Supplement
 
@@ -355,42 +348,42 @@ If any figure note conflicts with the written markdown or a generated split-task
   - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、LFLOW、PUMP、PIPE、COLUMN。
   - Visual evidence: [NON-ENGLISH REDACTED]：BZIN、H2IN、BZIN2、H2RCY2、RXIN、RXOUT、VAP、H2RCY、PURGE、PURGE2、LIQ、COLFD、CHRCY、CHRCY2、CHRCY3、LTENDS、PRODUCT。
   - Visual evidence: [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] BZIN/H2IN [NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED] REACT、HP-SEP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE，[NON-ENGLISH REDACTED] LFLOW [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED] FEED-MIX。
-- Question `labels_and_topology`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] from -&gt; through/into -&gt; to。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] fan-in/fan-out，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Aspen block type，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] visible_label [NON-ENGLISH REDACTED] type_from_context [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。
-  - Direct answer: {&#x27;visible_modules_or_equipment&#x27;: [{&#x27;visible_label&#x27;: &#x27;FEEDPUMP&#x27;, &#x27;type_from_context&#x27;: &#x27;Pump&#x27;}, {&#x27;visible_label&#x27;: &#x27;FEED-MIX&#x27;, &#x27;type_from_context&#x27;: &#x27;Heater&#x27;}, {&#x27;visible_label&#x27;: &#x27;REACT&#x27;, &#x27;type_from_context&#x27;: &#x27;Rstoic&#x27;}, {&#x27;visible_label&#x27;: &#x27;HP-SEP&#x27;, &#x27;type_from_context&#x27;: &#x27;Flash2&#x27;}, {&#x27;visible_label&#x27;: &#x27;VFLOW&#x27;, &#x27;type_from_context&#x27;: &#x27;FSplit&#x27;}, {&#x27;visible_label&#x27;: &#x27;VALVE&#x27;, &#x27;type_from_context&#x27;: &#x27;Valve&#x27;}, {&#x27;visible_label&#x27;: &#x27;COMP&#x27;, &#x27;type_from_context&#x27;: &#x27;Compr&#x27;}, {&#x27;visible_label&#x27;: &#x27;LFLOW&#x27;, &#x27;type_from_context&#x27;: &#x27;FSplit&#x27;}, {&#x27;visible_label&#x27;: &#x27;PUMP&#x27;, &#x27;type_from_context&#x27;: &#x27;Pump HI&#x27;}, {&#x27;visible_label&#x27;: &#x27;PIPE&#x27;, &#x27;type_from_context&#x27;: &#x27;Pipe&#x27;}, {&#x27;visible_label&#x27;: &#x27;COLUMN&#x27;, &#x27;type_from_context&#x27;: &#x27;RadFrac&#x27;}], &#x27;visible_stream_labels&#x27;: [&#x27;BZIN&#x27;, &#x27;H2IN&#x27;, &#x27;BZIN2&#x27;, &#x27;H2RCY2&#x27;, &#x27;RXIN&#x27;, &#x27;RXOUT&#x27;, &#x27;VAP&#x27;, &#x27;H2RCY&#x27;, &#x27;PURGE&#x27;, &#x27;PURGE2&#x27;, &#x27;LIQ&#x27;, &#x27;COLFD&#x27;, &#x27;CHRCY&#x27;, &#x27;CHRCY2&#x27;, &#x27;CHRCY3&#x27;, &#x27;LTENDS&#x27;, &#x27;PRODUCT&#x27;], &#x27;directly_visible_connections_as_edges&#x27;: [{&#x27;stream_label&#x27;: &#x27;BZIN&#x27;, &#x27;connection&#x27;: &#x27;external left feed -&gt; into FEEDPUMP&#x27;}, {&#x27;stream_label&#x27;: &#x27;BZIN2&#x27;, &#x27;connection&#x27;: &#x27;FEEDPUMP -&gt; into FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2IN&#x27;, &#x27;connection&#x27;: &#x27;external left feed -&gt; into FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2RCY2&#x27;, &#x27;connection&#x27;: &#x27;COMP -&gt; into FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY3&#x27;, &#x27;connection&#x27;: &#x27;PIPE -&gt; into FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;RXIN&#x27;, &#x27;connection&#x27;: &#x27;FEED-MIX -&gt; into REACT&#x27;}, {&#x27;stream_label&#x27;: &#x27;RXOUT&#x27;, &#x27;connection&#x27;: &#x27;REACT -&gt; into HP-SEP&#x27;}, {&#x27;stream_label&#x27;: &#x27;VAP&#x27;, &#x27;connection&#x27;: &#x27;HP-SEP -&gt; into VFLOW&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2RCY&#x27;, &#x27;connection&#x27;: &#x27;VFLOW -&gt; into COMP&#x27;}, {&#x27;stream_label&#x27;: &#x27;PURGE&#x27;, &#x27;connection&#x27;: &#x27;VFLOW -&gt; into VALVE&#x27;}, {&#x27;stream_label&#x27;: &#x27;PURGE2&#x27;, &#x27;connection&#x27;: &#x27;VALVE -&gt; external right outlet&#x27;}, {&#x27;stream_label&#x27;: &#x27;LIQ&#x27;, &#x27;connection&#x27;: &#x27;HP-SEP -&gt; into LFLOW&#x27;}, {&#x27;stream_label&#x27;: &#x27;COLFD&#x27;, &#x27;connection&#x27;: &#x27;LFLOW -&gt; into COLUMN&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY&#x27;, &#x27;connection&#x27;: &#x27;LFLOW -&gt; into PUMP&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY2&#x27;, &#x27;connection&#x27;: &#x27;PUMP -&gt; into PIPE&#x27;}, {&#x27;stream_label&#x27;: &#x27;LTENDS&#x27;, &#x27;connection&#x27;: &#x27;COLUMN -&gt; external right outlet&#x27;}, {&#x27;stream_label&#x27;: &#x27;PRODUCT&#x27;, &#x27;connection&#x27;: &#x27;COLUMN -&gt; external right outlet&#x27;}], &#x27;visible_node_fan_in_fan_out_summary&#x27;: [{&#x27;node&#x27;: &#x27;FEEDPUMP&#x27;, &#x27;fan_in&#x27;: [&#x27;BZIN&#x27;], &#x27;fan_out&#x27;: [&#x27;BZIN2&#x27;]}, {&#x27;node&#x27;: &#x27;FEED-MIX&#x27;, &#x27;fan_in&#x27;: [&#x27;BZIN2&#x27;, &#x27;H2IN&#x27;, &#x27;H2RCY2&#x27;, &#x27;CHRCY3&#x27;], &#x27;fan_out&#x27;: [&#x27;RXIN&#x27;]}, {&#x27;node&#x27;: &#x27;REACT&#x27;, &#x27;fan_in&#x27;: [&#x27;RXIN&#x27;], &#x27;fan_out&#x27;: [&#x27;RXOUT&#x27;]}, {&#x27;node&#x27;: &#x27;HP-SEP&#x27;, &#x27;fan_in&#x27;: [&#x27;RXOUT&#x27;], &#x27;fan_out&#x27;: [&#x27;VAP&#x27;, &#x27;LIQ&#x27;]}, {&#x27;node&#x27;: &#x27;VFLOW&#x27;, &#x27;fan_in&#x27;: [&#x27;VAP&#x27;], &#x27;fan_out&#x27;: [&#x27;H2RCY&#x27;, &#x27;PURGE&#x27;]}, {&#x27;node&#x27;: &#x27;COMP&#x27;, &#x27;fan_in&#x27;: [&#x27;H2RCY&#x27;], &#x27;fan_out&#x27;: [&#x27;H2RCY2&#x27;]}, {&#x27;node&#x27;: &#x27;VALVE&#x27;, &#x27;fan_in&#x27;: [&#x27;PURGE&#x27;], &#x27;fan_out&#x27;: [&#x27;PURGE2&#x27;]}, {&#x27;node&#x27;: &#x27;LFLOW&#x27;, &#x27;fan_in&#x27;: [&#x27;LIQ&#x27;], &#x27;fan_out&#x27;: [&#x27;COLFD&#x27;, &#x27;CHRCY&#x27;]}, {&#x27;node&#x27;: &#x27;PUMP&#x27;, &#x27;fan_in&#x27;: [&#x27;CHRCY&#x27;], &#x27;fan_out&#x27;: [&#x27;CHRCY2&#x27;]}, {&#x27;node&#x27;: &#x27;PIPE&#x27;, &#x27;fan_in&#x27;: [&#x27;CHRCY2&#x27;], &#x27;fan_out&#x27;: [&#x27;CHRCY3&#x27;]}, {&#x27;node&#x27;: &#x27;COLUMN&#x27;, &#x27;fan_in&#x27;: [&#x27;COLFD&#x27;], &#x27;fan_out&#x27;: [&#x27;LTENDS&#x27;, &#x27;PRODUCT&#x27;]}]}
-  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：&quot;FEEDPUMP&quot;, &quot;FEED-MIX&quot;, &quot;REACT&quot;, &quot;HP-SEP&quot;, &quot;VFLOW&quot;, &quot;VALVE&quot;, &quot;COMP&quot;, &quot;LFLOW&quot;, &quot;PUMP&quot;, &quot;PIPE&quot;, &quot;COLUMN&quot;。
-  - Visual evidence: [NON-ENGLISH REDACTED] &quot;BZIN&quot; [NON-ENGLISH REDACTED] &quot;FEEDPUMP&quot;，[NON-ENGLISH REDACTED] &quot;BZIN2&quot; [NON-ENGLISH REDACTED] &quot;FEED-MIX&quot;。
-  - Visual evidence: &quot;FEED-MIX&quot; [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] &quot;H2IN&quot;, &quot;BZIN2&quot;, &quot;H2RCY2&quot;, &quot;CHRCY3&quot; [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] &quot;RXIN&quot; [NON-ENGLISH REDACTED] &quot;REACT&quot;。
-  - Visual evidence: &quot;REACT&quot; [NON-ENGLISH REDACTED] &quot;RXOUT&quot; [NON-ENGLISH REDACTED] &quot;HP-SEP&quot;。
-  - Visual evidence: &quot;HP-SEP&quot; [NON-ENGLISH REDACTED] &quot;VAP&quot; [NON-ENGLISH REDACTED] &quot;VFLOW&quot;，[NON-ENGLISH REDACTED] &quot;LIQ&quot; [NON-ENGLISH REDACTED] &quot;LFLOW&quot;。
-  - Visual evidence: &quot;VFLOW&quot; [NON-ENGLISH REDACTED] &quot;H2RCY&quot;，[NON-ENGLISH REDACTED] &quot;COMP&quot;；[NON-ENGLISH REDACTED] &quot;PURGE&quot; [NON-ENGLISH REDACTED] &quot;VALVE&quot; [NON-ENGLISH REDACTED] &quot;PURGE2&quot;。
-  - Visual evidence: &quot;LFLOW&quot; [NON-ENGLISH REDACTED] &quot;COLFD&quot; [NON-ENGLISH REDACTED] &quot;COLUMN&quot;；[NON-ENGLISH REDACTED] &quot;CHRCY&quot; [NON-ENGLISH REDACTED] &quot;PUMP&quot;，[NON-ENGLISH REDACTED] &quot;CHRCY2&quot; [NON-ENGLISH REDACTED] &quot;PIPE&quot;，[NON-ENGLISH REDACTED] &quot;CHRCY3&quot; [NON-ENGLISH REDACTED] &quot;FEED-MIX&quot;。
-  - Visual evidence: &quot;COLUMN&quot; [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] &quot;LTENDS&quot;，[NON-ENGLISH REDACTED] &quot;PRODUCT&quot;。
+- Question `labels_and_topology`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] from -> through/into -> to。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] fan-in/fan-out，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Aspen block type，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] visible_label [NON-ENGLISH REDACTED] type_from_context [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。
+  - Direct answer: {'visible_modules_or_equipment': [{'visible_label': 'FEEDPUMP', 'type_from_context': 'Pump'}, {'visible_label': 'FEED-MIX', 'type_from_context': 'Heater'}, {'visible_label': 'REACT', 'type_from_context': 'Rstoic'}, {'visible_label': 'HP-SEP', 'type_from_context': 'Flash2'}, {'visible_label': 'VFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'VALVE', 'type_from_context': 'Valve'}, {'visible_label': 'COMP', 'type_from_context': 'Compr'}, {'visible_label': 'LFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'PUMP', 'type_from_context': 'Pump HI'}, {'visible_label': 'PIPE', 'type_from_context': 'Pipe'}, {'visible_label': 'COLUMN', 'type_from_context': 'RadFrac'}], 'visible_stream_labels': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], 'directly_visible_connections_as_edges': [{'stream_label': 'BZIN', 'connection': 'external left feed -> into FEEDPUMP'}, {'stream_label': 'BZIN2', 'connection': 'FEEDPUMP -> into FEED-MIX'}, {'stream_label': 'H2IN', 'connection': 'external left feed -> into FEED-MIX'}, {'stream_label': 'H2RCY2', 'connection': 'COMP -> into FEED-MIX'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> into FEED-MIX'}, {'stream_label': 'RXIN', 'connection': 'FEED-MIX -> into REACT'}, {'stream_label': 'RXOUT', 'connection': 'REACT -> into HP-SEP'}, {'stream_label': 'VAP', 'connection': 'HP-SEP -> into VFLOW'}, {'stream_label': 'H2RCY', 'connection': 'VFLOW -> into COMP'}, {'stream_label': 'PURGE', 'connection': 'VFLOW -> into VALVE'}, {'stream_label': 'PURGE2', 'connection': 'VALVE -> external right outlet'}, {'stream_label': 'LIQ', 'connection': 'HP-SEP -> into LFLOW'}, {'stream_label': 'COLFD', 'connection': 'LFLOW -> into COLUMN'}, {'stream_label': 'CHRCY', 'connection': 'LFLOW -> into PUMP'}, {'stream_label': 'CHRCY2', 'connection': 'PUMP -> into PIPE'}, {'stream_label': 'LTENDS', 'connection': 'COLUMN -> external right outlet'}, {'stream_label': 'PRODUCT', 'connection': 'COLUMN -> external right outlet'}], 'visible_node_fan_in_fan_out_summary': [{'node': 'FEEDPUMP', 'fan_in': ['BZIN'], 'fan_out': ['BZIN2']}, {'node': 'FEED-MIX', 'fan_in': ['BZIN2', 'H2IN', 'H2RCY2', 'CHRCY3'], 'fan_out': ['RXIN']}, {'node': 'REACT', 'fan_in': ['RXIN'], 'fan_out': ['RXOUT']}, {'node': 'HP-SEP', 'fan_in': ['RXOUT'], 'fan_out': ['VAP', 'LIQ']}, {'node': 'VFLOW', 'fan_in': ['VAP'], 'fan_out': ['H2RCY', 'PURGE']}, {'node': 'COMP', 'fan_in': ['H2RCY'], 'fan_out': ['H2RCY2']}, {'node': 'VALVE', 'fan_in': ['PURGE'], 'fan_out': ['PURGE2']}, {'node': 'LFLOW', 'fan_in': ['LIQ'], 'fan_out': ['COLFD', 'CHRCY']}, {'node': 'PUMP', 'fan_in': ['CHRCY'], 'fan_out': ['CHRCY2']}, {'node': 'PIPE', 'fan_in': ['CHRCY2'], 'fan_out': ['CHRCY3']}, {'node': 'COLUMN', 'fan_in': ['COLFD'], 'fan_out': ['LTENDS', 'PRODUCT']}]}
+  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]："FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN"。
+  - Visual evidence: [NON-ENGLISH REDACTED] "BZIN" [NON-ENGLISH REDACTED] "FEEDPUMP"，[NON-ENGLISH REDACTED] "BZIN2" [NON-ENGLISH REDACTED] "FEED-MIX"。
+  - Visual evidence: "FEED-MIX" [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] "H2IN", "BZIN2", "H2RCY2", "CHRCY3" [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] "RXIN" [NON-ENGLISH REDACTED] "REACT"。
+  - Visual evidence: "REACT" [NON-ENGLISH REDACTED] "RXOUT" [NON-ENGLISH REDACTED] "HP-SEP"。
+  - Visual evidence: "HP-SEP" [NON-ENGLISH REDACTED] "VAP" [NON-ENGLISH REDACTED] "VFLOW"，[NON-ENGLISH REDACTED] "LIQ" [NON-ENGLISH REDACTED] "LFLOW"。
+  - Visual evidence: "VFLOW" [NON-ENGLISH REDACTED] "H2RCY"，[NON-ENGLISH REDACTED] "COMP"；[NON-ENGLISH REDACTED] "PURGE" [NON-ENGLISH REDACTED] "VALVE" [NON-ENGLISH REDACTED] "PURGE2"。
+  - Visual evidence: "LFLOW" [NON-ENGLISH REDACTED] "COLFD" [NON-ENGLISH REDACTED] "COLUMN"；[NON-ENGLISH REDACTED] "CHRCY" [NON-ENGLISH REDACTED] "PUMP"，[NON-ENGLISH REDACTED] "CHRCY2" [NON-ENGLISH REDACTED] "PIPE"，[NON-ENGLISH REDACTED] "CHRCY3" [NON-ENGLISH REDACTED] "FEED-MIX"。
+  - Visual evidence: "COLUMN" [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] "LTENDS"，[NON-ENGLISH REDACTED] "PRODUCT"。
   - Uncertainty: [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
-  - Uncertainty: [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] &quot;COLUMN&quot; [NON-ENGLISH REDACTED]。
-  - Uncertainty: &quot;type_from_context&quot; [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
+  - Uncertainty: [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] "COLUMN" [NON-ENGLISH REDACTED]。
+  - Uncertainty: "type_from_context" [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
 - Question `numbers_and_constraints`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。
-  - Direct answer: {&#x27;[NON-ENGLISH REDACTED]&#x27;: [], &#x27;[NON-ENGLISH REDACTED]&#x27;: [], &#x27;[NON-ENGLISH REDACTED]&#x27;: [], &#x27;[NON-ENGLISH REDACTED]&#x27;: [], &#x27;[NON-ENGLISH REDACTED]&#x27;: [], &#x27;[NON-ENGLISH REDACTED]&#x27;: [&#x27;FEEDPUMP&#x27;, &#x27;FEED-MIX&#x27;, &#x27;REACT&#x27;, &#x27;HP-SEP&#x27;, &#x27;VFLOW&#x27;, &#x27;VALVE&#x27;, &#x27;COMP&#x27;, &#x27;LFLOW&#x27;, &#x27;PUMP&#x27;, &#x27;PIPE&#x27;, &#x27;COLUMN&#x27;], &#x27;[NON-ENGLISH REDACTED]&#x27;: [&#x27;BZIN&#x27;, &#x27;H2IN&#x27;, &#x27;BZIN2&#x27;, &#x27;H2RCY2&#x27;, &#x27;RXIN&#x27;, &#x27;RXOUT&#x27;, &#x27;VAP&#x27;, &#x27;H2RCY&#x27;, &#x27;PURGE&#x27;, &#x27;PURGE2&#x27;, &#x27;LIQ&#x27;, &#x27;COLFD&#x27;, &#x27;CHRCY&#x27;, &#x27;CHRCY2&#x27;, &#x27;CHRCY3&#x27;, &#x27;LTENDS&#x27;, &#x27;PRODUCT&#x27;], &#x27;[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]&#x27;: {&#x27;PRODUCT&#x27;: &#x27;COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]&#x27;, &#x27;LTENDS&#x27;: &#x27;COLUMN [NON-ENGLISH REDACTED]&#x27;, &#x27;H2RCY&#x27;: &#x27;VFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] COMP&#x27;, &#x27;H2RCY2&#x27;: &#x27;COMP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX&#x27;, &#x27;CHRCY&#x27;: &#x27;LFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] PUMP&#x27;, &#x27;CHRCY2&#x27;: &#x27;PUMP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] PIPE&#x27;, &#x27;CHRCY3&#x27;: &#x27;PIPE [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX&#x27;, &#x27;PURGE&#x27;: &#x27;VFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] VALVE&#x27;, &#x27;PURGE2&#x27;: &#x27;VALVE [NON-ENGLISH REDACTED]&#x27;}, &#x27;[NON-ENGLISH REDACTED]_Aspen_[NON-ENGLISH REDACTED]&#x27;: [&#x27;BZIN [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEEDPUMP；FEEDPUMP [NON-ENGLISH REDACTED] BZIN2。&#x27;, &#x27;H2IN [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX。&#x27;, &#x27;FEED-MIX [NON-ENGLISH REDACTED] 4 [NON-ENGLISH REDACTED]：BZIN2、H2IN、H2RCY2、CHRCY3；[NON-ENGLISH REDACTED] RXIN。&#x27;, &#x27;RXIN [NON-ENGLISH REDACTED] REACT；REACT [NON-ENGLISH REDACTED] RXOUT。&#x27;, &#x27;RXOUT [NON-ENGLISH REDACTED] HP-SEP；HP-SEP [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] VAP、[NON-ENGLISH REDACTED] LIQ。&#x27;, &#x27;VAP [NON-ENGLISH REDACTED] VFLOW；VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE [NON-ENGLISH REDACTED]。&#x27;, &#x27;H2RCY [NON-ENGLISH REDACTED] COMP [NON-ENGLISH REDACTED] H2RCY2，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。&#x27;, &#x27;PURGE [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] PURGE2，[NON-ENGLISH REDACTED]。&#x27;, &#x27;LIQ [NON-ENGLISH REDACTED] LFLOW；LFLOW [NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED]。&#x27;, &#x27;COLFD [NON-ENGLISH REDACTED] COLUMN。&#x27;, &#x27;CHRCY [NON-ENGLISH REDACTED] PUMP、PIPE，[NON-ENGLISH REDACTED] CHRCY、CHRCY2、CHRCY3，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。&#x27;, &#x27;COLUMN [NON-ENGLISH REDACTED] COLFD，[NON-ENGLISH REDACTED]：LTENDS [NON-ENGLISH REDACTED] PRODUCT。&#x27;, &#x27;[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。&#x27;]}
-  - Visual evidence: [NON-ENGLISH REDACTED]：&quot;FEEDPUMP&quot;, &quot;FEED-MIX&quot;, &quot;REACT&quot;, &quot;HP-SEP&quot;, &quot;VFLOW&quot;, &quot;VALVE&quot;, &quot;COMP&quot;, &quot;LFLOW&quot;, &quot;PUMP&quot;, &quot;PIPE&quot;, &quot;COLUMN&quot;。
-  - Visual evidence: [NON-ENGLISH REDACTED] &quot;BZIN&quot; [NON-ENGLISH REDACTED] &quot;FEEDPUMP&quot;，[NON-ENGLISH REDACTED] &quot;BZIN2&quot;。
-  - Visual evidence: &quot;H2IN&quot;, &quot;BZIN2&quot;, &quot;H2RCY2&quot;, &quot;CHRCY3&quot; [NON-ENGLISH REDACTED] &quot;FEED-MIX&quot;，&quot;FEED-MIX&quot; [NON-ENGLISH REDACTED] &quot;RXIN&quot;。
-  - Visual evidence: &quot;RXIN&quot; [NON-ENGLISH REDACTED] &quot;REACT&quot;，&quot;REACT&quot; [NON-ENGLISH REDACTED] &quot;RXOUT&quot;，[NON-ENGLISH REDACTED] &quot;HP-SEP&quot;。
-  - Visual evidence: &quot;HP-SEP&quot; [NON-ENGLISH REDACTED] &quot;VAP&quot;，[NON-ENGLISH REDACTED] &quot;LIQ&quot;。
-  - Visual evidence: &quot;VAP&quot; [NON-ENGLISH REDACTED] &quot;VFLOW&quot;；&quot;VFLOW&quot; [NON-ENGLISH REDACTED] &quot;H2RCY&quot;，[NON-ENGLISH REDACTED] &quot;PURGE&quot;。
-  - Visual evidence: &quot;H2RCY&quot; [NON-ENGLISH REDACTED] &quot;COMP&quot;，[NON-ENGLISH REDACTED] &quot;H2RCY2&quot; [NON-ENGLISH REDACTED] &quot;FEED-MIX&quot;。
-  - Visual evidence: &quot;PURGE&quot; [NON-ENGLISH REDACTED] &quot;VALVE&quot; [NON-ENGLISH REDACTED] &quot;PURGE2&quot;，[NON-ENGLISH REDACTED]。
+  - Direct answer: {'[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': [], '[NON-ENGLISH REDACTED]': ['FEEDPUMP', 'FEED-MIX', 'REACT', 'HP-SEP', 'VFLOW', 'VALVE', 'COMP', 'LFLOW', 'PUMP', 'PIPE', 'COLUMN'], '[NON-ENGLISH REDACTED]': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], '[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]_[NON-ENGLISH REDACTED]': {'PRODUCT': 'COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]', 'LTENDS': 'COLUMN [NON-ENGLISH REDACTED]', 'H2RCY': 'VFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] COMP', 'H2RCY2': 'COMP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX', 'CHRCY': 'LFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] PUMP', 'CHRCY2': 'PUMP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] PIPE', 'CHRCY3': 'PIPE [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX', 'PURGE': 'VFLOW [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] VALVE', 'PURGE2': 'VALVE [NON-ENGLISH REDACTED]'}, '[NON-ENGLISH REDACTED]_Aspen_[NON-ENGLISH REDACTED]': ['BZIN [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEEDPUMP；FEEDPUMP [NON-ENGLISH REDACTED] BZIN2。', 'H2IN [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEED-MIX。', 'FEED-MIX [NON-ENGLISH REDACTED] 4 [NON-ENGLISH REDACTED]：BZIN2、H2IN、H2RCY2、CHRCY3；[NON-ENGLISH REDACTED] RXIN。', 'RXIN [NON-ENGLISH REDACTED] REACT；REACT [NON-ENGLISH REDACTED] RXOUT。', 'RXOUT [NON-ENGLISH REDACTED] HP-SEP；HP-SEP [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] VAP、[NON-ENGLISH REDACTED] LIQ。', 'VAP [NON-ENGLISH REDACTED] VFLOW；VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE [NON-ENGLISH REDACTED]。', 'H2RCY [NON-ENGLISH REDACTED] COMP [NON-ENGLISH REDACTED] H2RCY2，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'PURGE [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] PURGE2，[NON-ENGLISH REDACTED]。', 'LIQ [NON-ENGLISH REDACTED] LFLOW；LFLOW [NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED]。', 'COLFD [NON-ENGLISH REDACTED] COLUMN。', 'CHRCY [NON-ENGLISH REDACTED] PUMP、PIPE，[NON-ENGLISH REDACTED] CHRCY、CHRCY2、CHRCY3，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'COLUMN [NON-ENGLISH REDACTED] COLFD，[NON-ENGLISH REDACTED]：LTENDS [NON-ENGLISH REDACTED] PRODUCT。', '[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。']}
+  - Visual evidence: [NON-ENGLISH REDACTED]："FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN"。
+  - Visual evidence: [NON-ENGLISH REDACTED] "BZIN" [NON-ENGLISH REDACTED] "FEEDPUMP"，[NON-ENGLISH REDACTED] "BZIN2"。
+  - Visual evidence: "H2IN", "BZIN2", "H2RCY2", "CHRCY3" [NON-ENGLISH REDACTED] "FEED-MIX"，"FEED-MIX" [NON-ENGLISH REDACTED] "RXIN"。
+  - Visual evidence: "RXIN" [NON-ENGLISH REDACTED] "REACT"，"REACT" [NON-ENGLISH REDACTED] "RXOUT"，[NON-ENGLISH REDACTED] "HP-SEP"。
+  - Visual evidence: "HP-SEP" [NON-ENGLISH REDACTED] "VAP"，[NON-ENGLISH REDACTED] "LIQ"。
+  - Visual evidence: "VAP" [NON-ENGLISH REDACTED] "VFLOW"；"VFLOW" [NON-ENGLISH REDACTED] "H2RCY"，[NON-ENGLISH REDACTED] "PURGE"。
+  - Visual evidence: "H2RCY" [NON-ENGLISH REDACTED] "COMP"，[NON-ENGLISH REDACTED] "H2RCY2" [NON-ENGLISH REDACTED] "FEED-MIX"。
+  - Visual evidence: "PURGE" [NON-ENGLISH REDACTED] "VALVE" [NON-ENGLISH REDACTED] "PURGE2"，[NON-ENGLISH REDACTED]。
   - Uncertainty: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
   - Uncertainty: [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
   - Uncertainty: COLUMN [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。
 - Question `stream_types_and_coupling`: You are given a stream-type icon legend reference image, then the task figure. Classify each visible stream label by line style and symbol using the reference legend only: solid line = material stream, dashed line with C = heat stream, dashed line with W = work stream, dashed line with I = power stream. Also classify block/unit symbols separately from stream labels. If a label such as Q1-Q4 uses dashed heat-style lines, treat it as heat/energy coupling, not material flow. Do not guess from label text alone. Do not invent a heat stream, including a label such as Q1, unless a dashed heat line is visible. A quench or reactor duty that the text describes as a material stream or a block result is not a heat stream.
-  - Direct answer: {&#x27;stream_type_classification&#x27;: {&#x27;material_streams_solid_line&#x27;: [&#x27;BZIN&#x27;, &#x27;H2IN&#x27;, &#x27;BZIN2&#x27;, &#x27;H2RCY2&#x27;, &#x27;RXIN&#x27;, &#x27;RXOUT&#x27;, &#x27;VAP&#x27;, &#x27;H2RCY&#x27;, &#x27;PURGE&#x27;, &#x27;PURGE2&#x27;, &#x27;LIQ&#x27;, &#x27;COLFD&#x27;, &#x27;CHRCY&#x27;, &#x27;CHRCY2&#x27;, &#x27;CHRCY3&#x27;, &#x27;LTENDS&#x27;, &#x27;PRODUCT&#x27;], &#x27;heat_streams_dashed_line_with_C&#x27;: [], &#x27;work_streams_dashed_line_with_W&#x27;: [], &#x27;power_streams_dashed_line_with_I&#x27;: []}, &#x27;block_unit_symbols_separate_from_stream_labels&#x27;: [&#x27;FEEDPUMP&#x27;, &#x27;FEED-MIX&#x27;, &#x27;REACT&#x27;, &#x27;HP-SEP&#x27;, &#x27;VFLOW&#x27;, &#x27;VALVE&#x27;, &#x27;COMP&#x27;, &#x27;LFLOW&#x27;, &#x27;PUMP&#x27;, &#x27;PIPE&#x27;, &#x27;COLUMN&#x27;], &#x27;summary&#x27;: &#x27;All visible labeled streams in the task figure are drawn as solid material-flow lines. No dashed heat/work/power coupling lines with C, W, or I symbols are visible.&#x27;}
+  - Direct answer: {'stream_type_classification': {'material_streams_solid_line': ['BZIN', 'H2IN', 'BZIN2', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'H2RCY', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'CHRCY', 'CHRCY2', 'CHRCY3', 'LTENDS', 'PRODUCT'], 'heat_streams_dashed_line_with_C': [], 'work_streams_dashed_line_with_W': [], 'power_streams_dashed_line_with_I': []}, 'block_unit_symbols_separate_from_stream_labels': ['FEEDPUMP', 'FEED-MIX', 'REACT', 'HP-SEP', 'VFLOW', 'VALVE', 'COMP', 'LFLOW', 'PUMP', 'PIPE', 'COLUMN'], 'summary': 'All visible labeled streams in the task figure are drawn as solid material-flow lines. No dashed heat/work/power coupling lines with C, W, or I symbols are visible.'}
   - Uncertainty: The figure is low-resolution, but the visible stream lines appear consistently solid; no dashed heat/work/power stream symbols are discernible.
   - Uncertainty: Block/unit symbols are listed as visible block labels only; the provided reference legend is for stream types, not for detailed equipment-icon classification.
-- Question `multi_effect_evaporation_port_contract`: If the active figure is a multi-effect evaporation flowsheet, derive an executable Aspen topology contract from the active subfigure only. Separate four path classes: liquid/concentrate material path, secondary-vapor or heating-material path, condensate/water path, and heat/energy coupling path. For every visible heat label such as Q1, Q2, Q3, or Q4 in the active subfigure, decide whether its endpoints are visually resolved. If resolved, output one row with: heat_label, source_heat_side_equipment, sink_evaporator_or_flash, visible_evidence, and aspen_port_contract in the exact form `source.HS(OUT) -&gt; Q* -&gt; sink.HS(IN)` (or the equivalent heat-out/heat-in port names if the labels imply different Aspen ports). If unresolved, output one row with heat_label, nearby_candidate_source_equipment, nearby_candidate_sink_effects, and uncertainty; do not mark it as complete. Never treat a heat label connected only to a flash/effect as a complete heat cascade. Do not import a heat-cascade pairing from an inactive subfigure, from effect numbering, or from process intuition alone; ground every source/sink decision in visible adjacency plus any human low-resolution clarification. Also list the material vapor streams that feed heater/exchanger symbols separately from the Q heat streams, because vapor material flow is not the same object as the Aspen heat stream.
-  - Direct answer: {&#x27;is_active_figure_multi_effect_evaporation_flowsheet&#x27;: False, &#x27;reason&#x27;: &#x27;The active figure is a cyclohexane production/reaction-separation flowsheet, not a multi-effect evaporation flowsheet. No evaporator effects, condensers, Q1/Q2/Q3/Q4 heat labels, or heat-cascade lines are visible.&#x27;, &#x27;aspen_topology_contract_from_active_subfigure_only&#x27;: {&#x27;liquid_or_concentrate_material_path&#x27;: {&#x27;status&#x27;: &#x27;not a multi-effect evaporation liquid/concentrate path&#x27;, &#x27;visible_material_edges&#x27;: [&#x27;BZIN -&gt; FEEDPUMP -&gt; BZIN2 -&gt; FEED-MIX&#x27;, &#x27;FEED-MIX -&gt; RXIN -&gt; REACT&#x27;, &#x27;REACT -&gt; RXOUT -&gt; HP-SEP&#x27;, &#x27;HP-SEP -&gt; LIQ -&gt; LFLOW&#x27;, &#x27;LFLOW -&gt; COLFD -&gt; COLUMN&#x27;, &#x27;COLUMN -&gt; PRODUCT&#x27;, &#x27;LFLOW -&gt; CHRCY -&gt; PUMP -&gt; CHRCY2 -&gt; PIPE -&gt; CHRCY3 -&gt; FEED-MIX&#x27;]}, &#x27;secondary_vapor_or_heating_material_path&#x27;: {&#x27;status&#x27;: &#x27;no multi-effect secondary-vapor/heating-material cascade is visible&#x27;, &#x27;visible_vapor_or_gas_material_edges&#x27;: [&#x27;HP-SEP -&gt; VAP -&gt; VFLOW&#x27;, &#x27;VFLOW -&gt; H2RCY -&gt; COMP -&gt; H2RCY2 -&gt; FEED-MIX&#x27;, &#x27;VFLOW -&gt; PURGE -&gt; VALVE -&gt; PURGE2&#x27;, &#x27;H2IN -&gt; FEED-MIX&#x27;], &#x27;material_vapor_streams_feeding_heater_or_exchanger_symbols_separate_from_Q&#x27;: [{&#x27;stream&#x27;: &#x27;H2IN&#x27;, &#x27;visible_connection&#x27;: &#x27;external feed -&gt; FEED-MIX&#x27;, &#x27;note&#x27;: &#x27;This is a material stream, not a Q heat stream.&#x27;}, {&#x27;stream&#x27;: &#x27;H2RCY2&#x27;, &#x27;visible_connection&#x27;: &#x27;COMP -&gt; FEED-MIX&#x27;, &#x27;note&#x27;: &#x27;This is a material recycle stream, not a Q heat stream.&#x27;}]}, &#x27;condensate_or_water_path&#x27;: {&#x27;status&#x27;: &#x27;none visible&#x27;, &#x27;visible_edges&#x27;: []}, &#x27;heat_or_energy_coupling_path&#x27;: {&#x27;status&#x27;: &#x27;none visible&#x27;, &#x27;visible_Q_heat_stream_rows&#x27;: [], &#x27;unresolved_Q_heat_stream_rows&#x27;: [], &#x27;note&#x27;: &#x27;No visible heat labels such as Q1, Q2, Q3, or Q4 appear in the active figure, so no Aspen heat-port contract of the form source.HS(OUT) -&gt; Q* -&gt; sink.HS(IN) can be completed or even proposed from this figure.&#x27;}}}
+- Question `multi_effect_evaporation_port_contract`: If the active figure is a multi-effect evaporation flowsheet, derive an executable Aspen topology contract from the active subfigure only. Separate four path classes: liquid/concentrate material path, secondary-vapor or heating-material path, condensate/water path, and heat/energy coupling path. For every visible heat label such as Q1, Q2, Q3, or Q4 in the active subfigure, decide whether its endpoints are visually resolved. If resolved, output one row with: heat_label, source_heat_side_equipment, sink_evaporator_or_flash, visible_evidence, and aspen_port_contract in the exact form `source.HS(OUT) -> Q* -> sink.HS(IN)` (or the equivalent heat-out/heat-in port names if the labels imply different Aspen ports). If unresolved, output one row with heat_label, nearby_candidate_source_equipment, nearby_candidate_sink_effects, and uncertainty; do not mark it as complete. Never treat a heat label connected only to a flash/effect as a complete heat cascade. Do not import a heat-cascade pairing from an inactive subfigure, from effect numbering, or from process intuition alone; ground every source/sink decision in visible adjacency plus any human low-resolution clarification. Also list the material vapor streams that feed heater/exchanger symbols separately from the Q heat streams, because vapor material flow is not the same object as the Aspen heat stream.
+  - Direct answer: {'is_active_figure_multi_effect_evaporation_flowsheet': False, 'reason': 'The active figure is a cyclohexane production/reaction-separation flowsheet, not a multi-effect evaporation flowsheet. No evaporator effects, condensers, Q1/Q2/Q3/Q4 heat labels, or heat-cascade lines are visible.', 'aspen_topology_contract_from_active_subfigure_only': {'liquid_or_concentrate_material_path': {'status': 'not a multi-effect evaporation liquid/concentrate path', 'visible_material_edges': ['BZIN -> FEEDPUMP -> BZIN2 -> FEED-MIX', 'FEED-MIX -> RXIN -> REACT', 'REACT -> RXOUT -> HP-SEP', 'HP-SEP -> LIQ -> LFLOW', 'LFLOW -> COLFD -> COLUMN', 'COLUMN -> PRODUCT', 'LFLOW -> CHRCY -> PUMP -> CHRCY2 -> PIPE -> CHRCY3 -> FEED-MIX']}, 'secondary_vapor_or_heating_material_path': {'status': 'no multi-effect secondary-vapor/heating-material cascade is visible', 'visible_vapor_or_gas_material_edges': ['HP-SEP -> VAP -> VFLOW', 'VFLOW -> H2RCY -> COMP -> H2RCY2 -> FEED-MIX', 'VFLOW -> PURGE -> VALVE -> PURGE2', 'H2IN -> FEED-MIX'], 'material_vapor_streams_feeding_heater_or_exchanger_symbols_separate_from_Q': [{'stream': 'H2IN', 'visible_connection': 'external feed -> FEED-MIX', 'note': 'This is a material stream, not a Q heat stream.'}, {'stream': 'H2RCY2', 'visible_connection': 'COMP -> FEED-MIX', 'note': 'This is a material recycle stream, not a Q heat stream.'}]}, 'condensate_or_water_path': {'status': 'none visible', 'visible_edges': []}, 'heat_or_energy_coupling_path': {'status': 'none visible', 'visible_Q_heat_stream_rows': [], 'unresolved_Q_heat_stream_rows': [], 'note': 'No visible heat labels such as Q1, Q2, Q3, or Q4 appear in the active figure, so no Aspen heat-port contract of the form source.HS(OUT) -> Q* -> sink.HS(IN) can be completed or even proposed from this figure.'}}}
   - Visual evidence: Visible equipment/module labels are: FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, LFLOW, PUMP, PIPE, COLUMN.
   - Visual evidence: Visible stream labels include: BZIN, H2IN, BZIN2, H2RCY2, RXIN, RXOUT, VAP, H2RCY, PURGE, PURGE2, LIQ, COLFD, CHRCY, CHRCY2, CHRCY3, LTENDS, PRODUCT.
   - Visual evidence: The only visibly labeled flash-like unit is HP-SEP, with RXOUT entering and VAP/LIQ leaving.
-  - Visual evidence: The vapor/gas path shown is HP-SEP -&gt; VAP -&gt; VFLOW, then split to H2RCY through COMP back to FEED-MIX and PURGE through VALVE to PURGE2.
+  - Visual evidence: The vapor/gas path shown is HP-SEP -> VAP -> VFLOW, then split to H2RCY through COMP back to FEED-MIX and PURGE through VALVE to PURGE2.
   - Visual evidence: No labels Q1, Q2, Q3, Q4, no dashed heat streams, and no evaporator-effect labels are visible in the active figure.
   - Uncertainty: The figure does not show any heat-stream labels or explicit Aspen energy ports; therefore heat coupling endpoints cannot be resolved.
   - Uncertainty: FEED-MIX is identified in the task context as a Heater module, but the visible figure does not show a separate Q heat stream into or out of it.
@@ -403,19 +396,19 @@ If any figure note conflicts with the written markdown or a generated split-task
 [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、LFLOW、COLUMN、PIPE、PUMP、COMP、VALVE [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] H2IN、BZIN、H2RCY、CHRCY、PRODUCT [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
 
 [NON-ENGLISH REDACTED]：COLUMN [NON-ENGLISH REDACTED]“12 [NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 1、[NON-ENGLISH REDACTED] 2、[NON-ENGLISH REDACTED] 3、[NON-ENGLISH REDACTED] 4”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] FEEDPUMP [NON-ENGLISH REDACTED] PUMP [NON-ENGLISH REDACTED]；BZIN2、H2RCY2、PURGE2、CHRCY2、CHRCY3 [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“PUMP”[NON-ENGLISH REDACTED]“FEEDPUMP”[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。
-  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：&quot;FEEDPUMP&quot;, &quot;FEED-MIX&quot;, &quot;REACT&quot;, &quot;HP-SEP&quot;, &quot;VFLOW&quot;, &quot;VALVE&quot;, &quot;COMP&quot;, &quot;LFLOW&quot;, &quot;PUMP&quot;, &quot;PIPE&quot;, &quot;COLUMN&quot;。
-  - Visual evidence: [NON-ENGLISH REDACTED]：&quot;BZIN&quot;, &quot;H2IN&quot;, &quot;BZIN2&quot;, &quot;H2RCY2&quot;, &quot;RXIN&quot;, &quot;RXOUT&quot;, &quot;VAP&quot;, &quot;H2RCY&quot;, &quot;PURGE&quot;, &quot;PURGE2&quot;, &quot;LIQ&quot;, &quot;COLFD&quot;, &quot;CHRCY&quot;, &quot;CHRCY2&quot;, &quot;CHRCY3&quot;, &quot;LTENDS&quot;, &quot;PRODUCT&quot;。
-  - Visual evidence: &quot;BZIN&quot; [NON-ENGLISH REDACTED] &quot;FEEDPUMP&quot;，[NON-ENGLISH REDACTED] &quot;BZIN2&quot;，[NON-ENGLISH REDACTED] BZIN2 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Visual evidence: &quot;H2RCY&quot; [NON-ENGLISH REDACTED] &quot;COMP&quot; [NON-ENGLISH REDACTED] &quot;H2RCY2&quot; [NON-ENGLISH REDACTED] &quot;FEED-MIX&quot;；[NON-ENGLISH REDACTED]。
-  - Visual evidence: &quot;PURGE&quot; [NON-ENGLISH REDACTED] &quot;VALVE&quot; [NON-ENGLISH REDACTED] &quot;PURGE2&quot;；[NON-ENGLISH REDACTED]。
-  - Visual evidence: &quot;CHRCY&quot; [NON-ENGLISH REDACTED] &quot;PUMP&quot; [NON-ENGLISH REDACTED] &quot;CHRCY2&quot;，[NON-ENGLISH REDACTED] &quot;PIPE&quot; [NON-ENGLISH REDACTED] &quot;CHRCY3&quot;，[NON-ENGLISH REDACTED] &quot;FEED-MIX&quot;；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
-  - Visual evidence: &quot;COLUMN&quot; [NON-ENGLISH REDACTED] &quot;COLFD&quot; [NON-ENGLISH REDACTED] &quot;LTENDS&quot;、&quot;PRODUCT&quot;；[NON-ENGLISH REDACTED] 1–12、[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]。
+  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]："FEEDPUMP", "FEED-MIX", "REACT", "HP-SEP", "VFLOW", "VALVE", "COMP", "LFLOW", "PUMP", "PIPE", "COLUMN"。
+  - Visual evidence: [NON-ENGLISH REDACTED]："BZIN", "H2IN", "BZIN2", "H2RCY2", "RXIN", "RXOUT", "VAP", "H2RCY", "PURGE", "PURGE2", "LIQ", "COLFD", "CHRCY", "CHRCY2", "CHRCY3", "LTENDS", "PRODUCT"。
+  - Visual evidence: "BZIN" [NON-ENGLISH REDACTED] "FEEDPUMP"，[NON-ENGLISH REDACTED] "BZIN2"，[NON-ENGLISH REDACTED] BZIN2 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+  - Visual evidence: "H2RCY" [NON-ENGLISH REDACTED] "COMP" [NON-ENGLISH REDACTED] "H2RCY2" [NON-ENGLISH REDACTED] "FEED-MIX"；[NON-ENGLISH REDACTED]。
+  - Visual evidence: "PURGE" [NON-ENGLISH REDACTED] "VALVE" [NON-ENGLISH REDACTED] "PURGE2"；[NON-ENGLISH REDACTED]。
+  - Visual evidence: "CHRCY" [NON-ENGLISH REDACTED] "PUMP" [NON-ENGLISH REDACTED] "CHRCY2"，[NON-ENGLISH REDACTED] "PIPE" [NON-ENGLISH REDACTED] "CHRCY3"，[NON-ENGLISH REDACTED] "FEED-MIX"；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
+  - Visual evidence: "COLUMN" [NON-ENGLISH REDACTED] "COLFD" [NON-ENGLISH REDACTED] "LTENDS"、"PRODUCT"；[NON-ENGLISH REDACTED] 1–12、[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]。
   - Uncertainty: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
   - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] BZIN2、PURGE2、CHRCY2、CHRCY3，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
   - Uncertainty: COLUMN [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。
   - Uncertainty: [NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 1–4”[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。
 - Question `icon_unit_family`: You are given Aspen Plus block-icon legend reference images, then the task figure. First mentally mask out ALL text and all rectangular text callout boxes in the task figure, including short labels such as V-1, E1, FLASH-2, B9, Q1, FEED1, PRODUCT, WATER, and S29. Then, using only the remaining non-text graphical process symbols, compare each symbol shape against the reference icons. If one icon is visually distinctive, report that match. If multiple block types share an ambiguous or simplified icon shape (for example a horizontal rounded vessel that could be HeatX or Decanter in textbook figures), report all plausible icon candidates instead of forcing a single geometry-only match. After listing icon candidates, use the task context only to rank which candidate is process-semantically more plausible; keep the ambiguity explicit when the figure itself cannot distinguish them. This icon-only result is lower priority than the visible-label topology result: never use icon candidates to override, split, delete, or add visible topology nodes reported by the label/topology question. Do not create a block entry for a boxed label, a stream tag, a connector segment, or a label attached to a stream. If a candidate would disappear after text/callout masking, omit it. Return entries with keys: symbol_id, symbol_location_without_using_text, icon_candidates, preferred_candidate_from_task_context, visual_reason_from_shape_only, semantic_reason_from_task_context, confidence, uncertainty. Never include visible text labels as evidence or as an output field.
-  - Direct answer: [{&#x27;symbol_id&#x27;: &#x27;S1&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;far left on the lower incoming material line&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Pump&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Pump&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a small circular rotating-equipment icon with a short connected line and base-like shading, matching the supplied Pump icon more closely than vessel, valve, or column icons.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this left-side pressure-raising unit as a pump.&#x27;, &#x27;confidence&#x27;: &#x27;high&#x27;, &#x27;uncertainty&#x27;: &#x27;Low-resolution shading makes fine details indistinct, but the round pump-like shape is distinctive.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S2&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;left-center where several incoming lines join before the reactor-like vessel&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Heater&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Heater&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The remaining non-text symbol is a small round icon with internal diagonal/zigzag-like markings. This is closest to the supplied Heater icon, not to the triangular Mixer or FSplit icons.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context states that this feed conditioning/mixing point is modeled with a heater-type module.&#x27;, &#x27;confidence&#x27;: &#x27;medium&#x27;, &#x27;uncertainty&#x27;: &#x27;The internal markings are small and blurred; the symbol also functions topologically as a mixing point, but its shape does not match the supplied triangular Mixer icon.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S3&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;center-left, immediately downstream of the round multi-inlet symbol&#x27;, &#x27;icon_candidates&#x27;: [&#x27;RStoic&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;RStoic&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a horizontal cylindrical vessel with internal crosshatched/packed-looking shading, closely matching the supplied RStoic reactor icon.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this step as the stoichiometric reaction section.&#x27;, &#x27;confidence&#x27;: &#x27;high&#x27;, &#x27;uncertainty&#x27;: &#x27;The hatch pattern is somewhat low-resolution, but the horizontal crosshatched reactor vessel is visually distinctive.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S4&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;center-right vertical vessel receiving material from the reactor-like symbol and sending one line upward and one downward&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Flash2&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Flash2&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a simple vertical rounded vessel without column trays or external condenser/reboiler attachments, matching the supplied Flash2 icon.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this vessel as a two-phase flash separator.&#x27;, &#x27;confidence&#x27;: &#x27;high&#x27;, &#x27;uncertainty&#x27;: &#x27;It could be generically interpreted as a vertical separator from shape alone, but among the supplied icons Flash2 is the closest match.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S5&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;upper middle, small filled square on the upward vapor/gas path where the line divides left and right&#x27;, &#x27;icon_candidates&#x27;: [&#x27;FSplit&#x27;, &#x27;Dupl&#x27;, &#x27;Mult&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;FSplit&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The visible symbol is only a small filled square junction with one incoming line and two outgoing lines. It does not closely match the supplied wedge-shaped FSplit icon or the boxed Mult/Dupl icons, so the match is a simplified splitter-marker ambiguity rather than a distinctive icon match.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context identifies this upper gas-path divider as a fractional splitter.&#x27;, &#x27;confidence&#x27;: &#x27;medium-low&#x27;, &#x27;uncertainty&#x27;: &#x27;Shape alone is not a close match to any supplied splitter icon; the candidate ranking depends strongly on the non-text split topology and task context.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S6&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;upper left of the vapor/gas recycle loop, on the line returning toward the central feed-conditioning area&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Compr&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Compr&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a tapered wedge/trapezoid rotating-equipment icon, visually matching the supplied compressor icon.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this recycle-gas pressure-changing unit as a compressor.&#x27;, &#x27;confidence&#x27;: &#x27;high&#x27;, &#x27;uncertainty&#x27;: &#x27;No significant ambiguity from the remaining shape.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S7&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;upper right on the outlet branch after the upper splitter marker&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Valve&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Valve&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is an inline valve/bowtie-like mark with a small stem-like feature, matching the supplied Valve icon.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this outlet pressure-changing unit as a valve.&#x27;, &#x27;confidence&#x27;: &#x27;high&#x27;, &#x27;uncertainty&#x27;: &#x27;The icon is small, but its inline valve geometry is recognizable.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S8&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;lower middle, small filled square below the vertical flash-like vessel where the liquid path divides&#x27;, &#x27;icon_candidates&#x27;: [&#x27;FSplit&#x27;, &#x27;Dupl&#x27;, &#x27;Mult&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;FSplit&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The visible symbol is a small filled square junction with one incoming line and two outgoing lines. It is not a distinctive match to the supplied wedge-shaped FSplit icon, so the geometry-only identification remains ambiguous among simplified splitter-type blocks.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context identifies this lower liquid-path divider as a fractional splitter.&#x27;, &#x27;confidence&#x27;: &#x27;medium-low&#x27;, &#x27;uncertainty&#x27;: &#x27;The square marker shape is not a close geometry match to the supplied Aspen splitter icons; context is needed to prefer FSplit.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S9&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;lower center-left on the recycle line leaving the lower splitter marker&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Pump&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Pump&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a circular rotating-equipment icon with connected inlet/outlet lines, matching the supplied Pump icon.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this lower recycle pressure-raising unit as a pump.&#x27;, &#x27;confidence&#x27;: &#x27;high&#x27;, &#x27;uncertainty&#x27;: &#x27;Low-resolution shading limits fine-detail comparison, but the pump-like circle is clear.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S10&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;lower left-of-center, horizontal tubular element downstream of the lower pump-like symbol&#x27;, &#x27;icon_candidates&#x27;: [&#x27;Pipe&#x27;, &#x27;Pipeline&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;Pipe&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a short horizontal cylindrical tube. This geometry is closest to the supplied Pipe and Pipeline icons, which are visually similar in the legend.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this recycle-line element as a pipe section.&#x27;, &#x27;confidence&#x27;: &#x27;medium-high&#x27;, &#x27;uncertainty&#x27;: &#x27;The supplied Pipe and Pipeline icons are very similar; the figure’s simplified tube shape does not distinguish them by geometry alone.&#x27;}, {&#x27;symbol_id&#x27;: &#x27;S11&#x27;, &#x27;symbol_location_without_using_text&#x27;: &#x27;right side, tall vertical tower with side connection from the lower splitter path and two product-side exits&#x27;, &#x27;icon_candidates&#x27;: [&#x27;DSTWU&#x27;, &#x27;Distl&#x27;, &#x27;RadFrac&#x27;], &#x27;preferred_candidate_from_task_context&#x27;: &#x27;RadFrac&#x27;, &#x27;visual_reason_from_shape_only&#x27;: &#x27;The symbol is a vertical distillation-column-like vessel with small top and bottom auxiliary round features. The supplied DSTWU, Distl, and RadFrac column icons are visually very similar, so the simplified shape alone does not uniquely distinguish among them.&#x27;, &#x27;semantic_reason_from_task_context&#x27;: &#x27;The task context describes this tower as a rigorous distillation column modeled with a RadFrac-type block.&#x27;, &#x27;confidence&#x27;: &#x27;medium&#x27;, &#x27;uncertainty&#x27;: &#x27;The icon geometry alone is ambiguous among several distillation-column icons in the reference legend.&#x27;}]
+  - Direct answer: [{'symbol_id': 'S1', 'symbol_location_without_using_text': 'far left on the lower incoming material line', 'icon_candidates': ['Pump'], 'preferred_candidate_from_task_context': 'Pump', 'visual_reason_from_shape_only': 'The symbol is a small circular rotating-equipment icon with a short connected line and base-like shading, matching the supplied Pump icon more closely than vessel, valve, or column icons.', 'semantic_reason_from_task_context': 'The task context describes this left-side pressure-raising unit as a pump.', 'confidence': 'high', 'uncertainty': 'Low-resolution shading makes fine details indistinct, but the round pump-like shape is distinctive.'}, {'symbol_id': 'S2', 'symbol_location_without_using_text': 'left-center where several incoming lines join before the reactor-like vessel', 'icon_candidates': ['Heater'], 'preferred_candidate_from_task_context': 'Heater', 'visual_reason_from_shape_only': 'The remaining non-text symbol is a small round icon with internal diagonal/zigzag-like markings. This is closest to the supplied Heater icon, not to the triangular Mixer or FSplit icons.', 'semantic_reason_from_task_context': 'The task context states that this feed conditioning/mixing point is modeled with a heater-type module.', 'confidence': 'medium', 'uncertainty': 'The internal markings are small and blurred; the symbol also functions topologically as a mixing point, but its shape does not match the supplied triangular Mixer icon.'}, {'symbol_id': 'S3', 'symbol_location_without_using_text': 'center-left, immediately downstream of the round multi-inlet symbol', 'icon_candidates': ['RStoic'], 'preferred_candidate_from_task_context': 'RStoic', 'visual_reason_from_shape_only': 'The symbol is a horizontal cylindrical vessel with internal crosshatched/packed-looking shading, closely matching the supplied RStoic reactor icon.', 'semantic_reason_from_task_context': 'The task context describes this step as the stoichiometric reaction section.', 'confidence': 'high', 'uncertainty': 'The hatch pattern is somewhat low-resolution, but the horizontal crosshatched reactor vessel is visually distinctive.'}, {'symbol_id': 'S4', 'symbol_location_without_using_text': 'center-right vertical vessel receiving material from the reactor-like symbol and sending one line upward and one downward', 'icon_candidates': ['Flash2'], 'preferred_candidate_from_task_context': 'Flash2', 'visual_reason_from_shape_only': 'The symbol is a simple vertical rounded vessel without column trays or external condenser/reboiler attachments, matching the supplied Flash2 icon.', 'semantic_reason_from_task_context': 'The task context describes this vessel as a two-phase flash separator.', 'confidence': 'high', 'uncertainty': 'It could be generically interpreted as a vertical separator from shape alone, but among the supplied icons Flash2 is the closest match.'}, {'symbol_id': 'S5', 'symbol_location_without_using_text': 'upper middle, small filled square on the upward vapor/gas path where the line divides left and right', 'icon_candidates': ['FSplit', 'Dupl', 'Mult'], 'preferred_candidate_from_task_context': 'FSplit', 'visual_reason_from_shape_only': 'The visible symbol is only a small filled square junction with one incoming line and two outgoing lines. It does not closely match the supplied wedge-shaped FSplit icon or the boxed Mult/Dupl icons, so the match is a simplified splitter-marker ambiguity rather than a distinctive icon match.', 'semantic_reason_from_task_context': 'The task context identifies this upper gas-path divider as a fractional splitter.', 'confidence': 'medium-low', 'uncertainty': 'Shape alone is not a close match to any supplied splitter icon; the candidate ranking depends strongly on the non-text split topology and task context.'}, {'symbol_id': 'S6', 'symbol_location_without_using_text': 'upper left of the vapor/gas recycle loop, on the line returning toward the central feed-conditioning area', 'icon_candidates': ['Compr'], 'preferred_candidate_from_task_context': 'Compr', 'visual_reason_from_shape_only': 'The symbol is a tapered wedge/trapezoid rotating-equipment icon, visually matching the supplied compressor icon.', 'semantic_reason_from_task_context': 'The task context describes this recycle-gas pressure-changing unit as a compressor.', 'confidence': 'high', 'uncertainty': 'No significant ambiguity from the remaining shape.'}, {'symbol_id': 'S7', 'symbol_location_without_using_text': 'upper right on the outlet branch after the upper splitter marker', 'icon_candidates': ['Valve'], 'preferred_candidate_from_task_context': 'Valve', 'visual_reason_from_shape_only': 'The symbol is an inline valve/bowtie-like mark with a small stem-like feature, matching the supplied Valve icon.', 'semantic_reason_from_task_context': 'The task context describes this outlet pressure-changing unit as a valve.', 'confidence': 'high', 'uncertainty': 'The icon is small, but its inline valve geometry is recognizable.'}, {'symbol_id': 'S8', 'symbol_location_without_using_text': 'lower middle, small filled square below the vertical flash-like vessel where the liquid path divides', 'icon_candidates': ['FSplit', 'Dupl', 'Mult'], 'preferred_candidate_from_task_context': 'FSplit', 'visual_reason_from_shape_only': 'The visible symbol is a small filled square junction with one incoming line and two outgoing lines. It is not a distinctive match to the supplied wedge-shaped FSplit icon, so the geometry-only identification remains ambiguous among simplified splitter-type blocks.', 'semantic_reason_from_task_context': 'The task context identifies this lower liquid-path divider as a fractional splitter.', 'confidence': 'medium-low', 'uncertainty': 'The square marker shape is not a close geometry match to the supplied Aspen splitter icons; context is needed to prefer FSplit.'}, {'symbol_id': 'S9', 'symbol_location_without_using_text': 'lower center-left on the recycle line leaving the lower splitter marker', 'icon_candidates': ['Pump'], 'preferred_candidate_from_task_context': 'Pump', 'visual_reason_from_shape_only': 'The symbol is a circular rotating-equipment icon with connected inlet/outlet lines, matching the supplied Pump icon.', 'semantic_reason_from_task_context': 'The task context describes this lower recycle pressure-raising unit as a pump.', 'confidence': 'high', 'uncertainty': 'Low-resolution shading limits fine-detail comparison, but the pump-like circle is clear.'}, {'symbol_id': 'S10', 'symbol_location_without_using_text': 'lower left-of-center, horizontal tubular element downstream of the lower pump-like symbol', 'icon_candidates': ['Pipe', 'Pipeline'], 'preferred_candidate_from_task_context': 'Pipe', 'visual_reason_from_shape_only': 'The symbol is a short horizontal cylindrical tube. This geometry is closest to the supplied Pipe and Pipeline icons, which are visually similar in the legend.', 'semantic_reason_from_task_context': 'The task context describes this recycle-line element as a pipe section.', 'confidence': 'medium-high', 'uncertainty': 'The supplied Pipe and Pipeline icons are very similar; the figure’s simplified tube shape does not distinguish them by geometry alone.'}, {'symbol_id': 'S11', 'symbol_location_without_using_text': 'right side, tall vertical tower with side connection from the lower splitter path and two product-side exits', 'icon_candidates': ['DSTWU', 'Distl', 'RadFrac'], 'preferred_candidate_from_task_context': 'RadFrac', 'visual_reason_from_shape_only': 'The symbol is a vertical distillation-column-like vessel with small top and bottom auxiliary round features. The supplied DSTWU, Distl, and RadFrac column icons are visually very similar, so the simplified shape alone does not uniquely distinguish among them.', 'semantic_reason_from_task_context': 'The task context describes this tower as a rigorous distillation column modeled with a RadFrac-type block.', 'confidence': 'medium', 'uncertainty': 'The icon geometry alone is ambiguous among several distillation-column icons in the reference legend.'}]
   - Visual evidence: All rectangular callout boxes and text were mentally masked before matching.
   - Visual evidence: The remaining process symbols include two round pump-like icons, one round heater-like multi-inlet icon, one horizontal crosshatched reactor-like vessel, one simple vertical flash-like vessel, two small filled square splitter markers, one tapered compressor-like wedge, one inline valve symbol, one short horizontal tube, and one tall column-like tower.
   - Visual evidence: The two small filled square splitter markers are not close geometric matches to the supplied wedge or boxed splitter icons, so they are reported as simplified ambiguous splitter symbols rather than distinctive icon matches.
@@ -433,14 +426,14 @@ Reason: LLM target-priority judgment separating primary targets, hard topology g
 Use this as a priority guide when planning repairs and interpreting target-related validation.
 Primary semantic targets and topology hard gates are blocking. Secondary fidelity targets should be evidenced and reported, but they should not override primary targets or topology when conflicts are documented.
 
-Source artifact: `&lt;SANDBOX_ROOT&gt;\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\target_priority_judgment.json`
+Source artifact: `<SANDBOX_ROOT>\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\target_priority_judgment.json`
 
 ## Primary Semantic Targets
 - P1_product_cyclohexane_mole_fraction: Report the mole fraction of cyclohexane/C6H12 in the final PRODUCT material stream.
   Evidence policy: The stated objective is to[NON-ENGLISH REDACTED]. This is the main deliverable of the task.
 - P2_aspen_flowsheet_result_path: The reported PRODUCT C6H12 mole fraction must come from a solved Aspen Plus flowsheet, not from a hand calculation or an input-only restatement.
   Evidence policy: The task asks to use Aspen Plus to create the cyclohexane production process and determine the product composition. A result not derived from the Aspen flowsheet would not satisfy the central request.
-- P3_core_process_semantics: Model the intended cyclohexane production chemistry and separations: benzene hydrogenation C6H6 + 3 H2 -&gt; C6H12 with 99.8% benzene conversion, cooling/flash light-gas separation, vapor purge/recycle, liquid recycle/column feed split, and RadFrac stabilization column producing PRODUCT.
+- P3_core_process_semantics: Model the intended cyclohexane production chemistry and separations: benzene hydrogenation C6H6 + 3 H2 -> C6H12 with 99.8% benzene conversion, cooling/flash light-gas separation, vapor purge/recycle, liquid recycle/column feed split, and RadFrac stabilization column producing PRODUCT.
   Evidence policy: These features define the process whose product composition is requested. Omitting or replacing them changes the semantic meaning of the requested PRODUCT composition.
 - P4_fixed_feed_and_major_operating_specs: Use the task-stated feed compositions/flow rates and major reactor, flash, split, and column operating specifications as the basis for the Aspen calculation.
   Evidence policy: The requested mole fraction is meaningful only for the given problem conditions, including H2IN, BZIN, reactor conversion/conditions, flash conditions, split fractions, and RadFrac conditions.
@@ -448,11 +441,11 @@ Source artifact: `&lt;SANDBOX_ROOT&gt;\runs\slim41_fixed_i1m2_r5_20261015_2227_c
 ## Topology Hard Gates
 - T1_visible_nodes_and_block_identities: The flowsheet must contain the figure-visible named process nodes FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, LFLOW, PUMP, PIPE, and COLUMN, with the text-specified Aspen block families where applicable.
   Evidence policy: The task asks to create the Aspen Plus flowsheet shown in the figure, and the text names the module families for these blocks. Removing, renaming, splitting, or substituting visible nodes changes the required flowsheet identity.
-- T2_feed_mixing_and_reactor_path: The feed/recycle path must preserve the visible topology: BZIN -&gt; FEEDPUMP -&gt; BZIN2 -&gt; FEED-MIX; H2IN -&gt; FEED-MIX; H2RCY2 -&gt; FEED-MIX; CHRCY3 -&gt; FEED-MIX; FEED-MIX -&gt; RXIN -&gt; REACT -&gt; RXOUT -&gt; HP-SEP.
+- T2_feed_mixing_and_reactor_path: The feed/recycle path must preserve the visible topology: BZIN -> FEEDPUMP -> BZIN2 -> FEED-MIX; H2IN -> FEED-MIX; H2RCY2 -> FEED-MIX; CHRCY3 -> FEED-MIX; FEED-MIX -> RXIN -> REACT -> RXOUT -> HP-SEP.
   Evidence policy: This is the figure-backed inlet and reactor topology leading to the process whose product is requested.
-- T3_separator_vapor_recycle_and_purge_topology: HP-SEP vapor outlet must feed VFLOW; VFLOW must split to H2RCY -&gt; COMP -&gt; H2RCY2 -&gt; FEED-MIX and PURGE -&gt; VALVE -&gt; PURGE2.
+- T3_separator_vapor_recycle_and_purge_topology: HP-SEP vapor outlet must feed VFLOW; VFLOW must split to H2RCY -> COMP -> H2RCY2 -> FEED-MIX and PURGE -> VALVE -> PURGE2.
   Evidence policy: The vapor recycle/purge loop is visible in the figure and described in the text as part of the cyclohexane production process.
-- T4_separator_liquid_column_and_liquid_recycle_topology: HP-SEP liquid outlet must feed LFLOW; LFLOW must split to COLFD -&gt; COLUMN and CHRCY -&gt; PUMP -&gt; CHRCY2 -&gt; PIPE -&gt; CHRCY3 -&gt; FEED-MIX.
+- T4_separator_liquid_column_and_liquid_recycle_topology: HP-SEP liquid outlet must feed LFLOW; LFLOW must split to COLFD -> COLUMN and CHRCY -> PUMP -> CHRCY2 -> PIPE -> CHRCY3 -> FEED-MIX.
   Evidence policy: The liquid split to the stabilizer column and liquid recycle loop is figure-backed and text-backed. It determines the stream that enters the final product column.
 - T5_column_product_identity: COLUMN must have COLFD as feed and LTENDS and PRODUCT as its two material outlets, with PRODUCT treated as the final product stream.
   Evidence policy: The requested result is specifically the product-stream composition; figure evidence identifies PRODUCT as the column outlet, not the purge, light ends, separator liquid, or column feed.
@@ -481,7 +474,7 @@ Separate validation into: hard topology/identity gates for visible nodes, materi
 ```
 
 ### FILE: generated/cursor_planner_initial_context.md
-Reason: cached aspen_task_planner planner context from &lt;SANDBOX_ROOT&gt;\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\cursor_planner_initial_context.json
+Reason: cached aspen_task_planner planner context from <SANDBOX_ROOT>\runs\slim41_fixed_i1m2_r5_20261015_2227_chinese_5_1\cursor_planner_initial_context.json
 ```text
 # Cursor Planner Initial Context
 
@@ -495,7 +488,7 @@ Treat explicit task facts as hard requirements. Do not remove named units, strea
 | [NON-ENGLISH REDACTED] / (m3/h) | 20 | 10 | 5 | 3 |
 | [NON-ENGLISH REDACTED] | 40 | 250 | 300 | 400 |
 - name=FEED-MIX; block_type=HEATER; specs=Temperature 150℃, pressure 2.3 MPa.
-- name=REACT; block_type=RSTOIC; specs=Temperature 200℃, pressure drop 0.1 MPa; reaction C6H6 + 3H2 -&gt; C6H12; benzene conversion 0.998.
+- name=REACT; block_type=RSTOIC; specs=Temperature 200℃, pressure drop 0.1 MPa; reaction C6H6 + 3H2 -> C6H12; benzene conversion 0.998.
 - name=VFLOW; block_type=FSPLIT; specs=Fraction of stream H2RCY is 92%.
 - name=LFLOW; block_type=FSPLIT; specs=Fraction of stream CHRCY is 30%.
 - name=HP-SEP; block_type=FLASH2; specs=Temperature 50℃, pressure drop 0.05 MPa.
@@ -546,567 +539,567 @@ Treat explicit task facts as hard requirements. Do not remove named units, strea
 
 ```
 
-### FILE: &lt;REPOSITORY_ROOT&gt;\experiments\script_agent_experiment\iter0_context_packs\v2\cases\chinese_5_1\task_gate_contract.json
+### FILE: <REPOSITORY_ROOT>\experiments\script_agent_experiment\iter0_context_packs\v2\cases\chinese_5_1\task_gate_contract.json
 Reason: LLM-selected validation gate contract from task text
 ```text
 {
-  &quot;case_id&quot;: &quot;chinese_5_1&quot;,
-  &quot;required_gates&quot;: [
+  "case_id": "chinese_5_1",
+  "required_gates": [
     {
-      &quot;kind&quot;: &quot;process_topology_and_named_block_identity&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The task asks to create the Aspen Plus cyclohexane production flowsheet shown in the figure, and the text explicitly names the Aspen module families for the visible blocks.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Final Aspen flowsheet contains the figure-visible material-stream topology with nodes FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, PIPE, PUMP, LFLOW, and COLUMN.&quot;,
-        &quot;Block-family/readback evidence shows FEEDPUMP is Pump, FEED-MIX is Heater, REACT is RStoic, HP-SEP is Flash2, VFLOW is FSplit, LFLOW is FSplit, COLUMN is RadFrac, PIPE is Pipe, PUMP is Pump HI or the specified Pump-HI pump model, COMP is Compr, and VALVE is Valve.&quot;,
-        &quot;Material-stream connections follow the visible topology: BZIN -&gt; FEEDPUMP -&gt; BZIN2 -&gt; FEED-MIX; H2IN -&gt; FEED-MIX; H2RCY2 -&gt; FEED-MIX; CHRCY3 -&gt; FEED-MIX; FEED-MIX -&gt; RXIN -&gt; REACT -&gt; RXOUT -&gt; HP-SEP.&quot;,
-        &quot;Separator and downstream topology follows the figure: HP-SEP -&gt; VAP -&gt; VFLOW; VFLOW -&gt; H2RCY -&gt; COMP -&gt; H2RCY2 -&gt; FEED-MIX; VFLOW -&gt; PURGE -&gt; VALVE -&gt; PURGE2; HP-SEP -&gt; LIQ -&gt; LFLOW; LFLOW -&gt; COLFD -&gt; COLUMN; COLUMN -&gt; LTENDS and PRODUCT; LFLOW -&gt; CHRCY -&gt; PUMP -&gt; CHRCY2 -&gt; PIPE -&gt; CHRCY3 -&gt; FEED-MIX.&quot;,
-        &quot;All figure-visible labeled streams are implemented as material streams; no dashed heat/work/power stream is used as a substitute for a material connection.&quot;
+      "kind": "process_topology_and_named_block_identity",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The task asks to create the Aspen Plus cyclohexane production flowsheet shown in the figure, and the text explicitly names the Aspen module families for the visible blocks.",
+      "deterministic_evidence": [
+        "Final Aspen flowsheet contains the figure-visible material-stream topology with nodes FEEDPUMP, FEED-MIX, REACT, HP-SEP, VFLOW, VALVE, COMP, PIPE, PUMP, LFLOW, and COLUMN.",
+        "Block-family/readback evidence shows FEEDPUMP is Pump, FEED-MIX is Heater, REACT is RStoic, HP-SEP is Flash2, VFLOW is FSplit, LFLOW is FSplit, COLUMN is RadFrac, PIPE is Pipe, PUMP is Pump HI or the specified Pump-HI pump model, COMP is Compr, and VALVE is Valve.",
+        "Material-stream connections follow the visible topology: BZIN -> FEEDPUMP -> BZIN2 -> FEED-MIX; H2IN -> FEED-MIX; H2RCY2 -> FEED-MIX; CHRCY3 -> FEED-MIX; FEED-MIX -> RXIN -> REACT -> RXOUT -> HP-SEP.",
+        "Separator and downstream topology follows the figure: HP-SEP -> VAP -> VFLOW; VFLOW -> H2RCY -> COMP -> H2RCY2 -> FEED-MIX; VFLOW -> PURGE -> VALVE -> PURGE2; HP-SEP -> LIQ -> LFLOW; LFLOW -> COLFD -> COLUMN; COLUMN -> LTENDS and PRODUCT; LFLOW -> CHRCY -> PUMP -> CHRCY2 -> PIPE -> CHRCY3 -> FEED-MIX.",
+        "All figure-visible labeled streams are implemented as material streams; no dashed heat/work/power stream is used as a substitute for a material connection."
       ]
     },
     {
-      &quot;kind&quot;: &quot;reaction_and_flash_separation_contract&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The reaction stoichiometry, benzene conversion, reactor conditions, and flash separator conditions define the central process chemistry and phase split feeding the recycle and column sections.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;RStoic reaction in REACT implements C6H6 + 3 H2 -&gt; C6H12.&quot;,
-        &quot;REACT uses benzene conversion 0.998, temperature 200 °C, and pressure drop 0.1 MPa.&quot;,
-        &quot;HP-SEP is fed by RXOUT and produces VAP and LIQ.&quot;,
-        &quot;HP-SEP uses temperature 50 °C and pressure drop 0.05 MPa.&quot;,
-        &quot;Final Aspen block result/readback confirms REACT and HP-SEP solved without fatal errors.&quot;
+      "kind": "reaction_and_flash_separation_contract",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The reaction stoichiometry, benzene conversion, reactor conditions, and flash separator conditions define the central process chemistry and phase split feeding the recycle and column sections.",
+      "deterministic_evidence": [
+        "RStoic reaction in REACT implements C6H6 + 3 H2 -> C6H12.",
+        "REACT uses benzene conversion 0.998, temperature 200 °C, and pressure drop 0.1 MPa.",
+        "HP-SEP is fed by RXOUT and produces VAP and LIQ.",
+        "HP-SEP uses temperature 50 °C and pressure drop 0.05 MPa.",
+        "Final Aspen block result/readback confirms REACT and HP-SEP solved without fatal errors."
       ]
     },
     {
-      &quot;kind&quot;: &quot;recycle_topology&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The task requires physical material recycle return paths; accounting-only declarations cannot replace those connections.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Final live material-port/stream readbacks prove every task-stated recycle return path reaches its upstream process unit, including task/figure intermediate equipment and branch splits.&quot;,
-        &quot;Final same-run Aspen results prove the physically connected recycle loops converged and participated in the reported product result; a declared recovery or makeup balance alone is insufficient.&quot;,
-        &quot;Recycle identities, destinations, and split specifications follow the authoritative task and figure, not recycled gate prose or inherited solution values.&quot;
+      "kind": "recycle_topology",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The task requires physical material recycle return paths; accounting-only declarations cannot replace those connections.",
+      "deterministic_evidence": [
+        "Final live material-port/stream readbacks prove every task-stated recycle return path reaches its upstream process unit, including task/figure intermediate equipment and branch splits.",
+        "Final same-run Aspen results prove the physically connected recycle loops converged and participated in the reported product result; a declared recovery or makeup balance alone is insufficient.",
+        "Recycle identities, destinations, and split specifications follow the authoritative task and figure, not recycled gate prose or inherited solution values."
       ],
-      &quot;closure_semantics&quot;: {
-        &quot;closure_type&quot;: &quot;numerical_recycle_tear&quot;,
-        &quot;accepted_topology&quot;: &quot;task-stated physical material return paths into upstream process units&quot;,
-        &quot;physical_recycle_required&quot;: true
+      "closure_semantics": {
+        "closure_type": "numerical_recycle_tear",
+        "accepted_topology": "task-stated physical material return paths into upstream process units",
+        "physical_recycle_required": true
       }
     },
     {
-      &quot;kind&quot;: &quot;pressure_transform_unit_fidelity&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The problem specifically says to become familiar with pressure-changing units and provides operating/specification data for pumps, compressor, pipe, and valve.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;FEEDPUMP block readback/input evidence includes pump efficiency 0.6 and driver efficiency 0.9.&quot;,
-        &quot;PUMP block readback/input evidence includes outlet pressure 2.6 MPa and the supplied pump characteristic curve if the Pump HI model requires the curve: flow 20, 10, 5, 3 m3/h with corresponding heads 40, 250, 300, 400.&quot;,
-        &quot;COMP block readback/input evidence shows isentropic compressor mode and pressure increment 0.4 MPa.&quot;,
-        &quot;PIPE block readback/input evidence shows carbon steel material, schedule/series 40, diameter 1 in, and length 25 m.&quot;,
-        &quot;VALVE block readback/input evidence shows outlet pressure 2 MPa and valve specification V810 equal percent flow shutoff valve with nominal diameter 1.5 in.&quot;,
-        &quot;Final stream pressure readbacks around these units are consistent with the specified pressure-changing unit settings, not only with helper payload values.&quot;
+      "kind": "pressure_transform_unit_fidelity",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The problem specifically says to become familiar with pressure-changing units and provides operating/specification data for pumps, compressor, pipe, and valve.",
+      "deterministic_evidence": [
+        "FEEDPUMP block readback/input evidence includes pump efficiency 0.6 and driver efficiency 0.9.",
+        "PUMP block readback/input evidence includes outlet pressure 2.6 MPa and the supplied pump characteristic curve if the Pump HI model requires the curve: flow 20, 10, 5, 3 m3/h with corresponding heads 40, 250, 300, 400.",
+        "COMP block readback/input evidence shows isentropic compressor mode and pressure increment 0.4 MPa.",
+        "PIPE block readback/input evidence shows carbon steel material, schedule/series 40, diameter 1 in, and length 25 m.",
+        "VALVE block readback/input evidence shows outlet pressure 2 MPa and valve specification V810 equal percent flow shutoff valve with nominal diameter 1.5 in.",
+        "Final stream pressure readbacks around these units are consistent with the specified pressure-changing unit settings, not only with helper payload values."
       ]
     },
     {
-      &quot;kind&quot;: &quot;stagewise_column&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The final product stream is produced by the explicitly specified RadFrac stabilizer column, so the column identity and operating specifications are essential to the requested product composition.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;COLUMN is a RadFrac block fed by COLFD from LFLOW.&quot;,
-        &quot;COLUMN uses 12 theoretical stages and feed stage 8.&quot;,
-        &quot;COLUMN uses reflux ratio 1.2.&quot;,
-        &quot;COLUMN pressure is 1.5 MPa.&quot;,
-        &quot;COLUMN distillate rate is 99 kmol/h.&quot;,
-        &quot;COLUMN condenser is a partial condenser with vapor-only distillate withdrawal.&quot;,
-        &quot;COLUMN produces LTENDS and PRODUCT, with PRODUCT treated as the final product stream for the requested mole fraction.&quot;
+      "kind": "stagewise_column",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The final product stream is produced by the explicitly specified RadFrac stabilizer column, so the column identity and operating specifications are essential to the requested product composition.",
+      "deterministic_evidence": [
+        "COLUMN is a RadFrac block fed by COLFD from LFLOW.",
+        "COLUMN uses 12 theoretical stages and feed stage 8.",
+        "COLUMN uses reflux ratio 1.2.",
+        "COLUMN pressure is 1.5 MPa.",
+        "COLUMN distillate rate is 99 kmol/h.",
+        "COLUMN condenser is a partial condenser with vapor-only distillate withdrawal.",
+        "COLUMN produces LTENDS and PRODUCT, with PRODUCT treated as the final product stream for the requested mole fraction."
       ]
     },
     {
-      &quot;kind&quot;: &quot;product_purity_contract&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The requested deliverable is the mole fraction of cyclohexane in the product stream.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;The reported result is the mole fraction of cyclohexane/C6H12 in stream PRODUCT.&quot;,
-        &quot;The measurement basis is raw full-material-stream mole fraction in PRODUCT, with denominator including all components present in that stream: H2, N2, CH4, benzene/C6H6, and cyclohexane/C6H12.&quot;,
-        &quot;Evidence identifies PRODUCT as the COLUMN product outlet, not LTENDS, PURGE, PURGE2, COLFD, LIQ, or a manually created summary stream.&quot;,
-        &quot;The cyclohexane mole fraction is read from final Aspen stream composition results after convergence.&quot;
+      "kind": "product_purity_contract",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The requested deliverable is the mole fraction of cyclohexane in the product stream.",
+      "deterministic_evidence": [
+        "The reported result is the mole fraction of cyclohexane/C6H12 in stream PRODUCT.",
+        "The measurement basis is raw full-material-stream mole fraction in PRODUCT, with denominator including all components present in that stream: H2, N2, CH4, benzene/C6H6, and cyclohexane/C6H12.",
+        "Evidence identifies PRODUCT as the COLUMN product outlet, not LTENDS, PURGE, PURGE2, COLFD, LIQ, or a manually created summary stream.",
+        "The cyclohexane mole fraction is read from final Aspen stream composition results after convergence."
       ]
     },
     {
-      &quot;kind&quot;: &quot;result_path_no_surrogate&quot;,
-      &quot;required&quot;: true,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;The task asks for the product-stream cyclohexane mole fraction from an Aspen Plus flowsheet, not a hand calculation or restatement of feed/reaction specifications.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Final answer cites Aspen Plus output/readback for stream PRODUCT mole fraction of cyclohexane.&quot;,
-        &quot;The result is not derived solely from feed rates, stoichiometric conversion, an input split fraction, the column distillate-rate specification, or a hand material balance.&quot;,
-        &quot;The result is obtained from the converged flowsheet containing the reactor, flash separator, vapor recycle/purge, liquid recycle, pressure-changing units, and RadFrac column.&quot;
+      "kind": "result_path_no_surrogate",
+      "required": true,
+      "allowed_surrogate": false,
+      "why": "The task asks for the product-stream cyclohexane mole fraction from an Aspen Plus flowsheet, not a hand calculation or restatement of feed/reaction specifications.",
+      "deterministic_evidence": [
+        "Final answer cites Aspen Plus output/readback for stream PRODUCT mole fraction of cyclohexane.",
+        "The result is not derived solely from feed rates, stoichiometric conversion, an input split fraction, the column distillate-rate specification, or a hand material balance.",
+        "The result is obtained from the converged flowsheet containing the reactor, flash separator, vapor recycle/purge, liquid recycle, pressure-changing units, and RadFrac column."
       ]
     },
     {
-      &quot;kind&quot;: &quot;convergence_and_rep_evidence&quot;,
-      &quot;required&quot;: false,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;A valid product composition requires the full recycle flowsheet and RadFrac column to solve successfully.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Aspen run status shows the simulation completed without fatal errors.&quot;,
-        &quot;Recycle convergence status is successful for the vapor recycle and liquid recycle loops.&quot;,
-        &quot;REACT, HP-SEP, VFLOW, LFLOW, COMP, PUMP, PIPE, VALVE, FEEDPUMP, FEED-MIX, and COLUMN report solved/converged status.&quot;,
-        &quot;The PRODUCT stream has nonempty final flow and component mole-fraction results.&quot;
+      "kind": "convergence_and_rep_evidence",
+      "required": false,
+      "allowed_surrogate": false,
+      "why": "A valid product composition requires the full recycle flowsheet and RadFrac column to solve successfully.",
+      "deterministic_evidence": [
+        "Aspen run status shows the simulation completed without fatal errors.",
+        "Recycle convergence status is successful for the vapor recycle and liquid recycle loops.",
+        "REACT, HP-SEP, VFLOW, LFLOW, COMP, PUMP, PIPE, VALVE, FEEDPUMP, FEED-MIX, and COLUMN report solved/converged status.",
+        "The PRODUCT stream has nonempty final flow and component mole-fraction results."
       ],
-      &quot;scoring_only&quot;: true
+      "scoring_only": true
     }
   ],
-  &quot;optional_fidelity_gates&quot;: [
+  "optional_fidelity_gates": [
     {
-      &quot;kind&quot;: &quot;property_method_contract&quot;,
-      &quot;required&quot;: false,
-      &quot;scoring_only&quot;: true,
-      &quot;why&quot;: &quot;The task states RK-SOAVE as the property method; documenting a final property-method readback improves fidelity, but this is a reporting/fidelity item rather than the primary product-composition evidence path.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Aspen property method readback or setup output shows RK-SOAVE.&quot;,
-        &quot;The report states that the final product mole fraction was generated using the RK-SOAVE method.&quot;
+      "kind": "property_method_contract",
+      "required": false,
+      "scoring_only": true,
+      "why": "The task states RK-SOAVE as the property method; documenting a final property-method readback improves fidelity, but this is a reporting/fidelity item rather than the primary product-composition evidence path.",
+      "deterministic_evidence": [
+        "Aspen property method readback or setup output shows RK-SOAVE.",
+        "The report states that the final product mole fraction was generated using the RK-SOAVE method."
       ]
     },
     {
-      &quot;kind&quot;: &quot;component_material_balance&quot;,
-      &quot;required&quot;: false,
-      &quot;scoring_only&quot;: true,
-      &quot;why&quot;: &quot;A component material-balance table is useful for checking the reactor, purge, recycle, column, and product sections, but the task&#x27;s primary requested deliverable is the PRODUCT cyclohexane mole fraction.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Component flow table covers H2, N2, CH4, benzene/C6H6, and cyclohexane/C6H12 for key streams H2IN, BZIN, RXIN, RXOUT, VAP, LIQ, PURGE2, COLFD, LTENDS, PRODUCT, H2RCY2, and CHRCY3.&quot;,
-        &quot;The table is based on Aspen output streams, not manually entered balance values.&quot;
+      "kind": "component_material_balance",
+      "required": false,
+      "scoring_only": true,
+      "why": "A component material-balance table is useful for checking the reactor, purge, recycle, column, and product sections, but the task's primary requested deliverable is the PRODUCT cyclohexane mole fraction.",
+      "deterministic_evidence": [
+        "Component flow table covers H2, N2, CH4, benzene/C6H6, and cyclohexane/C6H12 for key streams H2IN, BZIN, RXIN, RXOUT, VAP, LIQ, PURGE2, COLFD, LTENDS, PRODUCT, H2RCY2, and CHRCY3.",
+        "The table is based on Aspen output streams, not manually entered balance values."
       ]
     },
     {
-      &quot;kind&quot;: &quot;convergence_and_rep_evidence&quot;,
-      &quot;required&quot;: false,
-      &quot;allowed_surrogate&quot;: false,
-      &quot;why&quot;: &quot;A valid product composition requires the full recycle flowsheet and RadFrac column to solve successfully.&quot;,
-      &quot;deterministic_evidence&quot;: [
-        &quot;Aspen run status shows the simulation completed without fatal errors.&quot;,
-        &quot;Recycle convergence status is successful for the vapor recycle and liquid recycle loops.&quot;,
-        &quot;REACT, HP-SEP, VFLOW, LFLOW, COMP, PUMP, PIPE, VALVE, FEEDPUMP, FEED-MIX, and COLUMN report solved/converged status.&quot;,
-        &quot;The PRODUCT stream has nonempty final flow and component mole-fraction results.&quot;
+      "kind": "convergence_and_rep_evidence",
+      "required": false,
+      "allowed_surrogate": false,
+      "why": "A valid product composition requires the full recycle flowsheet and RadFrac column to solve successfully.",
+      "deterministic_evidence": [
+        "Aspen run status shows the simulation completed without fatal errors.",
+        "Recycle convergence status is successful for the vapor recycle and liquid recycle loops.",
+        "REACT, HP-SEP, VFLOW, LFLOW, COMP, PUMP, PIPE, VALVE, FEEDPUMP, FEED-MIX, and COLUMN report solved/converged status.",
+        "The PRODUCT stream has nonempty final flow and component mole-fraction results."
       ],
-      &quot;scoring_only&quot;: true
+      "scoring_only": true
     }
   ],
-  &quot;required_analysis_objects&quot;: [],
-  &quot;optional_analysis_objects&quot;: [],
-  &quot;analysis_object_adjudication&quot;: {
-    &quot;mode&quot;: &quot;llm_soft_judgment&quot;,
-    &quot;native_required_kinds&quot;: [],
-    &quot;optional_bonus_kinds&quot;: [],
-    &quot;not_required_kinds&quot;: [
+  "required_analysis_objects": [],
+  "optional_analysis_objects": [],
+  "analysis_object_adjudication": {
+    "mode": "llm_soft_judgment",
+    "native_required_kinds": [],
+    "optional_bonus_kinds": [],
+    "not_required_kinds": [
       {
-        &quot;kind&quot;: &quot;design_spec&quot;,
-        &quot;why_not_required&quot;: &quot;The task gives fixed operating specifications and asks to report the resulting product mole fraction. It does not explicitly ask for an Aspen Design Spec or for adjustment of a manipulated variable to meet a target.&quot;,
-        &quot;confidence&quot;: &quot;high&quot;
+        "kind": "design_spec",
+        "why_not_required": "The task gives fixed operating specifications and asks to report the resulting product mole fraction. It does not explicitly ask for an Aspen Design Spec or for adjustment of a manipulated variable to meet a target.",
+        "confidence": "high"
       },
       {
-        &quot;kind&quot;: &quot;sensitivity&quot;,
-        &quot;why_not_required&quot;: &quot;The task does not ask for a parameter sweep, sensitivity table, trend, curve, or effect of varying a variable.&quot;,
-        &quot;confidence&quot;: &quot;high&quot;
+        "kind": "sensitivity",
+        "why_not_required": "The task does not ask for a parameter sweep, sensitivity table, trend, curve, or effect of varying a variable.",
+        "confidence": "high"
       },
       {
-        &quot;kind&quot;: &quot;optimization&quot;,
-        &quot;why_not_required&quot;: &quot;The task does not ask to optimize, minimize, maximize, or select an optimum operating condition.&quot;,
-        &quot;confidence&quot;: &quot;high&quot;
+        "kind": "optimization",
+        "why_not_required": "The task does not ask to optimize, minimize, maximize, or select an optimum operating condition.",
+        "confidence": "high"
       }
     ],
-    &quot;review_needed&quot;: false,
-    &quot;review_reason&quot;: &quot;The task is a fixed flowsheet construction and reporting problem; no native Aspen Model Analysis object is requested.&quot;
+    "review_needed": false,
+    "review_reason": "The task is a fixed flowsheet construction and reporting problem; no native Aspen Model Analysis object is requested."
   },
-  &quot;result_path_requirements&quot;: [
+  "result_path_requirements": [
     {
-      &quot;result&quot;: &quot;cyclohexane mole fraction in PRODUCT&quot;,
-      &quot;must_derive_from&quot;: [
-        &quot;Final Aspen stream composition results for material stream PRODUCT&quot;,
-        &quot;Converged COLUMN/RadFrac bottom product outlet&quot;,
-        &quot;Full converged flowsheet including reactor, flash, recycle loops, pressure-changing units, and column&quot;
+      "result": "cyclohexane mole fraction in PRODUCT",
+      "must_derive_from": [
+        "Final Aspen stream composition results for material stream PRODUCT",
+        "Converged COLUMN/RadFrac bottom product outlet",
+        "Full converged flowsheet including reactor, flash, recycle loops, pressure-changing units, and column"
       ],
-      &quot;forbid_sources&quot;: [
-        &quot;Feed composition of BZIN or H2IN&quot;,
-        &quot;Benzene conversion input alone&quot;,
-        &quot;Stoichiometric hand calculation alone&quot;,
-        &quot;Column distillate rate or reflux ratio alone&quot;,
-        &quot;Configured requested-result variable without final Aspen stream readback&quot;,
-        &quot;LTENDS, PURGE, PURGE2, COLFD, LIQ, or any stream other than PRODUCT&quot;
+      "forbid_sources": [
+        "Feed composition of BZIN or H2IN",
+        "Benzene conversion input alone",
+        "Stoichiometric hand calculation alone",
+        "Column distillate rate or reflux ratio alone",
+        "Configured requested-result variable without final Aspen stream readback",
+        "LTENDS, PURGE, PURGE2, COLFD, LIQ, or any stream other than PRODUCT"
       ],
-      &quot;why&quot;: &quot;The deliverable is an Aspen-computed product-stream composition, so the value must come from the solved PRODUCT stream, not from fixed input data or another outlet.&quot;
+      "why": "The deliverable is an Aspen-computed product-stream composition, so the value must come from the solved PRODUCT stream, not from fixed input data or another outlet."
     },
     {
-      &quot;result&quot;: &quot;PRODUCT stream identity&quot;,
-      &quot;must_derive_from&quot;: [
-        &quot;Figure-visible topology showing COLUMN has LTENDS and PRODUCT outlets&quot;,
-        &quot;Aspen block/stream connectivity readback showing COLUMN -&gt; PRODUCT&quot;
+      "result": "PRODUCT stream identity",
+      "must_derive_from": [
+        "Figure-visible topology showing COLUMN has LTENDS and PRODUCT outlets",
+        "Aspen block/stream connectivity readback showing COLUMN -> PRODUCT"
       ],
-      &quot;forbid_sources&quot;: [
-        &quot;Renaming another outlet as PRODUCT after calculation&quot;,
-        &quot;Using the column overhead/light-ends stream LTENDS as the product&quot;,
-        &quot;Using separator liquid LIQ before LFLOW/COLUMN as the final product&quot;
+      "forbid_sources": [
+        "Renaming another outlet as PRODUCT after calculation",
+        "Using the column overhead/light-ends stream LTENDS as the product",
+        "Using separator liquid LIQ before LFLOW/COLUMN as the final product"
       ],
-      &quot;why&quot;: &quot;The figure and text identify the final product as the product stream from the stabilizing column.&quot;
+      "why": "The figure and text identify the final product as the product stream from the stabilizing column."
     }
   ],
-  &quot;numeric_acceptance_metrics&quot;: [
+  "numeric_acceptance_metrics": [
     {
-      &quot;metric&quot;: &quot;H2IN temperature&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 50,
-      &quot;unit&quot;: &quot;degC&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 50℃&quot;
+      "metric": "H2IN temperature",
+      "operator": "=",
+      "value": 50,
+      "unit": "degC",
+      "evidence": "[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 50℃"
     },
     {
-      &quot;metric&quot;: &quot;H2IN pressure&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 2.5,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 2.5 MPa&quot;
+      "metric": "H2IN pressure",
+      "operator": "=",
+      "value": 2.5,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 2.5 MPa"
     },
     {
-      &quot;metric&quot;: &quot;H2IN total molar flow&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 330,
-      &quot;unit&quot;: &quot;kmol/h&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 330 kmol/h&quot;
+      "metric": "H2IN total molar flow",
+      "operator": "=",
+      "value": 330,
+      "unit": "kmol/h",
+      "evidence": "[NON-ENGLISH REDACTED] H2IN：[NON-ENGLISH REDACTED] 330 kmol/h"
     },
     {
-      &quot;metric&quot;: &quot;H2IN H2 mole fraction&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.975,
-      &quot;unit&quot;: &quot;mole fraction&quot;,
-      &quot;evidence&quot;: &quot;H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02&quot;
+      "metric": "H2IN H2 mole fraction",
+      "operator": "=",
+      "value": 0.975,
+      "unit": "mole fraction",
+      "evidence": "H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
     },
     {
-      &quot;metric&quot;: &quot;H2IN N2 mole fraction&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.005,
-      &quot;unit&quot;: &quot;mole fraction&quot;,
-      &quot;evidence&quot;: &quot;H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02&quot;
+      "metric": "H2IN N2 mole fraction",
+      "operator": "=",
+      "value": 0.005,
+      "unit": "mole fraction",
+      "evidence": "H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
     },
     {
-      &quot;metric&quot;: &quot;H2IN CH4 mole fraction&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.02,
-      &quot;unit&quot;: &quot;mole fraction&quot;,
-      &quot;evidence&quot;: &quot;H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02&quot;
+      "metric": "H2IN CH4 mole fraction",
+      "operator": "=",
+      "value": 0.02,
+      "unit": "mole fraction",
+      "evidence": "H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
     },
     {
-      &quot;metric&quot;: &quot;BZIN temperature&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 40,
-      &quot;unit&quot;: &quot;degC&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] BZIN：[NON-ENGLISH REDACTED] 40℃&quot;
+      "metric": "BZIN temperature",
+      "operator": "=",
+      "value": 40,
+      "unit": "degC",
+      "evidence": "[NON-ENGLISH REDACTED] BZIN：[NON-ENGLISH REDACTED] 40℃"
     },
     {
-      &quot;metric&quot;: &quot;BZIN pressure&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.1,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] BZIN：[NON-ENGLISH REDACTED] 0.1 MPa&quot;
+      "metric": "BZIN pressure",
+      "operator": "=",
+      "value": 0.1,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] BZIN：[NON-ENGLISH REDACTED] 0.1 MPa"
     },
     {
-      &quot;metric&quot;: &quot;BZIN benzene feed flow&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 100,
-      &quot;unit&quot;: &quot;kmol/h&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 100 kmol/h&quot;
+      "metric": "BZIN benzene feed flow",
+      "operator": "=",
+      "value": 100,
+      "unit": "kmol/h",
+      "evidence": "[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 100 kmol/h"
     },
     {
-      &quot;metric&quot;: &quot;FEED-MIX temperature&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 150,
-      &quot;unit&quot;: &quot;degC&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] FEED-MIX（Heater [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 150℃&quot;
+      "metric": "FEED-MIX temperature",
+      "operator": "=",
+      "value": 150,
+      "unit": "degC",
+      "evidence": "[NON-ENGLISH REDACTED] FEED-MIX（Heater [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 150℃"
     },
     {
-      &quot;metric&quot;: &quot;FEED-MIX pressure&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 2.3,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] FEED-MIX（Heater [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 2.3 MPa&quot;
+      "metric": "FEED-MIX pressure",
+      "operator": "=",
+      "value": 2.3,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] FEED-MIX（Heater [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 2.3 MPa"
     },
     {
-      &quot;metric&quot;: &quot;REACT temperature&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 200,
-      &quot;unit&quot;: &quot;degC&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] REACT（Rstoic [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 200℃&quot;
+      "metric": "REACT temperature",
+      "operator": "=",
+      "value": 200,
+      "unit": "degC",
+      "evidence": "[NON-ENGLISH REDACTED] REACT（Rstoic [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 200℃"
     },
     {
-      &quot;metric&quot;: &quot;REACT pressure drop&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.1,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] REACT（Rstoic [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.1 MPa&quot;
+      "metric": "REACT pressure drop",
+      "operator": "=",
+      "value": 0.1,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] REACT（Rstoic [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.1 MPa"
     },
     {
-      &quot;metric&quot;: &quot;benzene conversion in REACT&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.998,
-      &quot;unit&quot;: &quot;fraction&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] 0.998&quot;
+      "metric": "benzene conversion in REACT",
+      "operator": "=",
+      "value": 0.998,
+      "unit": "fraction",
+      "evidence": "[NON-ENGLISH REDACTED] 0.998"
     },
     {
-      &quot;metric&quot;: &quot;VFLOW H2RCY split fraction&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.92,
-      &quot;unit&quot;: &quot;fraction&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] VFLOW（FSplit [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] 92%&quot;
+      "metric": "VFLOW H2RCY split fraction",
+      "operator": "=",
+      "value": 0.92,
+      "unit": "fraction",
+      "evidence": "[NON-ENGLISH REDACTED] VFLOW（FSplit [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] 92%"
     },
     {
-      &quot;metric&quot;: &quot;LFLOW CHRCY split fraction&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.3,
-      &quot;unit&quot;: &quot;fraction&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] LFLOW（FSplit [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED] 30%&quot;
+      "metric": "LFLOW CHRCY split fraction",
+      "operator": "=",
+      "value": 0.3,
+      "unit": "fraction",
+      "evidence": "[NON-ENGLISH REDACTED] LFLOW（FSplit [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED] 30%"
     },
     {
-      &quot;metric&quot;: &quot;HP-SEP temperature&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 50,
-      &quot;unit&quot;: &quot;degC&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] HP-SEP（Flash2 [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 50℃&quot;
+      "metric": "HP-SEP temperature",
+      "operator": "=",
+      "value": 50,
+      "unit": "degC",
+      "evidence": "[NON-ENGLISH REDACTED] HP-SEP（Flash2 [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 50℃"
     },
     {
-      &quot;metric&quot;: &quot;HP-SEP pressure drop&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.05,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] HP-SEP（Flash2 [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.05 MPa&quot;
+      "metric": "HP-SEP pressure drop",
+      "operator": "=",
+      "value": 0.05,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] HP-SEP（Flash2 [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.05 MPa"
     },
     {
-      &quot;metric&quot;: &quot;COLUMN theoretical stages&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 12,
-      &quot;unit&quot;: &quot;stages&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] COLUMN（RadFrac [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 12&quot;
+      "metric": "COLUMN theoretical stages",
+      "operator": "=",
+      "value": 12,
+      "unit": "stages",
+      "evidence": "[NON-ENGLISH REDACTED] COLUMN（RadFrac [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 12"
     },
     {
-      &quot;metric&quot;: &quot;COLUMN reflux ratio&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 1.2,
-      &quot;unit&quot;: &quot;dimensionless&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] 1.2&quot;
+      "metric": "COLUMN reflux ratio",
+      "operator": "=",
+      "value": 1.2,
+      "unit": "dimensionless",
+      "evidence": "[NON-ENGLISH REDACTED] 1.2"
     },
     {
-      &quot;metric&quot;: &quot;COLUMN feed stage&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 8,
-      &quot;unit&quot;: &quot;stage&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]&quot;
+      "metric": "COLUMN feed stage",
+      "operator": "=",
+      "value": 8,
+      "unit": "stage",
+      "evidence": "[NON-ENGLISH REDACTED] 8 [NON-ENGLISH REDACTED]"
     },
     {
-      &quot;metric&quot;: &quot;COLUMN pressure&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 1.5,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] 1.5 MPa&quot;
+      "metric": "COLUMN pressure",
+      "operator": "=",
+      "value": 1.5,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] 1.5 MPa"
     },
     {
-      &quot;metric&quot;: &quot;COLUMN distillate rate&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 99,
-      &quot;unit&quot;: &quot;kmol/h&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] 99 kmol/h&quot;
+      "metric": "COLUMN distillate rate",
+      "operator": "=",
+      "value": 99,
+      "unit": "kmol/h",
+      "evidence": "[NON-ENGLISH REDACTED] 99 kmol/h"
     },
     {
-      &quot;metric&quot;: &quot;FEEDPUMP pump efficiency&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.6,
-      &quot;unit&quot;: &quot;fraction&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] FEEDPUMP（Pump [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.6&quot;
+      "metric": "FEEDPUMP pump efficiency",
+      "operator": "=",
+      "value": 0.6,
+      "unit": "fraction",
+      "evidence": "[NON-ENGLISH REDACTED] FEEDPUMP（Pump [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.6"
     },
     {
-      &quot;metric&quot;: &quot;FEEDPUMP driver efficiency&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.9,
-      &quot;unit&quot;: &quot;fraction&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] FEEDPUMP（Pump [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.9&quot;
+      "metric": "FEEDPUMP driver efficiency",
+      "operator": "=",
+      "value": 0.9,
+      "unit": "fraction",
+      "evidence": "[NON-ENGLISH REDACTED] FEEDPUMP（Pump [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.9"
     },
     {
-      &quot;metric&quot;: &quot;PIPE diameter&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 1,
-      &quot;unit&quot;: &quot;in&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] PIPE（Pipe [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 1 in&quot;
+      "metric": "PIPE diameter",
+      "operator": "=",
+      "value": 1,
+      "unit": "in",
+      "evidence": "[NON-ENGLISH REDACTED] PIPE（Pipe [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 1 in"
     },
     {
-      &quot;metric&quot;: &quot;PIPE length&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 25,
-      &quot;unit&quot;: &quot;m&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] PIPE（Pipe [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 25 m&quot;
+      "metric": "PIPE length",
+      "operator": "=",
+      "value": 25,
+      "unit": "m",
+      "evidence": "[NON-ENGLISH REDACTED] PIPE（Pipe [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 25 m"
     },
     {
-      &quot;metric&quot;: &quot;PUMP outlet pressure&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 2.6,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] PUMP（Pump HI）：[NON-ENGLISH REDACTED] 2.6 MPa&quot;
+      "metric": "PUMP outlet pressure",
+      "operator": "=",
+      "value": 2.6,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] PUMP（Pump HI）：[NON-ENGLISH REDACTED] 2.6 MPa"
     },
     {
-      &quot;metric&quot;: &quot;COMP pressure increment&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 0.4,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] COMP（Compr [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.4 MPa&quot;
+      "metric": "COMP pressure increment",
+      "operator": "=",
+      "value": 0.4,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] COMP（Compr [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 0.4 MPa"
     },
     {
-      &quot;metric&quot;: &quot;VALVE outlet pressure&quot;,
-      &quot;operator&quot;: &quot;=&quot;,
-      &quot;value&quot;: 2,
-      &quot;unit&quot;: &quot;MPa&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED] VALVE（Valve [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 2 MPa&quot;
+      "metric": "VALVE outlet pressure",
+      "operator": "=",
+      "value": 2,
+      "unit": "MPa",
+      "evidence": "[NON-ENGLISH REDACTED] VALVE（Valve [NON-ENGLISH REDACTED]）：[NON-ENGLISH REDACTED] 2 MPa"
     },
     {
-      &quot;metric&quot;: &quot;product stream cyclohexane mole fraction&quot;,
-      &quot;operator&quot;: &quot;report&quot;,
-      &quot;value&quot;: &quot;Aspen-reported PRODUCT stream C6H12 mole fraction&quot;,
-      &quot;unit&quot;: &quot;mole fraction&quot;,
-      &quot;evidence&quot;: &quot;[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]&quot;
+      "metric": "product stream cyclohexane mole fraction",
+      "operator": "report",
+      "value": "Aspen-reported PRODUCT stream C6H12 mole fraction",
+      "unit": "mole fraction",
+      "evidence": "[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]"
     }
   ],
-  &quot;component_role_contract&quot;: {
-    &quot;feed_components&quot;: [
+  "component_role_contract": {
+    "feed_components": [
       {
-        &quot;name&quot;: &quot;H2&quot;,
-        &quot;role&quot;: &quot;hydrogen reactant in H2IN and vapor recycle component&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02; C6H6 + 3H2 -&gt; C6H12&quot;
+        "name": "H2",
+        "role": "hydrogen reactant in H2IN and vapor recycle component",
+        "source_text": "[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02; C6H6 + 3H2 -> C6H12"
       },
       {
-        &quot;name&quot;: &quot;N2&quot;,
-        &quot;role&quot;: &quot;inert/light-gas impurity in hydrogen feed&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02&quot;
+        "name": "N2",
+        "role": "inert/light-gas impurity in hydrogen feed",
+        "source_text": "[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
       },
       {
-        &quot;name&quot;: &quot;CH4&quot;,
-        &quot;role&quot;: &quot;light-gas impurity in hydrogen feed&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02&quot;
+        "name": "CH4",
+        "role": "light-gas impurity in hydrogen feed",
+        "source_text": "[NON-ENGLISH REDACTED] H2IN...[NON-ENGLISH REDACTED] H2、N2、CH4 [NON-ENGLISH REDACTED] 0.975、0.005 [NON-ENGLISH REDACTED] 0.02"
       },
       {
-        &quot;name&quot;: &quot;C6H6&quot;,
-        &quot;role&quot;: &quot;benzene reactant in BZIN&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED] BZIN...[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 100 kmol/h; C6H6([NON-ENGLISH REDACTED]) + 3H2([NON-ENGLISH REDACTED]) -&gt; C6H12([NON-ENGLISH REDACTED])&quot;
+        "name": "C6H6",
+        "role": "benzene reactant in BZIN",
+        "source_text": "[NON-ENGLISH REDACTED] BZIN...[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] 100 kmol/h; C6H6([NON-ENGLISH REDACTED]) + 3H2([NON-ENGLISH REDACTED]) -> C6H12([NON-ENGLISH REDACTED])"
       }
     ],
-    &quot;product_components&quot;: [
+    "product_components": [
       {
-        &quot;name&quot;: &quot;C6H12&quot;,
-        &quot;role&quot;: &quot;desired cyclohexane product whose mole fraction in PRODUCT is requested&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED]...C6H12([NON-ENGLISH REDACTED]); [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]&quot;
+        "name": "C6H12",
+        "role": "desired cyclohexane product whose mole fraction in PRODUCT is requested",
+        "source_text": "[NON-ENGLISH REDACTED]...C6H12([NON-ENGLISH REDACTED]); [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]"
       }
     ],
-    &quot;solvents_or_auxiliaries&quot;: [],
-    &quot;recycle_components&quot;: [
+    "solvents_or_auxiliaries": [],
+    "recycle_components": [
       {
-        &quot;name&quot;: &quot;H2&quot;,
-        &quot;role&quot;: &quot;hydrogen-rich vapor recycle returned through H2RCY/H2RCY2 to FEED-MIX&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED]; [NON-ENGLISH REDACTED] VFLOW...[NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] 92%&quot;
+        "name": "H2",
+        "role": "hydrogen-rich vapor recycle returned through H2RCY/H2RCY2 to FEED-MIX",
+        "source_text": "[NON-ENGLISH REDACTED]; [NON-ENGLISH REDACTED] VFLOW...[NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] 92%"
       },
       {
-        &quot;name&quot;: &quot;C6H12&quot;,
-        &quot;role&quot;: &quot;liquid cyclohexane-rich recycle used to help control reactor temperature&quot;,
-        &quot;source_text&quot;: &quot;[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]; [NON-ENGLISH REDACTED] LFLOW...[NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED] 30%&quot;
+        "name": "C6H12",
+        "role": "liquid cyclohexane-rich recycle used to help control reactor temperature",
+        "source_text": "[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]; [NON-ENGLISH REDACTED] LFLOW...[NON-ENGLISH REDACTED] CHRCY [NON-ENGLISH REDACTED] 30%"
       }
     ],
-    &quot;semantic_conflicts&quot;: [
+    "semantic_conflicts": [
       {
-        &quot;description&quot;: &quot;The figure-derived supplement notes a visible H2IN2 label near the FEED-MIX inlet area, but the written task only specifies feed stream H2IN and the precise H2IN2 connection is unclear.&quot;,
-        &quot;severity&quot;: &quot;info&quot;
+        "description": "The figure-derived supplement notes a visible H2IN2 label near the FEED-MIX inlet area, but the written task only specifies feed stream H2IN and the precise H2IN2 connection is unclear.",
+        "severity": "info"
       },
       {
-        &quot;description&quot;: &quot;FEED-MIX is named like a mixer and has multiple visible material inlets, while the written task specifies it as a Heater module. The contract preserves one visible node FEED-MIX with the written Heater block type rather than splitting it into separate mixer and heater nodes.&quot;,
-        &quot;severity&quot;: &quot;warning&quot;
+        "description": "FEED-MIX is named like a mixer and has multiple visible material inlets, while the written task specifies it as a Heater module. The contract preserves one visible node FEED-MIX with the written Heater block type rather than splitting it into separate mixer and heater nodes.",
+        "severity": "warning"
       }
     ]
   },
-  &quot;immutability_classification&quot;: {
-    &quot;immutable_task_specs&quot;: [
-      &quot;Use Aspen Plus to create the cyclohexane production process shown in the figure.&quot;,
-      &quot;Property method stated by the task: RK-SOAVE.&quot;,
-      &quot;Components: H2, N2, CH4, C6H6/benzene, and C6H12/cyclohexane.&quot;,
-      &quot;Reaction stoichiometry: C6H6 + 3H2 -&gt; C6H12.&quot;,
-      &quot;H2IN: 50 °C, 2.5 MPa, 330 kmol/h, mole fractions H2 0.975, N2 0.005, CH4 0.02.&quot;,
-      &quot;BZIN: 40 °C, 0.1 MPa, pure benzene, 100 kmol/h.&quot;,
-      &quot;FEED-MIX is specified as Heater module with 150 °C and 2.3 MPa.&quot;,
-      &quot;REACT is specified as RStoic with 200 °C, 0.1 MPa pressure drop, and benzene conversion 0.998.&quot;,
-      &quot;VFLOW is specified as FSplit with H2RCY fraction 92%.&quot;,
-      &quot;LFLOW is specified as FSplit with CHRCY fraction 30%.&quot;,
-      &quot;HP-SEP is specified as Flash2 with 50 °C and 0.05 MPa pressure drop.&quot;,
-      &quot;COLUMN is specified as RadFrac with 12 theoretical stages, reflux ratio 1.2, feed stage 8, pressure 1.5 MPa, distillate rate 99 kmol/h, and partial condenser with vapor-only distillate withdrawal.&quot;,
-      &quot;FEEDPUMP is specified as Pump with pump efficiency 0.6 and driver efficiency 0.9.&quot;,
-      &quot;PIPE is specified as carbon steel, series/schedule 40, diameter 1 in, length 25 m.&quot;,
-      &quot;PUMP is specified as Pump HI with outlet pressure 2.6 MPa.&quot;,
-      &quot;COMP is specified as isentropic Compr with pressure increment 0.4 MPa.&quot;,
-      &quot;VALVE is specified as Valve with outlet pressure 2 MPa, V810 equal percent flow shutoff valve, nominal diameter 1.5 in.&quot;,
-      &quot;Pump characteristic curve: flow values 20, 10, 5, 3 m3/h with heads 40, 250, 300, 400.&quot;,
-      &quot;Visible topology and stream labels from the figure, including PRODUCT as the final product stream from COLUMN.&quot;,
-      &quot;Requested result: mole fraction of cyclohexane in the product stream.&quot;
+  "immutability_classification": {
+    "immutable_task_specs": [
+      "Use Aspen Plus to create the cyclohexane production process shown in the figure.",
+      "Property method stated by the task: RK-SOAVE.",
+      "Components: H2, N2, CH4, C6H6/benzene, and C6H12/cyclohexane.",
+      "Reaction stoichiometry: C6H6 + 3H2 -> C6H12.",
+      "H2IN: 50 °C, 2.5 MPa, 330 kmol/h, mole fractions H2 0.975, N2 0.005, CH4 0.02.",
+      "BZIN: 40 °C, 0.1 MPa, pure benzene, 100 kmol/h.",
+      "FEED-MIX is specified as Heater module with 150 °C and 2.3 MPa.",
+      "REACT is specified as RStoic with 200 °C, 0.1 MPa pressure drop, and benzene conversion 0.998.",
+      "VFLOW is specified as FSplit with H2RCY fraction 92%.",
+      "LFLOW is specified as FSplit with CHRCY fraction 30%.",
+      "HP-SEP is specified as Flash2 with 50 °C and 0.05 MPa pressure drop.",
+      "COLUMN is specified as RadFrac with 12 theoretical stages, reflux ratio 1.2, feed stage 8, pressure 1.5 MPa, distillate rate 99 kmol/h, and partial condenser with vapor-only distillate withdrawal.",
+      "FEEDPUMP is specified as Pump with pump efficiency 0.6 and driver efficiency 0.9.",
+      "PIPE is specified as carbon steel, series/schedule 40, diameter 1 in, length 25 m.",
+      "PUMP is specified as Pump HI with outlet pressure 2.6 MPa.",
+      "COMP is specified as isentropic Compr with pressure increment 0.4 MPa.",
+      "VALVE is specified as Valve with outlet pressure 2 MPa, V810 equal percent flow shutoff valve, nominal diameter 1.5 in.",
+      "Pump characteristic curve: flow values 20, 10, 5, 3 m3/h with heads 40, 250, 300, 400.",
+      "Visible topology and stream labels from the figure, including PRODUCT as the final product stream from COLUMN.",
+      "Requested result: mole fraction of cyclohexane in the product stream."
     ],
-    &quot;provisional_model_assumptions&quot;: [
-      &quot;Aspen component IDs or databank aliases for benzene and cyclohexane may be chosen by the modeler as long as they represent C6H6 and C6H12.&quot;,
-      &quot;Unit conversions between MPa, kPa/bar, °C, kmol/h, m3/h, inches, and meters are implementation choices if Aspen requires different input units.&quot;,
-      &quot;If the Aspen Heater block interface cannot directly express all visible FEED-MIX inlet mixing semantics, any auxiliary implementation must preserve the visible single FEED-MIX function and final connectivity rather than changing the process meaning.&quot;,
-      &quot;Recycle tear stream choice, convergence algorithm, and initial guesses are modeler choices.&quot;,
-      &quot;Column convergence method, initial estimates, and numerical tolerances are modeler choices if the fixed RadFrac specifications are preserved.&quot;
+    "provisional_model_assumptions": [
+      "Aspen component IDs or databank aliases for benzene and cyclohexane may be chosen by the modeler as long as they represent C6H6 and C6H12.",
+      "Unit conversions between MPa, kPa/bar, °C, kmol/h, m3/h, inches, and meters are implementation choices if Aspen requires different input units.",
+      "If the Aspen Heater block interface cannot directly express all visible FEED-MIX inlet mixing semantics, any auxiliary implementation must preserve the visible single FEED-MIX function and final connectivity rather than changing the process meaning.",
+      "Recycle tear stream choice, convergence algorithm, and initial guesses are modeler choices.",
+      "Column convergence method, initial estimates, and numerical tolerances are modeler choices if the fixed RadFrac specifications are preserved."
     ],
-    &quot;exploration_dimensions&quot;: [
-      &quot;Recycle tear selection and convergence acceleration settings.&quot;,
-      &quot;Initial guesses for recycle compositions, flow rates, and pressures.&quot;,
-      &quot;Column convergence settings and initial profiles.&quot;,
-      &quot;Reasonable numerical tolerances for convergence and composition reporting.&quot;,
-      &quot;Implementation details needed to enter the Pump HI curve while preserving the supplied flow/head data and outlet pressure specification.&quot;
+    "exploration_dimensions": [
+      "Recycle tear selection and convergence acceleration settings.",
+      "Initial guesses for recycle compositions, flow rates, and pressures.",
+      "Column convergence settings and initial profiles.",
+      "Reasonable numerical tolerances for convergence and composition reporting.",
+      "Implementation details needed to enter the Pump HI curve while preserving the supplied flow/head data and outlet pressure specification."
     ],
-    &quot;classification_notes&quot;: [
-      &quot;Task-stated feed, block, reaction, split, pressure-unit, column, and property-method data are immutable and must not be changed to force convergence.&quot;,
-      &quot;No design variable, sensitivity range, or optimization objective is specified by the task.&quot;,
-      &quot;The product mole fraction is a result target to report, not an input composition to set.&quot;
+    "classification_notes": [
+      "Task-stated feed, block, reaction, split, pressure-unit, column, and property-method data are immutable and must not be changed to force convergence.",
+      "No design variable, sensitivity range, or optimization objective is specified by the task.",
+      "The product mole fraction is a result target to report, not an input composition to set."
     ]
   },
-  &quot;uncertainties&quot;: [
-    &quot;The figure-derived supplement reports an H2IN2 label near the FEED-MIX inlet area, but the written task specifies H2IN and the exact direct connection of H2IN2 is unclear.&quot;,
-    &quot;The written pump characteristic curve is presented after the Pump HI block description and is most naturally associated with PUMP, but the task text does not explicitly state in the table heading which pump uses the curve.&quot;,
-    &quot;The task provides no expected numerical value for the final cyclohexane mole fraction, so validation should require Aspen-backed reporting rather than comparison to a task-stated target value.&quot;,
-    &quot;FEED-MIX is specified as a Heater module while serving as the visible feed/recycle convergence point; implementation must preserve both the written block identity and the figure-visible mixing topology.&quot;
+  "uncertainties": [
+    "The figure-derived supplement reports an H2IN2 label near the FEED-MIX inlet area, but the written task specifies H2IN and the exact direct connection of H2IN2 is unclear.",
+    "The written pump characteristic curve is presented after the Pump HI block description and is most naturally associated with PUMP, but the task text does not explicitly state in the table heading which pump uses the curve.",
+    "The task provides no expected numerical value for the final cyclohexane mole fraction, so validation should require Aspen-backed reporting rather than comparison to a task-stated target value.",
+    "FEED-MIX is specified as a Heater module while serving as the visible feed/recycle convergence point; implementation must preserve both the written block identity and the figure-visible mixing topology."
   ],
-  &quot;figure_context_used&quot;: true,
-  &quot;figure_image_references&quot;: [
-    &quot;./images/exercise_5_1_flow.png&quot;
+  "figure_context_used": true,
+  "figure_image_references": [
+    "./images/exercise_5_1_flow.png"
   ],
-  &quot;figure_resolved_image_paths&quot;: [
-    &quot;tasks/test/chn/chapter_05/images/exercise_5_1_flow.png&quot;
+  "figure_resolved_image_paths": [
+    "tasks/test/chn/chapter_05/images/exercise_5_1_flow.png"
   ],
-  &quot;figure_grounding_summary&quot;: &quot;## Figure-Derived Supplement\n\nFor topology, visible stream labels, stream types, and figure-shown coupling, the figure evidence below is the highest-priority task source.\nTreat the `labels_and_topology` answer as the visible topology contract. Icon-family candidates are only block-type hints and must not split, remove, rename, or invent visible nodes.\nUse written text/tables for numeric conditions or semantics that are not visible in the figure, but do not silently overwrite a visible figure fact.\nIf any figure note conflicts with the written markdown or a generated split-task description, keep the conflict visible as a blocker until resolved.\n\n### Image: `tasks/test/chn/chapter_05/images/exercise_5_1_flow.png`\n\n- Question `subfigure_scope_and_authority`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] blocking uncertainty，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow；[NON-ENGLISH REDACTED] part_a、part_b [NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Direct answer: [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] part_a、part_b、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”（[NON-ENGLISH REDACTED]）。\n  - Visual evidence: [NON-ENGLISH REDACTED] Aspen Plus [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、PIPE、PUMP、LFLOW、COLUMN。\n  - Visual evidence: [NON-ENGLISH REDACTED]：BZIN、BZIN2、H2IN、H2IN2、H2RCY、H2RCY2、RXIN、RXOUT、VAP、PURGE、PURGE2、LIQ、COLFD、LTENDS、PRODUCT、CHRCY、CHRCY2、CHRCY3。\n  - Visual evidence: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”。\n  - Uncertainty: [NON-ENGLISH REDACTED] blocking uncertainty：[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n- Question `labels_and_topology`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] from -&gt; through/into -&gt; to。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] fan-in/fan-out，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Aspen block type，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] visible_label [NON-ENGLISH REDACTED] type_from_context [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。\n  - Direct answer: {&#x27;visible_modules_or_equipment_nodes&#x27;: [{&#x27;visible_label&#x27;: &#x27;FEEDPUMP&#x27;, &#x27;type_from_context&#x27;: &#x27;Pump&#x27;}, {&#x27;visible_label&#x27;: &#x27;FEED-MIX&#x27;, &#x27;type_from_context&#x27;: &#x27;Heater&#x27;}, {&#x27;visible_label&#x27;: &#x27;REACT&#x27;, &#x27;type_from_context&#x27;: &#x27;Rstoic&#x27;}, {&#x27;visible_label&#x27;: &#x27;HP-SEP&#x27;, &#x27;type_from_context&#x27;: &#x27;Flash2&#x27;}, {&#x27;visible_label&#x27;: &#x27;VFLOW&#x27;, &#x27;type_from_context&#x27;: &#x27;FSplit&#x27;}, {&#x27;visible_label&#x27;: &#x27;VALVE&#x27;, &#x27;type_from_context&#x27;: &#x27;Valve&#x27;}, {&#x27;visible_label&#x27;: &#x27;COMP&#x27;, &#x27;type_from_context&#x27;: &#x27;Compr&#x27;}, {&#x27;visible_label&#x27;: &#x27;PIPE&#x27;, &#x27;type_from_context&#x27;: &#x27;Pipe&#x27;}, {&#x27;visible_label&#x27;: &#x27;PUMP&#x27;, &#x27;type_from_context&#x27;: &#x27;Pump HI&#x27;}, {&#x27;visible_label&#x27;: &#x27;LFLOW&#x27;, &#x27;type_from_context&#x27;: &#x27;FSplit&#x27;}, {&#x27;visible_label&#x27;: &#x27;COLUMN&#x27;, &#x27;type_from_context&#x27;: &#x27;RadFrac&#x27;}], &#x27;visible_stream_labels&#x27;: [&#x27;BZIN&#x27;, &#x27;BZIN2&#x27;, &#x27;H2IN&#x27;, &#x27;H2IN2&#x27;, &#x27;H2RCY&#x27;, &#x27;H2RCY2&#x27;, &#x27;RXIN&#x27;, &#x27;RXOUT&#x27;, &#x27;VAP&#x27;, &#x27;PURGE&#x27;, &#x27;PURGE2&#x27;, &#x27;LIQ&#x27;, &#x27;COLFD&#x27;, &#x27;LTENDS&#x27;, &#x27;PRODUCT&#x27;, &#x27;CHRCY&#x27;, &#x27;CHRCY2&#x27;, &#x27;CHRCY3&#x27;], &#x27;direct_visible_connections_topology&#x27;: [{&#x27;stream_label&#x27;: &#x27;BZIN&#x27;, &#x27;connection&#x27;: &#x27;external feed -&gt; FEEDPUMP&#x27;}, {&#x27;stream_label&#x27;: &#x27;BZIN2&#x27;, &#x27;connection&#x27;: &#x27;FEEDPUMP -&gt; FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2IN&#x27;, &#x27;connection&#x27;: &#x27;external feed -&gt; FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2IN2&#x27;, &#x27;connection&#x27;: &#x27;appears adjacent to the FEED-MIX inlet area; direct from/to equipment is not clearly distinguishable from the nearby inlet manifold&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2RCY2&#x27;, &#x27;connection&#x27;: &#x27;COMP -&gt; FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY3&#x27;, &#x27;connection&#x27;: &#x27;PIPE -&gt; FEED-MIX&#x27;}, {&#x27;stream_label&#x27;: &#x27;RXIN&#x27;, &#x27;connection&#x27;: &#x27;FEED-MIX -&gt; REACT&#x27;}, {&#x27;stream_label&#x27;: &#x27;RXOUT&#x27;, &#x27;connection&#x27;: &#x27;REACT -&gt; HP-SEP&#x27;}, {&#x27;stream_label&#x27;: &#x27;VAP&#x27;, &#x27;connection&#x27;: &#x27;HP-SEP -&gt; VFLOW&#x27;}, {&#x27;stream_label&#x27;: &#x27;H2RCY&#x27;, &#x27;connection&#x27;: &#x27;VFLOW -&gt; COMP&#x27;}, {&#x27;stream_label&#x27;: &#x27;PURGE&#x27;, &#x27;connection&#x27;: &#x27;VFLOW -&gt; VALVE&#x27;}, {&#x27;stream_label&#x27;: &#x27;PURGE2&#x27;, &#x27;connection&#x27;: &#x27;VALVE -&gt; external outlet&#x27;}, {&#x27;stream_label&#x27;: &#x27;LIQ&#x27;, &#x27;connection&#x27;: &#x27;HP-SEP -&gt; LFLOW&#x27;}, {&#x27;stream_label&#x27;: &#x27;COLFD&#x27;, &#x27;connection&#x27;: &#x27;LFLOW -&gt; COLUMN&#x27;}, {&#x27;stream_label&#x27;: &#x27;LTENDS&#x27;, &#x27;connection&#x27;: &#x27;COLUMN -&gt; external outlet&#x27;}, {&#x27;stream_label&#x27;: &#x27;PRODUCT&#x27;, &#x27;connection&#x27;: &#x27;COLUMN -&gt; external outlet&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY&#x27;, &#x27;connection&#x27;: &#x27;LFLOW -&gt; PUMP&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY2&#x27;, &#x27;connection&#x27;: &#x27;PUMP -&gt; PIPE&#x27;}, {&#x27;stream_label&#x27;: &#x27;CHRCY3&#x27;, &#x27;connection&#x27;: &#x27;PIPE -&gt; FEED-MIX&#x27;}], &#x27;visible_node_fan_in_fan_out&#x27;: [{&#x27;node&#x27;: &#x27;FEEDPUMP&#x27;, &#x27;fan_in&#x27;: [&#x27;BZIN&#x27;], &#x27;fan_out&#x27;: [&#x27;BZIN2&#x27;]}, {&#x27;node&#x27;: &#x27;FEED-MIX&#x27;, &#x27;fan_in&#x27;: [&#x27;BZIN2&#x27;, &#x27;H2IN&#x27;, &#x27;H2RCY2&#x27;, &#x27;CHRCY3&#x27;], &#x27;fan_out&#x27;: [&#x27;RXIN&#x27;]}, {&#x27;node&#x27;: &#x27;REACT&#x27;, &#x27;fan_in&#x27;: [&#x27;RXIN&#x27;], &#x27;fan_out&#x27;: [&#x27;RXOUT&#x27;]}, {&#x27;node&#x27;: &#x27;HP-SEP&#x27;, &#x27;fan_in&#x27;: [&#x27;RXOUT&#x27;], &#x27;fan_out&#x27;: [&#x27;VAP&#x27;, &#x27;LIQ&#x27;]}, {&#x27;node&#x27;: &#x27;VFLOW&#x27;, &#x27;fan_in&#x27;: [&#x27;VAP&#x27;], &#x27;fan_out&#x27;: [&#x27;H2RCY&#x27;, &#x27;PURGE&#x27;]}, {&#x27;node&#x27;: &#x27;COMP&#x27;, &#x27;fan_in&#x27;: [&#x27;H2RCY&#x27;], &#x27;fan_out&#x27;: [&#x27;H2RCY2&#x27;]}, {&#x27;node&#x27;: &#x27;VALVE&#x27;, &#x27;fan_in&#x27;: [&#x27;PURGE&#x27;], &#x27;fan_out&#x27;: [&#x27;PURGE2&#x27;]}, {&#x27;node&#x27;: &#x27;LFLOW&#x27;, &#x27;fan_in&#x27;: [&#x27;LIQ&#x27;], &#x27;fan_out&#x27;: [&#x27;COLFD&#x27;, &#x27;CHRCY&#x27;]}, {&#x27;node&#x27;: &#x27;PUMP&#x27;, &#x27;fan_in&#x27;: [&#x27;CHRCY&#x27;], &#x27;fan_out&#x27;: [&#x27;CHRCY2&#x27;]}, {&#x27;node&#x27;: &#x27;PIPE&#x27;, &#x27;fan_in&#x27;: [&#x27;CHRCY2&#x27;], &#x27;fan_out&#x27;: [&#x27;CHRCY3&#x27;]}, {&#x27;node&#x27;: &#x27;COLUMN&#x27;, &#x27;fan_in&#x27;: [&#x27;COLFD&#x27;], &#x27;fan_out&#x27;: [&#x27;LTENDS&#x27;, &#x27;PRODUCT&#x27;]}]}\n  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：\&quot;FEEDPUMP\&quot;、\&quot;FEED-MIX\&quot;、\&quot;REACT\&quot;、\&quot;HP-SEP\&quot;、\&quot;VFLOW\&quot;、\&quot;VALVE\&quot;、\&quot;COMP\&quot;、\&quot;PIPE\&quot;、\&quot;PUMP\&quot;、\&quot;LFLOW\&quot;、\&quot;COLUMN\&quot;。\n  - Visual evidence: [NON-ENGLISH REDACTED]：\&quot;BZIN\&quot;、\&quot;BZIN2\&quot;、\&quot;H2IN\&quot;、\&quot;H2IN2\&quot;、\&quot;H2RCY\&quot;、\&quot;H2RCY2\&quot;、\&quot;RXIN\&quot;、\&quot;RXOUT\&quot;、\&quot;VAP\&quot;、\&quot;PURGE\&quot;、\&quot;PURGE2\&quot;、\&quot;LIQ\&quot;、\&quot;COLFD\&quot;、\&quot;LTENDS\&quot;、\&quot;PRODUCT\&quot;、\&quot;CHRCY\&quot;、\&quot;CHRCY2\&quot;、\&quot;CHRCY3\&quot;。\n  - Visual evidence: \&quot;FEED-MIX\&quot; [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] \&quot;RXIN\&quot; [NON-ENGLISH REDACTED] \&quot;REACT\&quot;。\n  - Visual evidence: \&quot;REACT\&quot; [NON-ENGLISH REDACTED] \&quot;RXOUT\&quot; [NON-ENGLISH REDACTED] \&quot;HP-SEP\&quot;。\n  - Visual evidence: \&quot;HP-SEP\&quot; [NON-ENGLISH REDACTED] \&quot;VAP\&quot;，[NON-ENGLISH REDACTED] \&quot;LIQ\&quot;。\n  - Visual evidence: \&quot;VFLOW\&quot; [NON-ENGLISH REDACTED] \&quot;PURGE\&quot; [NON-ENGLISH REDACTED] \&quot;VALVE\&quot; [NON-ENGLISH REDACTED] \&quot;PURGE2\&quot;；[NON-ENGLISH REDACTED] \&quot;H2RCY\&quot; [NON-ENGLISH REDACTED] \&quot;COMP\&quot;。\n  - Visual evidence: \&quot;LFLOW\&quot; [NON-ENGLISH REDACTED] \&quot;COLFD\&quot; [NON-ENGLISH REDACTED] \&quot;COLUMN\&quot;；[NON-ENGLISH REDACTED] \&quot;CHRCY\&quot;、\&quot;CHRCY2\&quot;、\&quot;CHRCY3\&quot;，[NON-ENGLISH REDACTED] \&quot;PUMP\&quot;、\&quot;PIPE\&quot; [NON-ENGLISH REDACTED] \&quot;FEED-MIX\&quot;。\n  - Visual evidence: \&quot;COLUMN\&quot; [NON-ENGLISH REDACTED] \&quot;LTENDS\&quot; [NON-ENGLISH REDACTED] \&quot;PRODUCT\&quot;。\n  - Uncertainty: \&quot;H2IN2\&quot; [NON-ENGLISH REDACTED] FEED-MIX [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] \&quot;H2IN\&quot;、\&quot;BZIN2\&quot;、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Uncertainty: [NON-ENGLISH REDACTED] \&quot;CHRCY\&quot;、\&quot;CHRCY2\&quot; [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] LFLOW -&gt; PUMP -&gt; PIPE -&gt; FEED-MIX，[NON-ENGLISH REDACTED]。\n  - Uncertainty: COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n- Question `numbers_and_constraints`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。\n  - Direct answer: {&#x27;clearly_visible_numbers_units_stage_numbers_operating_conditions&#x27;: &#x27;[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。&#x27;, &#x27;visible_caption&#x27;: &#x27;[NON-ENGLISH REDACTED]。&#x27;, &#x27;visible_product_recycle_purge_labels&#x27;: {&#x27;product&#x27;: [&#x27;PRODUCT&#x27;], &#x27;light_ends_or_overhead&#x27;: [&#x27;LTENDS&#x27;], &#x27;purge&#x27;: [&#x27;PURGE&#x27;, &#x27;PURGE2&#x27;], &#x27;gas_recycle_related&#x27;: [&#x27;H2RCY&#x27;, &#x27;H2RCY2&#x27;], &#x27;liquid_recycle_related&#x27;: [&#x27;CHRCY&#x27;, &#x27;CHRCY2&#x27;, &#x27;CHRCY3&#x27;], &#x27;reflux&#x27;: &#x27;[NON-ENGLISH REDACTED] reflux/[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]。&#x27;}, &#x27;visible_aspen_modeling_constraints_from_topology&#x27;: [&#x27;[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、PIPE、PUMP、LFLOW、COLUMN。&#x27;, &#x27;FEED-MIX [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] BZIN2、H2IN、H2RCY2、CHRCY3；[NON-ENGLISH REDACTED] RXIN。&#x27;, &#x27;REACT [NON-ENGLISH REDACTED] RXIN，[NON-ENGLISH REDACTED] RXOUT。&#x27;, &#x27;HP-SEP [NON-ENGLISH REDACTED] RXOUT，[NON-ENGLISH REDACTED] VAP [NON-ENGLISH REDACTED] LIQ。&#x27;, &#x27;VAP [NON-ENGLISH REDACTED] VFLOW；VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE。&#x27;, &#x27;H2RCY [NON-ENGLISH REDACTED] COMP [NON-ENGLISH REDACTED] H2RCY2，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。&#x27;, &#x27;PURGE [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] PURGE2 [NON-ENGLISH REDACTED]。&#x27;, &#x27;LIQ [NON-ENGLISH REDACTED] LFLOW；LFLOW [NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED] CHRCY。&#x27;, &#x27;COLFD [NON-ENGLISH REDACTED] COLUMN。&#x27;, &#x27;COLUMN [NON-ENGLISH REDACTED]：LTENDS [NON-ENGLISH REDACTED] PRODUCT。&#x27;, &#x27;CHRCY [NON-ENGLISH REDACTED] PUMP [NON-ENGLISH REDACTED] CHRCY2，[NON-ENGLISH REDACTED] PIPE [NON-ENGLISH REDACTED] CHRCY3，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。&#x27;, &#x27;BZIN [NON-ENGLISH REDACTED] FEEDPUMP [NON-ENGLISH REDACTED] BZIN2，[NON-ENGLISH REDACTED] FEED-MIX。&#x27;, &#x27;H2IN [NON-ENGLISH REDACTED] FEED-MIX [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] H2IN2 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。&#x27;]}\n  - Visual evidence: [NON-ENGLISH REDACTED] Aspen Plus [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。\n  - Visual evidence: [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED] “LTENDS” [NON-ENGLISH REDACTED] “PRODUCT”。\n  - Visual evidence: [NON-ENGLISH REDACTED] VFLOW [NON-ENGLISH REDACTED] “PURGE” [NON-ENGLISH REDACTED] “VALVE” [NON-ENGLISH REDACTED] “PURGE2”。\n  - Visual evidence: [NON-ENGLISH REDACTED] “H2RCY” [NON-ENGLISH REDACTED] “COMP” [NON-ENGLISH REDACTED] “H2RCY2”，[NON-ENGLISH REDACTED] FEED-MIX。\n  - Visual evidence: [NON-ENGLISH REDACTED] “CHRCY” [NON-ENGLISH REDACTED] “PUMP” [NON-ENGLISH REDACTED] “CHRCY2”，[NON-ENGLISH REDACTED] “PIPE” [NON-ENGLISH REDACTED] “CHRCY3”，[NON-ENGLISH REDACTED] FEED-MIX。\n  - Visual evidence: HP-SEP [NON-ENGLISH REDACTED] “VAP”，[NON-ENGLISH REDACTED] “LIQ”。\n  - Visual evidence: REACT [NON-ENGLISH REDACTED] HP-SEP [NON-ENGLISH REDACTED] “RXOUT”；FEED-MIX [NON-ENGLISH REDACTED] REACT [NON-ENGLISH REDACTED] “RXIN”。\n  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。\n  - Uncertainty: “H2I&quot;,
-  &quot;source&quot;: &quot;LLM gate contract&quot;,
-  &quot;model&quot;: &quot;gpt-5.5&quot;,
-  &quot;analysis_policy_version&quot;: &quot;analysis_optional_bonus_v2&quot;,
-  &quot;input_scope&quot;: &quot;task text only; no cases.yaml block_family or baseline script&quot;,
-  &quot;_usage&quot;: {
-    &quot;model&quot;: &quot;gpt-5.5&quot;,
-    &quot;prompt_tokens&quot;: 14596,
-    &quot;completion_tokens&quot;: 9464,
-    &quot;total_tokens&quot;: 24060
+  "figure_grounding_summary": "## Figure-Derived Supplement\n\nFor topology, visible stream labels, stream types, and figure-shown coupling, the figure evidence below is the highest-priority task source.\nTreat the `labels_and_topology` answer as the visible topology contract. Icon-family candidates are only block-type hints and must not split, remove, rename, or invent visible nodes.\nUse written text/tables for numeric conditions or semantics that are not visible in the figure, but do not silently overwrite a visible figure fact.\nIf any figure note conflicts with the written markdown or a generated split-task description, keep the conflict visible as a blocker until resolved.\n\n### Image: `tasks/test/chn/chapter_05/images/exercise_5_1_flow.png`\n\n- Question `subfigure_scope_and_authority`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] blocking uncertainty，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow；[NON-ENGLISH REDACTED] part_a、part_b [NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] split id [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Direct answer: [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] part_a、part_b、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、parallel、co-current、cross-flow [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”（[NON-ENGLISH REDACTED]）。\n  - Visual evidence: [NON-ENGLISH REDACTED] Aspen Plus [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、PIPE、PUMP、LFLOW、COLUMN。\n  - Visual evidence: [NON-ENGLISH REDACTED]：BZIN、BZIN2、H2IN、H2IN2、H2RCY、H2RCY2、RXIN、RXOUT、VAP、PURGE、PURGE2、LIQ、COLFD、LTENDS、PRODUCT、CHRCY、CHRCY2、CHRCY3。\n  - Visual evidence: [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] 5.1 [NON-ENGLISH REDACTED]”。\n  - Uncertainty: [NON-ENGLISH REDACTED] blocking uncertainty：[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n- Question `labels_and_topology`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] from -> through/into -> to。[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] fan-in/fan-out，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Aspen block type，[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] visible_label [NON-ENGLISH REDACTED] type_from_context [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。\n  - Direct answer: {'visible_modules_or_equipment_nodes': [{'visible_label': 'FEEDPUMP', 'type_from_context': 'Pump'}, {'visible_label': 'FEED-MIX', 'type_from_context': 'Heater'}, {'visible_label': 'REACT', 'type_from_context': 'Rstoic'}, {'visible_label': 'HP-SEP', 'type_from_context': 'Flash2'}, {'visible_label': 'VFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'VALVE', 'type_from_context': 'Valve'}, {'visible_label': 'COMP', 'type_from_context': 'Compr'}, {'visible_label': 'PIPE', 'type_from_context': 'Pipe'}, {'visible_label': 'PUMP', 'type_from_context': 'Pump HI'}, {'visible_label': 'LFLOW', 'type_from_context': 'FSplit'}, {'visible_label': 'COLUMN', 'type_from_context': 'RadFrac'}], 'visible_stream_labels': ['BZIN', 'BZIN2', 'H2IN', 'H2IN2', 'H2RCY', 'H2RCY2', 'RXIN', 'RXOUT', 'VAP', 'PURGE', 'PURGE2', 'LIQ', 'COLFD', 'LTENDS', 'PRODUCT', 'CHRCY', 'CHRCY2', 'CHRCY3'], 'direct_visible_connections_topology': [{'stream_label': 'BZIN', 'connection': 'external feed -> FEEDPUMP'}, {'stream_label': 'BZIN2', 'connection': 'FEEDPUMP -> FEED-MIX'}, {'stream_label': 'H2IN', 'connection': 'external feed -> FEED-MIX'}, {'stream_label': 'H2IN2', 'connection': 'appears adjacent to the FEED-MIX inlet area; direct from/to equipment is not clearly distinguishable from the nearby inlet manifold'}, {'stream_label': 'H2RCY2', 'connection': 'COMP -> FEED-MIX'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> FEED-MIX'}, {'stream_label': 'RXIN', 'connection': 'FEED-MIX -> REACT'}, {'stream_label': 'RXOUT', 'connection': 'REACT -> HP-SEP'}, {'stream_label': 'VAP', 'connection': 'HP-SEP -> VFLOW'}, {'stream_label': 'H2RCY', 'connection': 'VFLOW -> COMP'}, {'stream_label': 'PURGE', 'connection': 'VFLOW -> VALVE'}, {'stream_label': 'PURGE2', 'connection': 'VALVE -> external outlet'}, {'stream_label': 'LIQ', 'connection': 'HP-SEP -> LFLOW'}, {'stream_label': 'COLFD', 'connection': 'LFLOW -> COLUMN'}, {'stream_label': 'LTENDS', 'connection': 'COLUMN -> external outlet'}, {'stream_label': 'PRODUCT', 'connection': 'COLUMN -> external outlet'}, {'stream_label': 'CHRCY', 'connection': 'LFLOW -> PUMP'}, {'stream_label': 'CHRCY2', 'connection': 'PUMP -> PIPE'}, {'stream_label': 'CHRCY3', 'connection': 'PIPE -> FEED-MIX'}], 'visible_node_fan_in_fan_out': [{'node': 'FEEDPUMP', 'fan_in': ['BZIN'], 'fan_out': ['BZIN2']}, {'node': 'FEED-MIX', 'fan_in': ['BZIN2', 'H2IN', 'H2RCY2', 'CHRCY3'], 'fan_out': ['RXIN']}, {'node': 'REACT', 'fan_in': ['RXIN'], 'fan_out': ['RXOUT']}, {'node': 'HP-SEP', 'fan_in': ['RXOUT'], 'fan_out': ['VAP', 'LIQ']}, {'node': 'VFLOW', 'fan_in': ['VAP'], 'fan_out': ['H2RCY', 'PURGE']}, {'node': 'COMP', 'fan_in': ['H2RCY'], 'fan_out': ['H2RCY2']}, {'node': 'VALVE', 'fan_in': ['PURGE'], 'fan_out': ['PURGE2']}, {'node': 'LFLOW', 'fan_in': ['LIQ'], 'fan_out': ['COLFD', 'CHRCY']}, {'node': 'PUMP', 'fan_in': ['CHRCY'], 'fan_out': ['CHRCY2']}, {'node': 'PIPE', 'fan_in': ['CHRCY2'], 'fan_out': ['CHRCY3']}, {'node': 'COLUMN', 'fan_in': ['COLFD'], 'fan_out': ['LTENDS', 'PRODUCT']}]}\n  - Visual evidence: [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：\"FEEDPUMP\"、\"FEED-MIX\"、\"REACT\"、\"HP-SEP\"、\"VFLOW\"、\"VALVE\"、\"COMP\"、\"PIPE\"、\"PUMP\"、\"LFLOW\"、\"COLUMN\"。\n  - Visual evidence: [NON-ENGLISH REDACTED]：\"BZIN\"、\"BZIN2\"、\"H2IN\"、\"H2IN2\"、\"H2RCY\"、\"H2RCY2\"、\"RXIN\"、\"RXOUT\"、\"VAP\"、\"PURGE\"、\"PURGE2\"、\"LIQ\"、\"COLFD\"、\"LTENDS\"、\"PRODUCT\"、\"CHRCY\"、\"CHRCY2\"、\"CHRCY3\"。\n  - Visual evidence: \"FEED-MIX\" [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] \"RXIN\" [NON-ENGLISH REDACTED] \"REACT\"。\n  - Visual evidence: \"REACT\" [NON-ENGLISH REDACTED] \"RXOUT\" [NON-ENGLISH REDACTED] \"HP-SEP\"。\n  - Visual evidence: \"HP-SEP\" [NON-ENGLISH REDACTED] \"VAP\"，[NON-ENGLISH REDACTED] \"LIQ\"。\n  - Visual evidence: \"VFLOW\" [NON-ENGLISH REDACTED] \"PURGE\" [NON-ENGLISH REDACTED] \"VALVE\" [NON-ENGLISH REDACTED] \"PURGE2\"；[NON-ENGLISH REDACTED] \"H2RCY\" [NON-ENGLISH REDACTED] \"COMP\"。\n  - Visual evidence: \"LFLOW\" [NON-ENGLISH REDACTED] \"COLFD\" [NON-ENGLISH REDACTED] \"COLUMN\"；[NON-ENGLISH REDACTED] \"CHRCY\"、\"CHRCY2\"、\"CHRCY3\"，[NON-ENGLISH REDACTED] \"PUMP\"、\"PIPE\" [NON-ENGLISH REDACTED] \"FEED-MIX\"。\n  - Visual evidence: \"COLUMN\" [NON-ENGLISH REDACTED] \"LTENDS\" [NON-ENGLISH REDACTED] \"PRODUCT\"。\n  - Uncertainty: \"H2IN2\" [NON-ENGLISH REDACTED] FEED-MIX [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] \"H2IN\"、\"BZIN2\"、[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n  - Uncertainty: [NON-ENGLISH REDACTED] \"CHRCY\"、\"CHRCY2\" [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] LFLOW -> PUMP -> PIPE -> FEED-MIX，[NON-ENGLISH REDACTED]。\n  - Uncertainty: COLUMN [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。\n- Question `numbers_and_constraints`: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]。\n  - Direct answer: {'clearly_visible_numbers_units_stage_numbers_operating_conditions': '[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。', 'visible_caption': '[NON-ENGLISH REDACTED]。', 'visible_product_recycle_purge_labels': {'product': ['PRODUCT'], 'light_ends_or_overhead': ['LTENDS'], 'purge': ['PURGE', 'PURGE2'], 'gas_recycle_related': ['H2RCY', 'H2RCY2'], 'liquid_recycle_related': ['CHRCY', 'CHRCY2', 'CHRCY3'], 'reflux': '[NON-ENGLISH REDACTED] reflux/[NON-ENGLISH REDACTED] [NON-ENGLISH REDACTED]。'}, 'visible_aspen_modeling_constraints_from_topology': ['[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：FEEDPUMP、FEED-MIX、REACT、HP-SEP、VFLOW、VALVE、COMP、PIPE、PUMP、LFLOW、COLUMN。', 'FEED-MIX [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] BZIN2、H2IN、H2RCY2、CHRCY3；[NON-ENGLISH REDACTED] RXIN。', 'REACT [NON-ENGLISH REDACTED] RXIN，[NON-ENGLISH REDACTED] RXOUT。', 'HP-SEP [NON-ENGLISH REDACTED] RXOUT，[NON-ENGLISH REDACTED] VAP [NON-ENGLISH REDACTED] LIQ。', 'VAP [NON-ENGLISH REDACTED] VFLOW；VFLOW [NON-ENGLISH REDACTED] H2RCY [NON-ENGLISH REDACTED] PURGE。', 'H2RCY [NON-ENGLISH REDACTED] COMP [NON-ENGLISH REDACTED] H2RCY2，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'PURGE [NON-ENGLISH REDACTED] VALVE [NON-ENGLISH REDACTED] PURGE2 [NON-ENGLISH REDACTED]。', 'LIQ [NON-ENGLISH REDACTED] LFLOW；LFLOW [NON-ENGLISH REDACTED] COLFD [NON-ENGLISH REDACTED] CHRCY。', 'COLFD [NON-ENGLISH REDACTED] COLUMN。', 'COLUMN [NON-ENGLISH REDACTED]：LTENDS [NON-ENGLISH REDACTED] PRODUCT。', 'CHRCY [NON-ENGLISH REDACTED] PUMP [NON-ENGLISH REDACTED] CHRCY2，[NON-ENGLISH REDACTED] PIPE [NON-ENGLISH REDACTED] CHRCY3，[NON-ENGLISH REDACTED] FEED-MIX，[NON-ENGLISH REDACTED]。', 'BZIN [NON-ENGLISH REDACTED] FEEDPUMP [NON-ENGLISH REDACTED] BZIN2，[NON-ENGLISH REDACTED] FEED-MIX。', 'H2IN [NON-ENGLISH REDACTED] FEED-MIX [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] H2IN2 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]。']}\n  - Visual evidence: [NON-ENGLISH REDACTED] Aspen Plus [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。\n  - Visual evidence: [NON-ENGLISH REDACTED] COLUMN [NON-ENGLISH REDACTED] “LTENDS” [NON-ENGLISH REDACTED] “PRODUCT”。\n  - Visual evidence: [NON-ENGLISH REDACTED] VFLOW [NON-ENGLISH REDACTED] “PURGE” [NON-ENGLISH REDACTED] “VALVE” [NON-ENGLISH REDACTED] “PURGE2”。\n  - Visual evidence: [NON-ENGLISH REDACTED] “H2RCY” [NON-ENGLISH REDACTED] “COMP” [NON-ENGLISH REDACTED] “H2RCY2”，[NON-ENGLISH REDACTED] FEED-MIX。\n  - Visual evidence: [NON-ENGLISH REDACTED] “CHRCY” [NON-ENGLISH REDACTED] “PUMP” [NON-ENGLISH REDACTED] “CHRCY2”，[NON-ENGLISH REDACTED] “PIPE” [NON-ENGLISH REDACTED] “CHRCY3”，[NON-ENGLISH REDACTED] FEED-MIX。\n  - Visual evidence: HP-SEP [NON-ENGLISH REDACTED] “VAP”，[NON-ENGLISH REDACTED] “LIQ”。\n  - Visual evidence: REACT [NON-ENGLISH REDACTED] HP-SEP [NON-ENGLISH REDACTED] “RXOUT”；FEED-MIX [NON-ENGLISH REDACTED] REACT [NON-ENGLISH REDACTED] “RXIN”。\n  - Uncertainty: [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]。\n  - Uncertainty: “H2I",
+  "source": "LLM gate contract",
+  "model": "gpt-5.5",
+  "analysis_policy_version": "analysis_optional_bonus_v2",
+  "input_scope": "task text only; no cases.yaml block_family or baseline script",
+  "_usage": {
+    "model": "gpt-5.5",
+    "prompt_tokens": 14596,
+    "completion_tokens": 9464,
+    "total_tokens": 24060
   },
-  &quot;recycle_closure_contract&quot;: {
-    &quot;closure_type&quot;: &quot;numerical_recycle_tear&quot;,
-    &quot;accepted_topology&quot;: &quot;task-stated physical material return paths into upstream process units&quot;,
-    &quot;physical_recycle_required&quot;: true
+  "recycle_closure_contract": {
+    "closure_type": "numerical_recycle_tear",
+    "accepted_topology": "task-stated physical material return paths into upstream process units",
+    "physical_recycle_required": true
   },
-  &quot;requirement_registration&quot;: {
-    &quot;status&quot;: &quot;task_specific_dynamic&quot;,
-    &quot;task_specific_kinds&quot;: [
-      &quot;pressure_transform_unit_fidelity&quot;,
-      &quot;process_topology_and_named_block_identity&quot;,
-      &quot;reaction_and_flash_separation_contract&quot;
+  "requirement_registration": {
+    "status": "task_specific_dynamic",
+    "task_specific_kinds": [
+      "pressure_transform_unit_fidelity",
+      "process_topology_and_named_block_identity",
+      "reaction_and_flash_separation_contract"
     ],
-    &quot;permission_granted&quot;: false,
-    &quot;validation_route&quot;: &quot;generic_gate_adjudication&quot;
+    "permission_granted": false,
+    "validation_route": "generic_gate_adjudication"
   }
 }
 ```
@@ -1194,7 +1187,7 @@ Reason: core hardcoded script/runtime contract
 [NON-ENGLISH REDACTED]：
 
 ```text
-data/file/output/hardcoded/tasks/&lt;task_set&gt;/&lt;task_id&gt;/&lt;script_stem&gt;/
+data/file/output/hardcoded/tasks/<task_set>/<task_id>/<script_stem>/
 ```
 
 [NON-ENGLISH REDACTED]：
@@ -1316,7 +1309,7 @@ YOU CAN PROVIDE AN INITIAL VALUE IN THE BLOCK OR USE ANOTHER VARIABLE.
 
 - `Design Spec` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] **Aspen [NON-ENGLISH REDACTED]**，[NON-ENGLISH REDACTED] flowsheet [NON-ENGLISH REDACTED]。
 - [NON-ENGLISH REDACTED] flowsheet [NON-ENGLISH REDACTED] `V1`，[NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED] `MOLE-L1`、`MOLE-VN`、`MOLE-D` [NON-ENGLISH REDACTED] token。
-- [NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED] `Data\Blocks\&lt;BLK&gt;\Input\PROD_FLOW\&lt;stream&gt;`，[NON-ENGLISH REDACTED] `V1` [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED] token** [NON-ENGLISH REDACTED]。
+- [NON-ENGLISH REDACTED] block [NON-ENGLISH REDACTED] `Data\Blocks\<BLK>\Input\PROD_FLOW\<stream>`，[NON-ENGLISH REDACTED] `V1` [NON-ENGLISH REDACTED] `helper-managed manipulated-variable field` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED] token** [NON-ENGLISH REDACTED]。
 
 [NON-ENGLISH REDACTED]：
 
@@ -1470,11 +1463,11 @@ generated code to choose between HTTP and local Python helpers.
 
 ## Default Unified Invocation Contract
 
-`client.invoke(&quot;capability&quot;, **params)` is the default for registered capabilities
+`client.invoke("capability", **params)` is the default for registered capabilities
 and returns a `status`/`result` envelope. Registered local helpers and native HTTP
 operations share one registry; generated code need not classify them by transport.
-`safe.call(client, &quot;capability&quot;, **params)` strictly checks the routed outcome and
-unwraps its result payload. `safe.probe_call(client, &quot;capability&quot;, **params)` uses
+`safe.call(client, "capability", **params)` strictly checks the routed outcome and
+unwraps its result payload. `safe.probe_call(client, "capability", **params)` uses
 the same registry but preserves diagnostic payloads, including incomplete
 completion evidence. Existing typed `safe.func(client, ...)` helpers remain valid.
 `client.execute(...)` is a compatibility entry into this unified route.
@@ -1574,18 +1567,18 @@ Import them from the generic helper files already provided in context.
 The harness runs generated scripts with these arguments:
 
 ```text
---section-out-dir &lt;path&gt;
---bkp-subdir &lt;server-relative-subdir&gt;
---task-key &lt;stable-task-key&gt;
---server-url &lt;url&gt;       # optional
---port &lt;int&gt;             # optional
+--section-out-dir <path>
+--bkp-subdir <server-relative-subdir>
+--task-key <stable-task-key>
+--server-url <url>       # optional
+--port <int>             # optional
 --show-gui              # optional flag
 ```
 
 Every generated script must accept all of them. Write `summary.json` at:
 
 ```python
-Path(args.section_out_dir) / SCRIPT_STEM / &quot;summary.json&quot;
+Path(args.section_out_dir) / SCRIPT_STEM / "summary.json"
 ```
 
 Use `args.bkp_subdir` for evidence exports when present, and use
@@ -1616,8 +1609,8 @@ state and log it into `summary.json`:
 ```python
 topology_probe = probe_model_state(
     client,
-    stream_names=[&quot;F1&quot;, &quot;P1&quot;],
-    block_names=[&quot;M1&quot;, &quot;R1&quot;],
+    stream_names=["F1", "P1"],
+    block_names=["M1", "R1"],
     include_flowsheet=True,
     include_ui_next=False,
 )
@@ -1626,8 +1619,8 @@ topology_probe = probe_model_state(
 Use focused probes when repairing:
 
 ```python
-check_stream_completion(client, &quot;F1&quot;)
-check_block_completion(client, &quot;R1&quot;)
+check_stream_completion(client, "F1")
+check_block_completion(client, "R1")
 check_flowsheet_completion(client)
 ```
 
@@ -1648,16 +1641,16 @@ run, probe required feed streams and blocks and gate execution:
 ```python
 ready_probe = probe_model_state(
     client,
-    stream_names=[&quot;F1&quot;],
-    block_names=[&quot;C1&quot;],
+    stream_names=["F1"],
+    block_names=["C1"],
     include_flowsheet=True,
 )
-assert_completion_ready(ready_probe, require_streams=[&quot;F1&quot;], require_blocks=[&quot;C1&quot;])
+assert_completion_ready(ready_probe, require_streams=["F1"], require_blocks=["C1"])
 ```
 
 If a feed stream says `input_incomplete`, call `ui_next_completion(...)` once and
 fix the missing stream state before running. A common error is setting
-`mixed_spec=&quot;TP&quot;` while only setting pressure and vapor fraction; Aspen then
+`mixed_spec="TP"` while only setting pressure and vapor fraction; Aspen then
 reports `SUBSTREAM not complete: SSID = MIXED` and `Two of Temperature,
 Pressure, and Vapor Fraction must be specified`.
 
@@ -1680,53 +1673,53 @@ Component setup:
 
 ```python
 client.invoke(
-    &quot;add_components_by_cas&quot;,
+    "add_components_by_cas",
     components=[
-        {&quot;component_id&quot;: &quot;ETOH&quot;, &quot;cas&quot;: &quot;64-17-5&quot;},
-        {&quot;component_id&quot;: &quot;H2O&quot;, &quot;cas&quot;: &quot;7732-18-5&quot;},
+        {"component_id": "ETOH", "cas": "64-17-5"},
+        {"component_id": "H2O", "cas": "7732-18-5"},
     ],
 )
-client.invoke(&quot;list_component_ids&quot;)
+client.invoke("list_component_ids")
 ```
 
 Recycle Calculator and convergence operations:
 
 ```python
-client.invoke(&quot;create_calculator&quot;, calculator_name=&quot;C-1&quot;)
+client.invoke("create_calculator", calculator_name="C-1")
 
 client.invoke(
-    &quot;calculator_define_stream_component_flow&quot;,
-    calculator_name=&quot;C-1&quot;,
-    variable_name=&quot;A&quot;,
-    stream_name=&quot;M1&quot;,
-    component=&quot;COMP-01&quot;,
-    unit=&quot;kmol/hr&quot;,
-    substream=&quot;MIXED&quot;,
-    vartype=&quot;MOLE-FLOW&quot;,
+    "calculator_define_stream_component_flow",
+    calculator_name="C-1",
+    variable_name="A",
+    stream_name="M1",
+    component="COMP-01",
+    unit="kmol/hr",
+    substream="MIXED",
+    vartype="MOLE-FLOW",
 )
 
 client.invoke(
-    &quot;calculator_set_fortran_exec&quot;,
-    calculator_name=&quot;C-1&quot;,
-    statements=&quot;A = 120 - B&quot;,
-    method=&quot;FORTRAN&quot;,
+    "calculator_set_fortran_exec",
+    calculator_name="C-1",
+    statements="A = 120 - B",
+    method="FORTRAN",
 )
 
 client.invoke(
-    &quot;calculator_set_execute_before_block&quot;,
-    calculator_name=&quot;C-1&quot;,
-    block_name=&quot;MX&quot;,
-    block_type=&quot;BLOCK&quot;,
+    "calculator_set_execute_before_block",
+    calculator_name="C-1",
+    block_name="MX",
+    block_type="BLOCK",
 )
 
 client.invoke(
-    &quot;set_convergence_options&quot;,
+    "set_convergence_options",
     tolerance=1e-4,
-    tear_method=&quot;WEGSTEIN&quot;,
+    tear_method="WEGSTEIN",
 )
 
 client.invoke(
-    &quot;set_wegstein_options&quot;,
+    "set_wegstein_options",
     max_iterations=100,      # WEG_MAXIT
     wait=1,                  # WEG_WAIT
     direct_steps=0,          # ACCELERATE
@@ -1734,7 +1727,7 @@ client.invoke(
     lower_bound=-5.0,        # WEG_QMIN
     upper_bound=0.0,         # WEG_QMAX
 )
-client.invoke(&quot;read_recycle_convergence_setup&quot;, calculator_name=&quot;C-1&quot;)
+client.invoke("read_recycle_convergence_setup", calculator_name="C-1")
 ```
 
 These raw HTTP operations exist so the helper module can express robust
@@ -1759,7 +1752,7 @@ only `component_id` and is not the preferred route for real chemicals.
 Property method:
 
 ```python
-ensure_property_method(client, method=&quot;NRTL&quot;)
+ensure_property_method(client, method="NRTL")
 ```
 
 `ensure_property_method(...)` is idempotent. If Aspen reports
@@ -1769,44 +1762,44 @@ global `GBASEOPSET` / `GOPSETNAME` fields before returning success.
 Block-wise property method / local option set:
 
 ```python
-configure_block_property_method(client, block_name=&quot;A1&quot;, method=&quot;UNIQUAC&quot;)
-configure_block_property_method(client, block_name=&quot;A2&quot;, method=&quot;NRTL&quot;)
-configure_block_property_method(client, block_name=&quot;A3&quot;, method=&quot;WILSON&quot;)
+configure_block_property_method(client, block_name="A1", method="UNIQUAC")
+configure_block_property_method(client, block_name="A2", method="NRTL")
+configure_block_property_method(client, block_name="A3", method="WILSON")
 ```
 
-This writes and reads back `\Data\Blocks\&lt;BLOCK&gt;\Input\OPSETNAME`. Do not call
+This writes and reads back `\Data\Blocks\<BLOCK>\Input\OPSETNAME`. Do not call
 nonexistent operations such as `set_block_property_method`.
 
 Streams and blocks:
 
 ```python
-client.invoke(&quot;create_material_stream&quot;, stream_name=&quot;F1&quot;)
-client.invoke(&quot;create_material_stream&quot;, stream_name=&quot;P2&quot;)
-client.invoke(&quot;create_heater&quot;, block_name=&quot;H1&quot;)
-client.invoke(&quot;create_flash2&quot;, block_name=&quot;FL&quot;)
-client.invoke(&quot;create_pump&quot;, block_name=&quot;P1&quot;)
+client.invoke("create_material_stream", stream_name="F1")
+client.invoke("create_material_stream", stream_name="P2")
+client.invoke("create_heater", block_name="H1")
+client.invoke("create_flash2", block_name="FL")
+client.invoke("create_pump", block_name="P1")
 ```
 
 Topology:
 
 The unwrapped `list_block_ports` payload is
-`{&quot;success&quot;: true, &quot;block_name&quot;: &quot;H1&quot;, &quot;ports&quot;: {&quot;F(IN)&quot;: [], &quot;P(OUT)&quot;: []}}`.
+`{"success": true, "block_name": "H1", "ports": {"F(IN)": [], "P(OUT)": []}}`.
 Direct routed client calls return that payload in a `status`/`result` envelope.
 Port names are dictionary keys; an empty connected-stream list means a port
 exists but is currently unwired. Normalize either form with the existing pure
 `safe.extract_block_ports` helper, not a local response-shape parser.
 
 ```python
-block_name = &quot;H1&quot;
-ports = safe.extract_block_ports(client.invoke(&quot;list_block_ports&quot;, block_name=block_name))
-for name in (&quot;F(IN)&quot;, &quot;P(OUT)&quot;):
+block_name = "H1"
+ports = safe.extract_block_ports(client.invoke("list_block_ports", block_name=block_name))
+for name in ("F(IN)", "P(OUT)"):
     if name not in ports:
-        raise RuntimeError(f&quot;Required port {name} missing on {block_name}&quot;)
-client.invoke(&quot;connect_stream&quot;, block_name=block_name, stream_name=&quot;F1&quot;, port_name=&quot;F(IN)&quot;)
-client.invoke(&quot;connect_stream&quot;, block_name=block_name, stream_name=&quot;P2&quot;, port_name=&quot;P(OUT)&quot;)
-wired = safe.extract_block_ports(client.invoke(&quot;list_block_ports&quot;, block_name=block_name))
-if &quot;F1&quot; not in wired.get(&quot;F(IN)&quot;, []) or &quot;P2&quot; not in wired.get(&quot;P(OUT)&quot;, []):
-    raise RuntimeError(&quot;Intended stream wiring was not confirmed by live readback&quot;)
+        raise RuntimeError(f"Required port {name} missing on {block_name}")
+client.invoke("connect_stream", block_name=block_name, stream_name="F1", port_name="F(IN)")
+client.invoke("connect_stream", block_name=block_name, stream_name="P2", port_name="P(OUT)")
+wired = safe.extract_block_ports(client.invoke("list_block_ports", block_name=block_name))
+if "F1" not in wired.get("F(IN)", []) or "P2" not in wired.get("P(OUT)", []):
+    raise RuntimeError("Intended stream wiring was not confirmed by live readback")
 ```
 
 Use `name in ports`, not `bool(ports[name])`, for availability. Port presence
@@ -1826,7 +1819,7 @@ Do not use semantic words such as `FEED`, `PRODUCT`, `INLET`, or `OUTLET` as
 For common one-feed/one-product material blocks, prefer the helper:
 
 ```python
-connect_material_inlet_outlet(client, block_name=&quot;P1&quot;, inlet_stream=&quot;F1&quot;, outlet_stream=&quot;P2&quot;)
+connect_material_inlet_outlet(client, block_name="P1", inlet_stream="F1", outlet_stream="P2")
 ```
 
 It calls `list_block_ports` and uses live material ports such as `F(IN)` and
@@ -1838,9 +1831,9 @@ For multi-feed/multi-product material blocks, never invent ports such as `IN1`,
 ```python
 connect_material_ports_by_order(
     client,
-    block_name=&quot;M1&quot;,
-    inlet_streams=[&quot;F1&quot;, &quot;F2&quot;],
-    outlet_streams=[&quot;S1&quot;],
+    block_name="M1",
+    inlet_streams=["F1", "F2"],
+    outlet_streams=["S1"],
 )
 ```
 
@@ -1850,11 +1843,11 @@ material-port order, and returns the port evidence for `summary.json`.
 Material stream state and composition:
 
 ```python
-client.invoke(&quot;set_mixed_spec_mixed&quot;, stream_name=&quot;F1&quot;, value=&quot;TP&quot;)
-client.invoke(&quot;set_basis_mixed&quot;, stream_name=&quot;F1&quot;, value=&quot;MOLE-FLOW&quot;)
-client.invoke(&quot;set_temp_mixed&quot;, stream_name=&quot;F1&quot;, value=25.0, unit=&quot;C&quot;)
-client.invoke(&quot;set_pres_mixed&quot;, stream_name=&quot;F1&quot;, value=1.0, unit=&quot;atm&quot;)
-client.invoke(&quot;set_flow_mixed&quot;, stream_name=&quot;F1&quot;, component_name=&quot;ETOH&quot;, value=50.0, unit=&quot;kmol/hr&quot;)
+client.invoke("set_mixed_spec_mixed", stream_name="F1", value="TP")
+client.invoke("set_basis_mixed", stream_name="F1", value="MOLE-FLOW")
+client.invoke("set_temp_mixed", stream_name="F1", value=25.0, unit="C")
+client.invoke("set_pres_mixed", stream_name="F1", value=1.0, unit="atm")
+client.invoke("set_flow_mixed", stream_name="F1", component_name="ETOH", value=50.0, unit="kmol/hr")
 ```
 
 Use `component_name` and `value` for `set_flow_mixed`. Do not use
@@ -1865,13 +1858,13 @@ The selected `mixed_spec` must match exactly two state variables:
 
 ```python
 # Normal T/P feed:
-set_material_stream(..., mixed_spec=&quot;TP&quot;, temperature=25.0, temperature_unit=&quot;C&quot;, pressure=1.0, pressure_unit=&quot;atm&quot;)
+set_material_stream(..., mixed_spec="TP", temperature=25.0, temperature_unit="C", pressure=1.0, pressure_unit="atm")
 
 # Saturated liquid/vapor at pressure:
-set_material_stream(..., mixed_spec=&quot;PV&quot;, pressure=1.0, pressure_unit=&quot;atm&quot;, vapor_fraction=0.0)
+set_material_stream(..., mixed_spec="PV", pressure=1.0, pressure_unit="atm", vapor_fraction=0.0)
 ```
 
-Do not use `mixed_spec=&quot;TP&quot;` with only pressure + vapor fraction. That leaves
+Do not use `mixed_spec="TP"` with only pressure + vapor fraction. That leaves
 temperature unset and makes the stream incomplete.
 
 Component-specific probe readback:
@@ -1879,10 +1872,10 @@ Component-specific probe readback:
 ```python
 purity = call(
     client,
-    &quot;read_stream_output&quot;,
-    stream_name=&quot;P2&quot;,
-    variable=&quot;mole_fraction&quot;,
-    component_name=&quot;ETOH&quot;,
+    "read_stream_output",
+    stream_name="P2",
+    variable="mole_fraction",
+    component_name="ETOH",
 )
 ```
 
@@ -1895,15 +1888,15 @@ Common block specs:
 
 ```python
 # HEATER / FLASH2
-client.invoke(&quot;set_spec_opt&quot;, block_name=&quot;H1&quot;, value=&quot;TP&quot;)
-client.invoke(&quot;set_temp&quot;, block_name=&quot;H1&quot;, value=80.0, unit=&quot;C&quot;)
-client.invoke(&quot;set_pres&quot;, block_name=&quot;H1&quot;, value=1.0, unit=&quot;atm&quot;)
-client.invoke(&quot;set_duty&quot;, block_name=&quot;H1&quot;, value=0.0, unit=&quot;kW&quot;)
+client.invoke("set_spec_opt", block_name="H1", value="TP")
+client.invoke("set_temp", block_name="H1", value=80.0, unit="C")
+client.invoke("set_pres", block_name="H1", value=1.0, unit="atm")
+client.invoke("set_duty", block_name="H1", value=0.0, unit="kW")
 
 # PUMP
-client.invoke(&quot;set_opt_spec&quot;, block_name=&quot;P1&quot;, value=&quot;DELP&quot;)
-client.invoke(&quot;set_delp&quot;, block_name=&quot;P1&quot;, value=2.0, unit=&quot;bar&quot;)
-client.invoke(&quot;set_pres&quot;, block_name=&quot;P1&quot;, value=5.0, unit=&quot;bar&quot;)
+client.invoke("set_opt_spec", block_name="P1", value="DELP")
+client.invoke("set_delp", block_name="P1", value=2.0, unit="bar")
+client.invoke("set_pres", block_name="P1", value=5.0, unit="bar")
 ```
 
 For `FLASH2`, legal `set_spec_opt` values include `TP`, `TV`, `PV`, `TD`, and
@@ -1912,7 +1905,7 @@ For `FLASH2`, legal `set_spec_opt` values include `TP`, `TV`, `PV`, `TD`, and
 Completion and run:
 
 ```python
-completion = client.invoke(&quot;ui_check_next_completion_status&quot;, close_window=True, status_timeout_s=8.0)
+completion = client.invoke("ui_check_next_completion_status", close_window=True, status_timeout_s=8.0)
 final = run_completion_engine_and_export(
     client,
     server_subdir=args.bkp_subdir,
@@ -1920,8 +1913,8 @@ final = run_completion_engine_and_export(
     task_key=args.task_key,
     export_bkp=False,
 )
-per_error = final.get(&quot;per_error&quot;)
-run = final.get(&quot;engine_run&quot;)
+per_error = final.get("per_error")
+run = final.get("engine_run")
 ```
 
 Before `engine_run`, call `ui_check_next_completion_status` at least once and
@@ -1946,39 +1939,39 @@ Common RStoic helpers:
 ```python
 configure_rstoic_stoichiometry(
     client,
-    block_name=&quot;R1&quot;,
+    block_name="R1",
     reaction_number=1,
-    reactants={&quot;BENZ&quot;: 1.0, &quot;H2&quot;: 3.0},
-    products={&quot;CH&quot;: 1.0},
+    reactants={"BENZ": 1.0, "H2": 3.0},
+    products={"CH": 1.0},
 )
 configure_rstoic_fractional_conversions(
     client,
-    block_name=&quot;R1&quot;,
-    conversions=[{&quot;reaction_number&quot;: 1, &quot;component_id&quot;: &quot;BENZ&quot;, &quot;conversion&quot;: 0.75}],
+    block_name="R1",
+    conversions=[{"reaction_number": 1, "component_id": "BENZ", "conversion": 0.75}],
 )
 configure_rstoic_calculated_heat_reference(
     client,
-    block_name=&quot;R1&quot;,
+    block_name="R1",
     rows=[
         {
-            &quot;reaction_number&quot;: 1,
-            &quot;reference_component_id&quot;: &quot;BENZ&quot;,
-            &quot;reference_phase&quot;: &quot;V&quot;,
+            "reaction_number": 1,
+            "reference_component_id": "BENZ",
+            "reference_phase": "V",
         },
     ],
     reference_temperature=298.15,
-    reference_temperature_unit=&quot;K&quot;,
+    reference_temperature_unit="K",
     reference_pressure=1.0,
-    reference_pressure_unit=&quot;atm&quot;,
+    reference_pressure_unit="atm",
 )
 configure_rstoic_flash(
     client,
-    block_name=&quot;R1&quot;,
-    spec_opt=&quot;TP&quot;,
+    block_name="R1",
+    spec_opt="TP",
     temperature=200.0,
-    temperature_unit=&quot;C&quot;,
+    temperature_unit="C",
     pressure=20.0,
-    pressure_unit=&quot;bar&quot;,
+    pressure_unit="bar",
 )
 ```
 
@@ -1991,25 +1984,25 @@ Common REquil helper:
 ```python
 configure_requil_equilibrium_reactions(
     client,
-    block_name=&quot;R1&quot;,
+    block_name="R1",
     nphase=2,
-    spec_opt=&quot;TP&quot;,
+    spec_opt="TP",
     temperature=450.0,
-    temperature_unit=&quot;F&quot;,
+    temperature_unit="F",
     pressure=1.0,
-    pressure_unit=&quot;atm&quot;,
+    pressure_unit="atm",
     reactions=[
         {
-            &quot;reaction_number&quot;: 1,
-            &quot;reactants&quot;: {&quot;MEOH&quot;: 1.0},
-            &quot;products&quot;: {&quot;CO&quot;: 1.0, &quot;H2&quot;: 2.0},
-            &quot;delta&quot;: 0.0,
+            "reaction_number": 1,
+            "reactants": {"MEOH": 1.0},
+            "products": {"CO": 1.0, "H2": 2.0},
+            "delta": 0.0,
         },
         {
-            &quot;reaction_number&quot;: 2,
-            &quot;reactants&quot;: {&quot;CO&quot;: 1.0, &quot;H2O&quot;: 1.0},
-            &quot;products&quot;: {&quot;CO2&quot;: 1.0, &quot;H2&quot;: 1.0},
-            &quot;delta&quot;: 0.0,
+            "reaction_number": 2,
+            "reactants": {"CO": 1.0, "H2O": 1.0},
+            "products": {"CO2": 1.0, "H2": 1.0},
+            "delta": 0.0,
         },
     ],
 )
@@ -2018,19 +2011,19 @@ configure_requil_equilibrium_reactions(
 For REquil, never set only `set_opt_ext_delt` / `set_delt`. The reaction
 stoichiometry table must be written with `set_block_reaction_stoichiometry`
 first, otherwise the block stays input-incomplete and will block the flowsheet.
-Prefer `SPEC_OPT=&quot;TP&quot;` when the task states reactor temperature and pressure.
+Prefer `SPEC_OPT="TP"` when the task states reactor temperature and pressure.
 Using `PD` with arbitrary zero duty can pass input completion but fail at runtime
 with `UNABLE TO FIND OUTLET TEMPERATURE`.
-After REquil reaction setup, probe `check_block_completion(client, &quot;R1&quot;)` and do
+After REquil reaction setup, probe `check_block_completion(client, "R1")` and do
 not bypass an incomplete REquil by exporting only a separate RGibbs block.
 
 Evidence export:
 
 ```python
-client.invoke(&quot;export_rep&quot;, filename=&quot;output/subdir/run.rep&quot;, export_format=2)
-client.invoke(&quot;export_apw&quot;, filename=&quot;output/subdir/run.apw&quot;)
+client.invoke("export_rep", filename="output/subdir/run.rep", export_format=2)
+client.invoke("export_apw", filename="output/subdir/run.apw")
 # Optional debug evidence only; not required for script-agent success:
-# client.checkpoint(filename=&quot;output/subdir/run.bkp&quot;)
+# client.checkpoint(filename="output/subdir/run.bkp")
 ```
 
 `summary.json` should include a top-level `evidence` dict with non-empty
@@ -2062,28 +2055,28 @@ from script_agent_exp.safe_aspen_calls import run_completion_engine_and_export
 
 final = run_completion_engine_and_export(
     client,
-    server_subdir=f&quot;script_agent_experiment/{SCRIPT_STEM}/{case_key}&quot;,
-    script_stem=f&quot;{SCRIPT_STEM}_{case_key}&quot;,
-    task_key=f&quot;{task_key}_{case_key}&quot;,
-    required_streams=[&quot;F1&quot;],
-    required_blocks=[&quot;H1&quot;, &quot;PF&quot;, &quot;H2&quot;, &quot;AD&quot;, &quot;H3&quot;, &quot;V1&quot;, &quot;V2&quot;],
+    server_subdir=f"script_agent_experiment/{SCRIPT_STEM}/{case_key}",
+    script_stem=f"{SCRIPT_STEM}_{case_key}",
+    task_key=f"{task_key}_{case_key}",
+    required_streams=["F1"],
+    required_blocks=["H1", "PF", "H2", "AD", "H3", "V1", "V2"],
 )
 ```
 
 Record the returned object directly in the case summary:
 
-- `case[&quot;engine_run&quot;] = final[&quot;engine_run&quot;]`
-- `case[&quot;per_error&quot;] = final[&quot;per_error&quot;]`
-- `case[&quot;run_status&quot;] = final[&quot;run_status&quot;]`
-- `case[&quot;evidence&quot;] = final[&quot;evidence&quot;]`
-- `case[&quot;completion&quot;] = final[&quot;completion&quot;]`
+- `case["engine_run"] = final["engine_run"]`
+- `case["per_error"] = final["per_error"]`
+- `case["run_status"] = final["run_status"]`
+- `case["evidence"] = final["evidence"]`
+- `case["completion"] = final["completion"]`
 
 Then derive gates from the returned fields:
 
-- `PER_ERROR=0`: `final[&quot;per_error&quot;][&quot;value&quot;] == 0`
-- REP exists: `final[&quot;evidence&quot;][&quot;rep_path&quot;]`
-- APW exists: `final[&quot;evidence&quot;][&quot;apw_path&quot;]`
-- REP convergence: parse `final[&quot;evidence&quot;][&quot;rep_path&quot;]` with `rep_parser.parse_problem_status`.
+- `PER_ERROR=0`: `final["per_error"]["value"] == 0`
+- REP exists: `final["evidence"]["rep_path"]`
+- APW exists: `final["evidence"]["apw_path"]`
+- REP convergence: parse `final["evidence"]["rep_path"]` with `rep_parser.parse_problem_status`.
 
 ## Why This Helper
 
@@ -2124,31 +2117,31 @@ For a three-case thesis task, write:
 
 ```json
 {
-  &quot;cases&quot;: [
+  "cases": [
     {
-      &quot;case_key&quot;: &quot;araby&quot;,
-      &quot;crude&quot;: &quot;Araby&quot;,
-      &quot;engine_run&quot;: {},
-      &quot;per_error&quot;: {&quot;value&quot;: 0},
-      &quot;run_status&quot;: {},
-      &quot;evidence&quot;: {
-        &quot;rep_path&quot;: &quot;...&quot;,
-        &quot;apw_path&quot;: &quot;...&quot;
+      "case_key": "araby",
+      "crude": "Araby",
+      "engine_run": {},
+      "per_error": {"value": 0},
+      "run_status": {},
+      "evidence": {
+        "rep_path": "...",
+        "apw_path": "..."
       },
-      &quot;rep_converged&quot;: true,
-      &quot;product_streams_m3_d&quot;: {},
-      &quot;column_readbacks&quot;: {}
+      "rep_converged": true,
+      "product_streams_m3_d": {},
+      "column_readbacks": {}
     }
   ],
-  &quot;evidence_gate&quot;: {
-    &quot;all_cases_have_rep_apw&quot;: true,
-    &quot;all_cases_per_error_zero&quot;: true,
-    &quot;all_cases_rep_converged&quot;: true
+  "evidence_gate": {
+    "all_cases_have_rep_apw": true,
+    "all_cases_per_error_zero": true,
+    "all_cases_rep_converged": true
   }
 }
 ```
 
-The top-level `summary[&quot;evidence&quot;]` may point to the final case or contain
+The top-level `summary["evidence"]` may point to the final case or contain
 `case_evidence`, but each case must still carry its own evidence paths.
 
 ## MD-first base-case readback (own-agent)
@@ -2196,24 +2189,24 @@ from script_agent_exp.safe_aspen_calls import (
 
 ## Core Calls
 
-### `load_rep(path: str) -&gt; str`
+### `load_rep(path: str) -> str`
 
 Read a textual Aspen `.rep` file. Use this for the `evidence.rep_path` produced
 by `run_completion_engine_and_export(...)` or `finalize_task_summary(...)`.
 
-### `parse_problem_status(rep_text: str) -&gt; dict`
+### `parse_problem_status(rep_text: str) -> dict`
 
 Return a convergence summary:
 
 ```python
 status = parse_problem_status(rep_text)
-converged = bool(status.get(&quot;converged&quot;))
-hints = status.get(&quot;hints&quot;) or []
+converged = bool(status.get("converged"))
+hints = status.get("hints") or []
 ```
 
 Use this to support final `rep_converged` / problem-status evidence.
 
-### `parse_stream_section(rep_text: str) -&gt; dict[str, RepStreamRow]`
+### `parse_stream_section(rep_text: str) -> dict[str, RepStreamRow]`
 
 Parse Aspen stream summary tables, including paginated stream tables. Each row
 has fields such as:
@@ -2231,31 +2224,31 @@ has fields such as:
 Example:
 
 ```python
-rep_text = load_rep(final[&quot;evidence&quot;][&quot;rep_path&quot;])
+rep_text = load_rep(final["evidence"]["rep_path"])
 streams = parse_stream_section(rep_text)
-outlet = streams.get(&quot;P1&quot;)
-water_kmol_s = (outlet.components_kmol_s or {}).get(&quot;WATER&quot;) if outlet else None
+outlet = streams.get("P1")
+water_kmol_s = (outlet.components_kmol_s or {}).get("WATER") if outlet else None
 ```
 
 ## Task-Specific Helpers
 
-### `parse_block_heat_duty_watt(rep_text: str) -&gt; dict[str, float | None]`
+### `parse_block_heat_duty_watt(rep_text: str) -> dict[str, float | None]`
 
 Best-effort block heat-duty extraction from the U-O-S block section. Use for
 HeatX, Heater, condenser/reboiler, and similar duty readbacks when direct Aspen
 tree readbacks are unavailable or need REP corroboration.
 
-### `parse_block_theoretical_stages(rep_text: str, *, block_name: str) -&gt; float | None`
+### `parse_block_theoretical_stages(rep_text: str, *, block_name: str) -> float | None`
 
 Best-effort stage/tray count extraction for shortcut or column blocks. Use for
 DSTWU/RadFrac comparison evidence when the task asks for theoretical stages.
 
-### `parse_radfrac_liquid_x_profile(rep_text: str, *, block_name: str, component_ids: list[str]) -&gt; dict`
+### `parse_radfrac_liquid_x_profile(rep_text: str, *, block_name: str, component_ids: list[str]) -> dict`
 
 Best-effort RadFrac liquid mole-fraction profile extraction. Use when the task
 asks for composition profiles or stagewise liquid composition evidence.
 
-### `build_agent_visible_rep_text(rep_text: str, *, max_chars: int = 18000) -&gt; str`
+### `build_agent_visible_rep_text(rep_text: str, *, max_chars: int = 18000) -> str`
 
 Create a compact REP excerpt with the flowsheet, block, stream, and problem
 status sections. Use it only for bounded diagnostics or report snippets; keep
@@ -2283,14 +2276,14 @@ analysis, probe, and heat-cascade helpers live in separate complete catalogs.
 
 ## Unified Capability Invocation
 
-Default to `client.invoke(&quot;capability&quot;, **params)` for registered capabilities.
+Default to `client.invoke("capability", **params)` for registered capabilities.
 It returns a `status`/`result` envelope. Local Python helpers and native HTTP
 operations use the same capability registry; generated code need not decide
 which transport implements a registered capability.
 
-Use `safe.call(client, &quot;capability&quot;, **params)` for strict execution: it checks
+Use `safe.call(client, "capability", **params)` for strict execution: it checks
 the routed outcome and unwraps the result payload. Use
-`safe.probe_call(client, &quot;capability&quot;, **params)` for diagnostics through the
+`safe.probe_call(client, "capability", **params)` for diagnostics through the
 same registry; incomplete completion probes are evidence, not automatically
 fatal setup exceptions. Existing typed `safe.func(client, ...)` calls remain
 supported. `client.execute(...)` is a compatibility entry into the unified
@@ -2331,7 +2324,7 @@ edge/ancestor paths, not JSON values to stringify; preserve the underlying model
 Use `AspenHttpClient(server_url=server_url, task_hash=task_hash, task_name=task_name, recorder=recorder)`.
 Keep one `JsonlRecorder` in the same output subtree as `summary.json`.
 
-Call `client.ensure_session(...)` before model mutation. Use `inset=&quot;SI&quot;` or
+Call `client.ensure_session(...)` before model mutation. Use `inset="SI"` or
 another legal built-in unit set through `ensure_session`; do not write INSET
 through raw tree access.
 
@@ -2344,7 +2337,7 @@ composition, reactions, or downstream specs.
 Use documented property-method helpers. Do not invent raw tree writes for global
 or block-local property methods.
 
-After `ensure_property_method(..., method=&quot;SRK&quot;)`, call registered
+After `ensure_property_method(..., method="SRK")`, call registered
 `safe.configure_srk_free_water_steamnbs(client)` for STEAMNBS/default-STEAM-TA.
 Local Python helper, callable through unified invocation when registered, not
 an HTTP wire operation. The helper internally uses `typed helper write surface`/`typed readback helper such as read_stream_output(...)` on
@@ -2369,10 +2362,10 @@ For product-purity probes, request the actual component fraction explicitly:
 
 ```python
 purity = client.invoke(
-    &quot;read_stream_output&quot;,
-    stream_name=&quot;P1&quot;,
-    variable=&quot;mole_fraction&quot;,
-    component_name=&quot;ETOH&quot;,
+    "read_stream_output",
+    stream_name="P1",
+    variable="mole_fraction",
+    component_name="ETOH",
 )
 ```
 
@@ -2386,7 +2379,7 @@ readback contract below.
 For final evidence, prefer:
 
 ```python
-final = client.invoke(&quot;run_completion_engine_and_export&quot;,
+final = client.invoke("run_completion_engine_and_export",
     required_streams=REQUIRED_STREAMS,
     required_blocks=REQUIRED_BLOCKS,
     server_subdir=args.bkp_subdir,
@@ -2441,7 +2434,7 @@ post-Design-Spec Aspen run, not from seeds or setter receipts.
 For decision exploration, prefer:
 
 ```python
-suite = client.invoke(&quot;configure_sensitivity_exploration_suite&quot;,  suite_name=suite_name, sweeps=sweeps, summary=summary,
+suite = client.invoke("configure_sensitivity_exploration_suite",  suite_name=suite_name, sweeps=sweeps, summary=summary,
     collect=True, decision_basis=decision_basis,
 )
 # The suite owns collection and records per-Sensitivity evidence in summary.
@@ -2452,7 +2445,7 @@ Use stream-variable sweeps for material stream feed, solvent, makeup, or utility
 flow handles. Use block-variable sweeps only when the manipulated surface is
 actually block-owned.
 
-The suite returns `schema_version=&quot;sensitivity_configuration_transaction.v1&quot;`.
+The suite returns `schema_version="sensitivity_configuration_transaction.v1"`.
 `configuration_status` is `configured`, `partial`, or `failed`; inspect
 `configuration_success`, `required_steps`, and `configuration_errors` for required
 configuration/Fill failures. `success` retains whole-request semantics (including
@@ -2546,16 +2539,16 @@ Use this complete catalog when the task profile explicitly includes `RADFRAC`.
 For ordinary total-condenser/kettle columns, prefer:
 
 ```python
-client.invoke(&quot;configure_radfrac_total_condenser&quot;,
-    block_name=&quot;D1&quot;,
-    feed_stream=&quot;F1&quot;,
+client.invoke("configure_radfrac_total_condenser",
+    block_name="D1",
+    feed_stream="F1",
     nstage=20,
     feed_stage=10,
     reflux_ratio=1.5,
     distillate_flow=1.0,
-    distillate_flow_unit=&quot;kmol/hr&quot;,
+    distillate_flow_unit="kmol/hr",
     top_pressure=1.0,
-    pressure_unit=&quot;atm&quot;,
+    pressure_unit="atm",
 )
 ```
 
@@ -2567,11 +2560,11 @@ The runtime parent supplies canonical imports; do not generate a `sys.path`
 bootstrap or use legacy experiments-package fallbacks.
 
 If a task, reference BKP, or live readback shows explicit `PRES1` / `PRES2`
-pressure rows, use `bottom_pressure_mode=&quot;pres2&quot;` with
-`configure_radfrac_total_condenser(...)`, or call `client.execute(&quot;set_pres2&quot;,
+pressure rows, use `bottom_pressure_mode="pres2"` with
+`configure_radfrac_total_condenser(...)`, or call `client.execute("set_pres2",
 ...)` directly after `set_pres1`. The default helper behavior keeps historical
 `DP-COL` semantics for `bottom_pressure`; it is not a substitute for probing
-`PRES2` when the Aspen file&#x27;s pressure surface is TOP-BOTTOM / P-SPEC2.
+`PRES2` when the Aspen file's pressure surface is TOP-BOTTOM / P-SPEC2.
 
 For all-fail RadFrac probes, pressure profile is a first-class axis:
 `set_pres1`-only, explicit `set_pres1` + `set_pres2`, and `DP-COL` can be
@@ -2593,10 +2586,10 @@ task instead of adding end effects only to converge.
 After setting feed stages, configure per-feed convention with the Python helper:
 
 ```python
-client.invoke(&quot;configure_radfrac_feed_convention&quot;,
-    block_name=&quot;D1&quot;,
-    stream_name=&quot;F1&quot;,
-    convention=&quot;ON-STAGE&quot;,
+client.invoke("configure_radfrac_feed_convention",
+    block_name="D1",
+    stream_name="F1",
+    convention="ON-STAGE",
 )
 ```
 
@@ -2631,23 +2624,23 @@ work.
 
 ## Heat Stream Duty
 
-Heat streams created by `create_heat_stream` live under `Data\Streams\&lt;Q&gt;` with
+Heat streams created by `create_heat_stream` live under `Data\Streams\<Q>` with
 heat-stream semantics. Use helper calls for duty writes:
 
 ```python
-client.invoke(&quot;configure_heat_stream_duty&quot;,
-    stream_name=&quot;Q1&quot;,
+client.invoke("configure_heat_stream_duty",
+    stream_name="Q1",
     duty=1.5e7,
-    unit=&quot;Watt&quot;,
+    unit="Watt",
 )
 ```
 
 For cascades:
 
 ```python
-client.invoke(&quot;configure_heat_stream_duty_map&quot;,
-    duties_by_stream={&quot;Q1&quot;: 2.0e7, &quot;Q2&quot;: 1.5e7},
-    unit=&quot;Watt&quot;,
+client.invoke("configure_heat_stream_duty_map",
+    duties_by_stream={"Q1": 2.0e7, "Q2": 1.5e7},
+    unit="Watt",
 )
 ```
 
@@ -2684,7 +2677,7 @@ single structured result.
 ### FILE: docs/hardcoded_script_plan/block_type_inject/streams_globals.md
 Reason: generic stream/global Aspen surface
 ```text
-# Block-Type [NON-ENGLISH REDACTED]：Streams &amp; Globals（[NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED]）
+# Block-Type [NON-ENGLISH REDACTED]：Streams & Globals（[NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED] / [NON-ENGLISH REDACTED]）
 
 - **[NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]）
 - **Aspen [NON-ENGLISH REDACTED]**：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] `docs/hardcoded_script_plan/block_type_inject/heat_stream.md`。
@@ -2704,10 +2697,10 @@ Reason: generic stream/global Aspen surface
 
 ```python
 # [NON-ENGLISH REDACTED] A：session [NON-ENGLISH REDACTED] ensure_session [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]）
-client.ensure_session(show_gui=False, inset=&quot;SI&quot;)   # [NON-ENGLISH REDACTED] inset=&quot;ENG&quot;
+client.ensure_session(show_gui=False, inset="SI")   # [NON-ENGLISH REDACTED] inset="ENG"
 
 # [NON-ENGLISH REDACTED] B：[NON-ENGLISH REDACTED] helper
-client.invoke(&quot;configure_inset_unit_system&quot;,  value=&quot;SI&quot;)
+client.invoke("configure_inset_unit_system",  value="SI")
 # path: Data\Setup\Global\Input\INSET
 # [NON-ENGLISH REDACTED]：SI | ENG | ENGUS | MET | SI-CHEM | MET-CHEM
 # [NON-ENGLISH REDACTED] Data\Setup\System-Options\Input\INSET [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
@@ -2772,9 +2765,9 @@ client.invoke(&quot;configure_inset_unit_system&quot;,  value=&quot;SI&quot;)
 
 | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
 |------|------|
-| [NON-ENGLISH REDACTED] T/P/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `Data\Streams\&lt;S&gt;\Output\...` [NON-ENGLISH REDACTED] REP |
+| [NON-ENGLISH REDACTED] T/P/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | `Data\Streams\<S>\Output\...` [NON-ENGLISH REDACTED] REP |
 | [NON-ENGLISH REDACTED] | `ensure_property_method` / `read_global_property_method` readback payload |
-| INSET | `safe.configure_inset_unit_system(client, value=...)` readback；[NON-ENGLISH REDACTED] `client.ensure_session(..., inset=&quot;SI&quot;)` |
+| INSET | `safe.configure_inset_unit_system(client, value=...)` readback；[NON-ENGLISH REDACTED] `client.ensure_session(..., inset="SI")` |
 
 
 ---
@@ -2845,7 +2838,7 @@ common reusable IDs and generic usage rules.
 ## Usage Rules
 
 - Prefer native Aspen IDs from CAS lookup and the table above over guessed
-  abbreviations from task text (`Water` -&gt; `H2O`, not `WA`; `Methanol` -&gt; `MEOH`,
+  abbreviations from task text (`Water` -> `H2O`, not `WA`; `Methanol` -> `MEOH`,
   not `ME`).
 - Prefer task-visible component names and CAS lookup helpers over guessing.
 - If the generated script uses local short IDs such as `BZ` or `TOL`, record the
@@ -2956,7 +2949,7 @@ Generated public capability names in this document are family-specific. The unde
 |---------------|------|---------------|------|
 | `set_heater_flash_spec` | `SPEC_OPT` | [NON-ENGLISH REDACTED] §2.1 | [NON-ENGLISH REDACTED] gate |
 | `set_heater_temperature` | `TEMP` | float + unit | [NON-ENGLISH REDACTED] |
-| `set_heater_pressure` | `PRES` | float + unit | [NON-ENGLISH REDACTED]（&gt;0 [NON-ENGLISH REDACTED]；≤0 [NON-ENGLISH REDACTED]） |
+| `set_heater_pressure` | `PRES` | float + unit | [NON-ENGLISH REDACTED]（>0 [NON-ENGLISH REDACTED]；≤0 [NON-ENGLISH REDACTED]） |
 | `set_heater_vapor_fraction` | `VFRAC` | float | **`SPEC_OPT=PV`** [NON-ENGLISH REDACTED] |
 | `set_heater_duty` | `DUTY` | float + unit | `TQ`/`PQ`/`TD`/`PD` [NON-ENGLISH REDACTED] duty/heat [NON-ENGLISH REDACTED] |
 
@@ -3099,7 +3092,7 @@ Generated public capability names in this document are family-specific. The unde
 
 Pressure + duty [NON-ENGLISH REDACTED]（[NON-ENGLISH REDACTED]「0.3 MPa + 0 kW duty」）[NON-ENGLISH REDACTED] **`PD`**，[NON-ENGLISH REDACTED] `PQ`。[NON-ENGLISH REDACTED] COM [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] HTTP `ui_set_rstoic_flash_spec_pq`（legacy [NON-ENGLISH REDACTED]）[NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] `PD`。
 
-**Bar-scale `PRES`（[NON-ENGLISH REDACTED] INSET [NON-ENGLISH REDACTED]）**：`set_pres(..., unit=&quot;bar&quot;)` [NON-ENGLISH REDACTED]。Meta [NON-ENGLISH REDACTED] `PRES = -0.1` [NON-ENGLISH REDACTED] **`unit=&quot;bar&quot;`**（absolute bar [NON-ENGLISH REDACTED] = [NON-ENGLISH REDACTED]）。[NON-ENGLISH REDACTED] bar [NON-ENGLISH REDACTED] MPa。[NON-ENGLISH REDACTED] `aspen-custom-unit-set` [NON-ENGLISH REDACTED] `bar_pressure_write_probe.py`。
+**Bar-scale `PRES`（[NON-ENGLISH REDACTED] INSET [NON-ENGLISH REDACTED]）**：`set_pres(..., unit="bar")` [NON-ENGLISH REDACTED]。Meta [NON-ENGLISH REDACTED] `PRES = -0.1` [NON-ENGLISH REDACTED] **`unit="bar"`**（absolute bar [NON-ENGLISH REDACTED] = [NON-ENGLISH REDACTED]）。[NON-ENGLISH REDACTED] bar [NON-ENGLISH REDACTED] MPa。[NON-ENGLISH REDACTED] `aspen-custom-unit-set` [NON-ENGLISH REDACTED] `bar_pressure_write_probe.py`。
 
 ### 2.2 `HEATOPT` / Heat Transfer Option
 
@@ -3199,13 +3192,13 @@ Generated public capability names in this document are family-specific. The unde
 
 ### 2.2 Bar-scale / near-atmospheric `PRES`
 
-- **`unit=&quot;bar&quot;` [NON-ENGLISH REDACTED]**（[NON-ENGLISH REDACTED] INSET [NON-ENGLISH REDACTED]）；`set_flash2_pressure` [NON-ENGLISH REDACTED] Literal [NON-ENGLISH REDACTED] `bar` / `bara` / `barg`。
-- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：meta [NON-ENGLISH REDACTED] **`PRES = -0.05`** [NON-ENGLISH REDACTED] **`unit=&quot;bar&quot;`**（absolute bar [NON-ENGLISH REDACTED] = [NON-ENGLISH REDACTED]）。
+- **`unit="bar"` [NON-ENGLISH REDACTED]**（[NON-ENGLISH REDACTED] INSET [NON-ENGLISH REDACTED]）；`set_flash2_pressure` [NON-ENGLISH REDACTED] Literal [NON-ENGLISH REDACTED] `bar` / `bara` / `barg`。
+- [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]：meta [NON-ENGLISH REDACTED] **`PRES = -0.05`** [NON-ENGLISH REDACTED] **`unit="bar"`**（absolute bar [NON-ENGLISH REDACTED] = [NON-ENGLISH REDACTED]）。
 - **[NON-ENGLISH REDACTED]**[NON-ENGLISH REDACTED] bar [NON-ENGLISH REDACTED] **`MPa`**（[NON-ENGLISH REDACTED] `-0.05 bar` → `2.15 MPa` [NON-ENGLISH REDACTED]）。
 - [NON-ENGLISH REDACTED] readback [NON-ENGLISH REDACTED]；readback [NON-ENGLISH REDACTED] display unit [NON-ENGLISH REDACTED] `psia` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] display label [NON-ENGLISH REDACTED] `unit=`。
 
 ```python
-client.invoke(&quot;set_flash2_pressure&quot;, block_name=&quot;F&quot;, value=-0.05, unit=&quot;bar&quot;)
+client.invoke("set_flash2_pressure", block_name="F", value=-0.05, unit="bar")
 ```
 
 [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED] `set_flash2_temperature` + `set_flash2_pressure`。[NON-ENGLISH REDACTED] `SPEC_OPT` [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、duty、vapor fraction [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]、utility requirement [NON-ENGLISH REDACTED]。
@@ -3219,9 +3212,9 @@ F(IN), HS(IN), V(OUT), L(OUT), WD(OUT), HS(OUT)
 ```
 
 - `HS(IN): []` [NON-ENGLISH REDACTED] `HS(OUT): []` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] heat port。
-- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `create_heat_stream(&lt;heat_stream&gt;)`，[NON-ENGLISH REDACTED] `connect_stream(block_name=&lt;flash&gt;, stream_name=&lt;heat_stream&gt;, port_name=&quot;HS(IN)&quot;)` [NON-ENGLISH REDACTED] live [NON-ENGLISH REDACTED] heat port。[NON-ENGLISH REDACTED] port readback、heat stream duty/readback、REP/APW [NON-ENGLISH REDACTED] run。
+- [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `create_heat_stream(<heat_stream>)`，[NON-ENGLISH REDACTED] `connect_stream(block_name=<flash>, stream_name=<heat_stream>, port_name="HS(IN)")` [NON-ENGLISH REDACTED] live [NON-ENGLISH REDACTED] heat port。[NON-ENGLISH REDACTED] port readback、heat stream duty/readback、REP/APW [NON-ENGLISH REDACTED] run。
 - [NON-ENGLISH REDACTED] duty / fixed heat balance [NON-ENGLISH REDACTED] Flash2，[NON-ENGLISH REDACTED] heat stream；[NON-ENGLISH REDACTED] block-owned `set_flash2_flash_spec` + `set_flash2_duty` / `set_flash2_temperature` / `set_flash2_pressure`。
-- `TQ` [NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED] + heat/duty [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] heat stream / duty path [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/heat stream [NON-ENGLISH REDACTED]，`set_spec_opt(..., &quot;TQ&quot;)` + `set_temp(...)`，[NON-ENGLISH REDACTED] heat stream / block duty path [NON-ENGLISH REDACTED] run [NON-ENGLISH REDACTED]。
+- `TQ` [NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED] + heat/duty [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] heat stream / duty path [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]/heat stream [NON-ENGLISH REDACTED]，`set_spec_opt(..., "TQ")` + `set_temp(...)`，[NON-ENGLISH REDACTED] heat stream / block duty path [NON-ENGLISH REDACTED] run [NON-ENGLISH REDACTED]。
 - `set_flash2_vapor_fraction` [NON-ENGLISH REDACTED] Flash2 [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] heat/duty path [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `set_flash2_vapor_fraction` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] heat stream [NON-ENGLISH REDACTED] native duty path [NON-ENGLISH REDACTED] run。
 - [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `TQ` [NON-ENGLISH REDACTED] **Flash2** [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] RStoic [NON-ENGLISH REDACTED] block family；[NON-ENGLISH REDACTED] RStoic [NON-ENGLISH REDACTED] `SPEC_OPT` [NON-ENGLISH REDACTED] `TQ`。
 
@@ -3263,16 +3256,16 @@ Reason: block-family Aspen surface selected from task profile
 
 `configure_fsplit_shared_outlets(...)` [NON-ENGLISH REDACTED] Aspen HTTP operation。[NON-ENGLISH REDACTED]
 `safe.configure_fsplit_shared_outlets(client, ...)` [NON-ENGLISH REDACTED]
-`call_helper(&quot;configure_fsplit_shared_outlets&quot;, client, ...)` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]**
-`client.execute(&quot;configure_fsplit_shared_outlets&quot;, ...)` [NON-ENGLISH REDACTED]
-`do_op(client, &quot;configure_fsplit_shared_outlets&quot;, ...)`.
+`call_helper("configure_fsplit_shared_outlets", client, ...)` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]**
+`client.execute("configure_fsplit_shared_outlets", ...)` [NON-ENGLISH REDACTED]
+`do_op(client, "configure_fsplit_shared_outlets", ...)`.
 
 ```python
-client.invoke(&quot;configure_fsplit_shared_outlets&quot;,
-    block_name=&quot;VF&quot;,
-    inlet_stream=&quot;V2&quot;,
-    outlet_streams=[&quot;V4&quot;, &quot;V3&quot;],
-    split_fractions={&quot;V4&quot;: 0.92},
+client.invoke("configure_fsplit_shared_outlets",
+    block_name="VF",
+    inlet_stream="V2",
+    outlet_streams=["V4", "V3"],
+    split_fractions={"V4": 0.92},
 )
 ```
 
@@ -3353,7 +3346,7 @@ Generated public capability names in this document are family-specific. The unde
 | `configure_radfrac_bottom_vapor_feed(...)` | `feed_stream`, `nstage`, `feed_stage`, `top_pressure`, `pressure_unit`, `column_dp`, `reflux_ratio`, `distillate_flow`, `d_over_f` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] **[NON-ENGLISH REDACTED]**；[NON-ENGLISH REDACTED] `PRES1` + `FEED_CONVEN=ON-STAGE-VAP` |
 | `configure_radfrac_no_condenser_absorber(...)` | `nstage`, `feed_stages: dict`, `feed_conventions: dict`, `top_pressure`, `pressure_unit`, `bottom_pressure`, `column_dp` | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `PRES1`，[NON-ENGLISH REDACTED] `PRES2` [NON-ENGLISH REDACTED] `DP_COL`，[NON-ENGLISH REDACTED] |
 | `configure_radfrac_no_condenser_reboiled_bottoms(...)` | `reboiler_type`, `feed_stages`, `top_pressure`, `pressure_unit`, … | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `PRES1` / `PRES2` / `DP_COL` |
-| `configure_radfrac_feed_convention(...)` | `block_name`, `stream_name`, `convention` | **Python-only** helper；[NON-ENGLISH REDACTED] `FEED_CONVEN` + `FEED_CONVE2` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]** `client.execute(&quot;configure_radfrac_feed_convention&quot;, ...)` |
+| `configure_radfrac_feed_convention(...)` | `block_name`, `stream_name`, `convention` | **Python-only** helper；[NON-ENGLISH REDACTED] `FEED_CONVEN` + `FEED_CONVE2` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]** `client.execute("configure_radfrac_feed_convention", ...)` |
 | `configure_radfrac_extractive_distillation_pair(...)` | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] + [NON-ENGLISH REDACTED] |
 | `connect_radfrac_feed_distillate_bottoms(...)` | `block_name`, `inlet_streams`, `distillate_stream`, `bottoms_stream` | [NON-ENGLISH REDACTED] RadFrac：[NON-ENGLISH REDACTED] `F(IN)`，[NON-ENGLISH REDACTED] `LD(OUT)`，[NON-ENGLISH REDACTED] `B(OUT)`；[NON-ENGLISH REDACTED] evidence |
 | `scan_radfrac_bottoms_for_component_recovery(...)` | `column_block`, `feed_stream`, `bottoms_stream`, `component_name`, `flow_values`, `flow_unit`, `target_recovery` | [NON-ENGLISH REDACTED] RadFrac `BASIS_B` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]”[NON-ENGLISH REDACTED] |
@@ -3378,11 +3371,11 @@ Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distil
 - `REBOILER=NONE` [NON-ENGLISH REDACTED]，Bottom Stage [NON-ENGLISH REDACTED]：[NON-ENGLISH REDACTED] `ON-STAGE-VAP`，[NON-ENGLISH REDACTED] Aspen [NON-ENGLISH REDACTED] `NSTAGE+1` above-stage vapor/liquid [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] feed stage [NON-ENGLISH REDACTED] convention。
 - [NON-ENGLISH REDACTED] `list_block_ports`。[NON-ENGLISH REDACTED] `VD(OUT)`，[NON-ENGLISH REDACTED] `D(OUT)`。
 - [NON-ENGLISH REDACTED] Aspen / UI Next [NON-ENGLISH REDACTED]：
-  - `FEEDS not complete: SID = &lt;stream&gt;`
+  - `FEEDS not complete: SID = <stream>`
   - `Stage must be specified.`
   - `A feed or pumparound stream to the top stage must be specified when Condenser=None or condenser duty is zero.`
   - `A feed or pumparound stream to the bottom stage must be specified when Reboiler=None or reboiler duty is zero.`
-  [NON-ENGLISH REDACTED] `FEEDS\&lt;stream&gt;\STAGE` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：`set_feed_stage(...)` + `FEED_CONVEN` + `FEED_CONVE2` + `set_pres1(...)`，[NON-ENGLISH REDACTED] `configure_radfrac_no_condenser_absorber(...)`。
+  [NON-ENGLISH REDACTED] `FEEDS\<stream>\STAGE` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：`set_feed_stage(...)` + `FEED_CONVEN` + `FEED_CONVE2` + `set_pres1(...)`，[NON-ENGLISH REDACTED] `configure_radfrac_no_condenser_absorber(...)`。
 
 ---
 
@@ -3407,12 +3400,12 @@ Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distil
 [NON-ENGLISH REDACTED] BKP / APW [NON-ENGLISH REDACTED] RadFrac [NON-ENGLISH REDACTED] `P-SPEC2: PRES1=... PRES2=...`，
 [NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED] recycle、feed stage [NON-ENGLISH REDACTED] solver。`PRES2`
 [NON-ENGLISH REDACTED] probe [NON-ENGLISH REDACTED]；`configure_radfrac_total_condenser(...)`
-[NON-ENGLISH REDACTED] `bottom_pressure_mode=&quot;pres2&quot;` [NON-ENGLISH REDACTED] TOP-BOTTOM/P-SPEC2 [NON-ENGLISH REDACTED]。
+[NON-ENGLISH REDACTED] `bottom_pressure_mode="pres2"` [NON-ENGLISH REDACTED] TOP-BOTTOM/P-SPEC2 [NON-ENGLISH REDACTED]。
 
 `PRES1` [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED] Next / completion [NON-ENGLISH REDACTED]
 `Top Stage Pressure must be specified when Top/Bottom or Section Pressure Drop is selected.`
 [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] `Stage 1 / Condenser pressure`，[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]
-`set_pres1(block_name=&lt;BLK&gt;, value=&lt;top pressure&gt;, unit=&lt;unit&gt;)`。
+`set_pres1(block_name=<BLK>, value=<top pressure>, unit=<unit>)`。
 
 [NON-ENGLISH REDACTED]：
 
@@ -3420,7 +3413,7 @@ Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distil
   [NON-ENGLISH REDACTED] DP-COL；[NON-ENGLISH REDACTED]。
 - [NON-ENGLISH REDACTED] **column pressure drop**，[NON-ENGLISH REDACTED] `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop`。
 - [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `PRES1`；[NON-ENGLISH REDACTED]“[NON-ENGLISH REDACTED] bottom”[NON-ENGLISH REDACTED]。
-- `bottom_pressure &gt;= top_pressure` [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。`psig/barg/kPag`
+- `bottom_pressure >= top_pressure` [NON-ENGLISH REDACTED]、[NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]。`psig/barg/kPag`
   [NON-ENGLISH REDACTED] `psia/bar/kPa` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `kPa`。
 - [NON-ENGLISH REDACTED]：`kPa`, `bar`, `atm`, `mmHg`, `MPa`, `psi`, `psia`, `psig`。
   [NON-ENGLISH REDACTED] `set_radfrac_top_pressure` / `set_radfrac_bottom_pressure` [NON-ENGLISH REDACTED]；`set_radfrac_column_pressure_drop`
@@ -3429,8 +3422,8 @@ Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distil
 
 [NON-ENGLISH REDACTED]：
 
-1. `read_pressure_state(block_name, unit=&lt;same_unit&gt;)` [NON-ENGLISH REDACTED]
-   `Data\Blocks\&lt;BLK&gt;\Input\PRES1`, `PRES2`, `OPT_PRES`, `DP_COL`。
+1. `read_pressure_state(block_name, unit=<same_unit>)` [NON-ENGLISH REDACTED]
+   `Data\Blocks\<BLK>\Input\PRES1`, `PRES2`, `OPT_PRES`, `DP_COL`。
 2. [NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `set_radfrac_top_pressure`。
 3. [NON-ENGLISH REDACTED] `OPT_PRES=DP-COL`，[NON-ENGLISH REDACTED] `DP_COL` [NON-ENGLISH REDACTED] bottom absolute pressure。
 4. [NON-ENGLISH REDACTED] `set_radfrac_bottom_pressure`，[NON-ENGLISH REDACTED] `PRES2` [NON-ENGLISH REDACTED] `PRES1` [NON-ENGLISH REDACTED]。
@@ -3441,9 +3434,9 @@ Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distil
 `configure_radfrac_feed_convention(...)` [NON-ENGLISH REDACTED] `script_agent_exp.safe_aspen_calls`
 [NON-ENGLISH REDACTED] **Python helper**，[NON-ENGLISH REDACTED] Aspen HTTP `/execute` operation。[NON-ENGLISH REDACTED]
 `safe.configure_radfrac_feed_convention(client, ...)` [NON-ENGLISH REDACTED]
-`call_helper(&quot;configure_radfrac_feed_convention&quot;, client, ...)` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]**
-`client.execute(&quot;configure_radfrac_feed_convention&quot;, ...)` [NON-ENGLISH REDACTED]
-`do_op(client, &quot;configure_radfrac_feed_convention&quot;, ...)`。
+`call_helper("configure_radfrac_feed_convention", client, ...)` [NON-ENGLISH REDACTED]；**[NON-ENGLISH REDACTED]**
+`client.execute("configure_radfrac_feed_convention", ...)` [NON-ENGLISH REDACTED]
+`do_op(client, "configure_radfrac_feed_convention", ...)`。
 
 | helper | token [NON-ENGLISH REDACTED] |
 |--------|-------------|
@@ -3451,14 +3444,14 @@ Use `inlet_streams=[feed]`, not `feed_stream=`, for `connect_radfrac_feed_distil
 | [NON-ENGLISH REDACTED] `FEED_CONVEN` + `FEED_CONVE2` **[NON-ENGLISH REDACTED]** | [NON-ENGLISH REDACTED] `legal_values` |
 
 ```python
-client.invoke(&quot;configure_radfrac_feed_convention&quot;,
-    block_name=&quot;CO&quot;,
-    stream_name=&quot;CF&quot;,
-    convention=&quot;ON-STAGE-LIQ&quot;,
+client.invoke("configure_radfrac_feed_convention",
+    block_name="CO",
+    stream_name="CF",
+    convention="ON-STAGE-LIQ",
 )
 ```
 
-[NON-ENGLISH REDACTED] RadFrac feed stage [NON-ENGLISH REDACTED] `Data\Blocks\&lt;BLK&gt;\Input\FEEDS\&lt;stream&gt;\STAGE` [NON-ENGLISH REDACTED] `...\FEEDS\&lt;stream&gt;\FEED_STAGE` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] surface。[NON-ENGLISH REDACTED] **stage** [NON-ENGLISH REDACTED] HTTP `set_feed_stage(...)`；[NON-ENGLISH REDACTED] **convention** [NON-ENGLISH REDACTED] Python helper。
+[NON-ENGLISH REDACTED] RadFrac feed stage [NON-ENGLISH REDACTED] `Data\Blocks\<BLK>\Input\FEEDS\<stream>\STAGE` [NON-ENGLISH REDACTED] `...\FEEDS\<stream>\FEED_STAGE` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] surface。[NON-ENGLISH REDACTED] **stage** [NON-ENGLISH REDACTED] HTTP `set_feed_stage(...)`；[NON-ENGLISH REDACTED] **convention** [NON-ENGLISH REDACTED] Python helper。
 
 [NON-ENGLISH REDACTED] RadFrac probe [NON-ENGLISH REDACTED] `PER_ERROR=1` [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
 `feed_stage` [NON-ENGLISH REDACTED]。`ABOVE-STAGE` / `ON-STAGE` / `VAPOR` / `LIQUID`
@@ -3474,8 +3467,8 @@ operating-spec selections. Numeric writes can change active `COL-SPECS` membersh
 do not append `set_d_f` after a successful `set_radfrac_reflux_ratio` + `set_radfrac_distillate_rate` bundle.
 `configure_radfrac_bottom_vapor_feed` keeps explicit `distillate_flow` when both
 arguments are supplied and records `d_over_f` as inactive evidence. Ratio-only
-calls retain `set_d_f`. The order remains end effects -&gt; stage/pressure -&gt; feed
-stage/convention -&gt; reflux -&gt; one draw spec. This is not a mechanism for clearing
+calls retain `set_d_f`. The order remains end effects -> stage/pressure -> feed
+stage/convention -> reflux -> one draw spec. This is not a mechanism for clearing
 old specs on inherited columns: inspect active UI/COL-SPECS rows before a basis
 switch; do not guess selector paths or suppress a selected setter failure.
 A saturated-vapor bottom feed does not imply `CONDENSER=NONE`: preserve a stated
@@ -3529,14 +3522,14 @@ Exact direct-call form for an additional or special RadFrac feed:
 
 ```python
 client.invoke(
-    &quot;set_radfrac_feed_stage&quot;,
-    block_name=&quot;D1&quot;,
-    stream_name=&quot;S1&quot;,
+    "set_radfrac_feed_stage",
+    block_name="D1",
+    stream_name="S1",
     value=5,
 )
 ```
 
-The public capability retains the native setter&#x27;s generic numeric keyword `value`. The semantic name does **not** imply a `stage` keyword. Prefer `configure_radfrac_total_condenser(..., feed_stage=...)` for the standard single-feed bundle; use the direct capability above only for per-feed additions.
+The public capability retains the native setter's generic numeric keyword `value`. The semantic name does **not** imply a `stage` keyword. Prefer `configure_radfrac_total_condenser(..., feed_stage=...)` for the standard single-feed bundle; use the direct capability above only for per-feed additions.
 
 ### 2.2.0 Partial-Vapor + Distillate rate [NON-ENGLISH REDACTED]
 
@@ -3545,10 +3538,10 @@ Operating specifications [NON-ENGLISH REDACTED] `Reflux ratio` + `Distillate rat
 `Distillate rate` [NON-ENGLISH REDACTED] RadFrac [NON-ENGLISH REDACTED]：
 
 ```python
-Application.Tree.FindNode(r&quot;\Data\Blocks\D1\Input\BASIS_D&quot;)
+Application.Tree.FindNode(r"\Data\Blocks\D1\Input\BASIS_D")
 ```
 
-[NON-ENGLISH REDACTED] MCP/helper [NON-ENGLISH REDACTED] `client.invoke(&quot;set_radfrac_distillate_rate&quot;, block_name=&quot;D1&quot;, value=&lt;rate&gt;, unit=&lt;molar-flow-unit&gt;)`。
+[NON-ENGLISH REDACTED] MCP/helper [NON-ENGLISH REDACTED] `client.invoke("set_radfrac_distillate_rate", block_name="D1", value=<rate>, unit=<molar-flow-unit>)`。
 [NON-ENGLISH REDACTED] `BASIS_RDV` / `set_basis_rdv`，[NON-ENGLISH REDACTED] `D:F` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
 live UI [NON-ENGLISH REDACTED] vapor distillate fraction / D:F [NON-ENGLISH REDACTED]。
 [NON-ENGLISH REDACTED] `BASIS_RR` [NON-ENGLISH REDACTED] `BASIS_D`；`BASIS_D` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] operating specs
@@ -3574,13 +3567,13 @@ live UI [NON-ENGLISH REDACTED] vapor distillate fraction / D:F [NON-ENGLISH REDA
 Aspen client。[NON-ENGLISH REDACTED] trusted REP [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] keyword-only [NON-ENGLISH REDACTED]：
 
 ```python
-rep_text = Path(rep_path).read_text(encoding=&quot;utf-8&quot;, errors=&quot;replace&quot;)
+rep_text = Path(rep_path).read_text(encoding="utf-8", errors="replace")
 profile = safe.collect_radfrac_profile_markdown_evidence(
     rep_text=rep_text,
-    block_name=&quot;D1&quot;,
-    component_ids=[&quot;MEOH&quot;, &quot;ETOH&quot;, &quot;H2O&quot;],
+    block_name="D1",
+    component_ids=["MEOH", "ETOH", "H2O"],
     output_dir=artifact_dir,
-    profile_name=&quot;MOLE-X-PROFILE&quot;,
+    profile_name="MOLE-X-PROFILE",
     source_rep_path=rep_path,
 )
 ```
@@ -3596,21 +3589,21 @@ profile = safe.collect_radfrac_profile_markdown_evidence(
 ```python
 configure_radfrac_no_condenser_absorber(
     client,
-    block_name=&quot;D1&quot;,
+    block_name="D1",
     nstage=12,
-    feed_stages={&quot;W1&quot;: 1, &quot;G1&quot;: 12},
-    feed_conventions={&quot;W1&quot;: &quot;ON-STAGE-LIQ&quot;, &quot;G1&quot;: &quot;ON-STAGE-VAP&quot;},
+    feed_stages={"W1": 1, "G1": 12},
+    feed_conventions={"W1": "ON-STAGE-LIQ", "G1": "ON-STAGE-VAP"},
     top_pressure=101.325,
-    pressure_unit=&quot;kPa&quot;,
+    pressure_unit="kPa",
 )
 ```
 
 [NON-ENGLISH REDACTED] helper [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]：
 
 1. `set_condenser(D1, NONE)` + `set_reboiler(D1, NONE)` + `set_nstage(D1, 12)`。
-2. `set_pres1(D1, 101.325, &quot;kPa&quot;)`，[NON-ENGLISH REDACTED] `set_radfrac_bottom_pressure` [NON-ENGLISH REDACTED] `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop`。
+2. `set_pres1(D1, 101.325, "kPa")`，[NON-ENGLISH REDACTED] `set_radfrac_bottom_pressure` [NON-ENGLISH REDACTED] `OPT_PRES=DP-COL` + `set_radfrac_column_pressure_drop`。
 3. `set_feed_stage(D1, W1, 1)`、`set_feed_stage(D1, G1, 12)`。
-4. `safe.configure_radfrac_feed_convention(client, block_name=&quot;D1&quot;, stream_name=..., convention=...)`；[NON-ENGLISH REDACTED] `ON-STAGE-VAP`，[NON-ENGLISH REDACTED] `ON-STAGE-LIQ`。
+4. `safe.configure_radfrac_feed_convention(client, block_name="D1", stream_name=..., convention=...)`；[NON-ENGLISH REDACTED] `ON-STAGE-VAP`，[NON-ENGLISH REDACTED] `ON-STAGE-LIQ`。
 
 ### 2.3 [NON-ENGLISH REDACTED]
 
@@ -3626,7 +3619,7 @@ configure_radfrac_no_condenser_absorber(
 [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]
 `export_radfrac_composition_profile_plot(client, block_name=..., components=[...], basis=...)`。
 `basis` [NON-ENGLISH REDACTED] `mole_y`（[NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED]「[NON-ENGLISH REDACTED]」）、`mole_x`（[NON-ENGLISH REDACTED]）、`mass_y`、`mass_x`。
-[NON-ENGLISH REDACTED] PNG，[NON-ENGLISH REDACTED] `summary[&quot;plots&quot;]`。
+[NON-ENGLISH REDACTED] PNG，[NON-ENGLISH REDACTED] `summary["plots"]`。
 `MOLE-Y-PROFILE` / `MOLE-X-PROFILE` [NON-ENGLISH REDACTED] Markdown [NON-ENGLISH REDACTED]。
 
 | MCP operation | [NON-ENGLISH REDACTED] |
@@ -3789,7 +3782,7 @@ Generated public capability names in this document are family-specific. The unde
 ```text
 configure_compr_pressure_rise(
     client, *, block_name, delta_pressure, pressure_unit=None,
-    compressor_type=&quot;ISENTROPIC&quot;,
+    compressor_type="ISENTROPIC",
 )
 ```
 
@@ -3943,11 +3936,11 @@ safe.configure_pipe_schedule_sizing(
     client,
     *,
     block_name: str,
-    material: str = &quot;CARBON-STEEL&quot;,
-    schedule: int = &lt;number&gt;,
-    nominal_diam: str = &quot;1-IN&quot;,
-    length: float =&lt;float number&gt;,
-    length_unit: str = &quot;meter&quot;,
+    material: str = "CARBON-STEEL",
+    schedule: int = <number>,
+    nominal_diam: str = "1-IN",
+    length: float =<float number>,
+    length_unit: str = "meter",
 )
 ```
 
@@ -3963,7 +3956,7 @@ safe.configure_pipe_schedule_sizing(
 ### 2.1 [NON-ENGLISH REDACTED] `OPT_DIAM` [NON-ENGLISH REDACTED]
 
 `PIPE` [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] schedule token [NON-ENGLISH REDACTED]。[NON-ENGLISH REDACTED]
-`Data\Blocks\&lt;BLK&gt;\Input\LENGTH`；[NON-ENGLISH REDACTED] `PI` [NON-ENGLISH REDACTED]
+`Data\Blocks\<BLK>\Input\LENGTH`；[NON-ENGLISH REDACTED] `PI` [NON-ENGLISH REDACTED]
 `Data\Blocks\PI\Input\LENGTH`。
 
 [NON-ENGLISH REDACTED] `OPT_DIAM`：
@@ -3971,7 +3964,7 @@ safe.configure_pipe_schedule_sizing(
 | `OPT_DIAM` [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED]/[NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
 |-----------------|-------------------|------|
 | `OSCHED` schedule [NON-ENGLISH REDACTED] | `MATERIAL`、`SCHEDULE`、`NOMINAL_DIAM`、`LENGTH` | [NON-ENGLISH REDACTED] `configure_pipe_schedule_sizing(...)` [NON-ENGLISH REDACTED]；[NON-ENGLISH REDACTED] `IN_DIAM` |
-| direct inner-diameter / `OINNER` [NON-ENGLISH REDACTED] | `IN_DIAM`、`LENGTH` | `IN_DIAM` [NON-ENGLISH REDACTED] `Data\Blocks\&lt;BLK&gt;\Input\IN_DIAM`，[NON-ENGLISH REDACTED] `Data\Blocks\PI\Input\IN_DIAM` |
+| direct inner-diameter / `OINNER` [NON-ENGLISH REDACTED] | `IN_DIAM`、`LENGTH` | `IN_DIAM` [NON-ENGLISH REDACTED] `Data\Blocks\<BLK>\Input\IN_DIAM`，[NON-ENGLISH REDACTED] `Data\Blocks\PI\Input\IN_DIAM` |
 
 [NON-ENGLISH REDACTED] completion [NON-ENGLISH REDACTED] UI Next [NON-ENGLISH REDACTED] pipe length，[NON-ENGLISH REDACTED] `LENGTH`；[NON-ENGLISH REDACTED]
 `OPT_DIAM` [NON-ENGLISH REDACTED] direct inner-diameter [NON-ENGLISH REDACTED]，[NON-ENGLISH REDACTED] `IN_DIAM` [NON-ENGLISH REDACTED]。
@@ -4052,10 +4045,10 @@ Reason: block-family Aspen surface selected from task profile
 
 ```python
 outlet_pressure_value = ...  # effect pressure basis from task/table
-client.invoke(&quot;configure_valve_pressure_changer_outlet&quot;,
-    block_name=&quot;VA1&quot;,
+client.invoke("configure_valve_pressure_changer_outlet",
+    block_name="VA1",
     outlet_pressure=outlet_pressure_value,
-    pressure_unit=&quot;kPa&quot;,
+    pressure_unit="kPa",
 )
 ```
 
@@ -4063,10 +4056,10 @@ client.invoke(&quot;configure_valve_pressure_changer_outlet&quot;,
 
 ```python
 delta_p_value = ...  # pressure drop from task
-client.invoke(&quot;configure_valve_pressure_changer_pressure_drop&quot;,
-    block_name=&quot;VA1&quot;,
+client.invoke("configure_valve_pressure_changer_pressure_drop",
+    block_name="VA1",
     pressure_drop=delta_p_value,
-    pressure_unit=&quot;kPa&quot;,
+    pressure_unit="kPa",
 )
 ```
 
@@ -4076,10 +4069,10 @@ client.invoke(&quot;configure_valve_pressure_changer_pressure_drop&quot;,
 
 ```python
 outlet_pressure_value = ...  # numeric value from the task
-client.invoke(&quot;configure_valve_outlet_pressure_design&quot;,
-    block_name=&quot;VA&quot;,
+client.invoke("configure_valve_outlet_pressure_design",
+    block_name="VA",
     outlet_pressure=outlet_pressure_value,
-    pressure_unit=&quot;MPa&quot;,
+    pressure_unit="MPa",
 )
 ```
 
@@ -4087,11 +4080,11 @@ client.invoke(&quot;configure_valve_outlet_pressure_design&quot;,
 
 ```python
 outlet_pressure_value = ...  # numeric value from the task
-selected_preset_id = &quot;...&quot;  # from list_valve_vendor_presets / §2.4 catalog
-client.invoke(&quot;configure_valve_outlet_pressure_design&quot;,
-    block_name=&quot;VA&quot;,
+selected_preset_id = "..."  # from list_valve_vendor_presets / §2.4 catalog
+client.invoke("configure_valve_outlet_pressure_design",
+    block_name="VA",
     outlet_pressure=outlet_pressure_value,
-    pressure_unit=&quot;MPa&quot;,
+    pressure_unit="MPa",
     vendor_preset_id=selected_preset_id,
 )
 ```
@@ -4099,8 +4092,8 @@ client.invoke(&quot;configure_valve_outlet_pressure_design&quot;,
 [NON-ENGLISH REDACTED] design [NON-ENGLISH REDACTED] preset：
 
 ```python
-client.invoke(&quot;apply_valve_vendor_preset&quot;,
-    block_name=&quot;VA&quot;,
+client.invoke("apply_valve_vendor_preset",
+    block_name="VA",
     preset_id=selected_preset_id,
 )
 ```
@@ -4129,8 +4122,8 @@ client.invoke(&quot;apply_valve_vendor_preset&quot;,
 |---------------|------------|---------------|------|
 | `set_mode` | `MODE` | ADIAB-FLASH / SET-PRESSURE / CALC-PRESSURE | **Calculation type gate**。[NON-ENGLISH REDACTED] §2.1；[NON-ENGLISH REDACTED] pressure/design/rating/vendor [NON-ENGLISH REDACTED]。 |
 | `set_opt_design` | `OPT_DESIGN` | `P-OUT` / `P-DROP` | GUI **Pressure specification**；[NON-ENGLISH REDACTED] §2.2 |
-| `set_p_out` | `P_OUT` | **`value` + `unit`** | **`OPT_DESIGN=P-OUT`** → `\Data\Blocks\&lt;ID&gt;\Input\P_OUT` |
-| `set_p_drop` | `P_DROP` | **`value` + `unit`** | **`OPT_DESIGN=P-DROP`** → `\Data\Blocks\&lt;ID&gt;\Input\P_DROP` |
+| `set_p_out` | `P_OUT` | **`value` + `unit`** | **`OPT_DESIGN=P-OUT`** → `\Data\Blocks\<ID>\Input\P_OUT` |
+| `set_p_drop` | `P_DROP` | **`value` + `unit`** | **`OPT_DESIGN=P-DROP`** → `\Data\Blocks\<ID>\Input\P_DROP` |
 | `set_check_choke` | `CHECK_CHOKE` | NO / YES | [NON-ENGLISH REDACTED] choking [NON-ENGLISH REDACTED] `NO`。 |
 | `set_pdrp_fac` | `PDRP_FAC` | float | [NON-ENGLISH REDACTED] rating factor；[NON-ENGLISH REDACTED]。 |
 | `set_prec_fac` | `PREC_FAC` | float | [NON-ENGLISH REDACTED] rating factor；[NON-ENGLISH REDACTED]。 |
@@ -4145,7 +4138,7 @@ Library Valve [NON-ENGLISH REDACTED] pressure/recovery factors [NON-ENGLISH REDA
 
 ### 2.1 `MODE` / Calculation Type
 
-`Data\Blocks\&lt;B&gt;\Input\MODE` [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] **Calculation type**，[NON-ENGLISH REDACTED] Valve [NON-ENGLISH REDACTED] function gate：
+`Data\Blocks\<B>\Input\MODE` [NON-ENGLISH REDACTED] GUI [NON-ENGLISH REDACTED] **Calculation type**，[NON-ENGLISH REDACTED] Valve [NON-ENGLISH REDACTED] function gate：
 
 | `MODE` [NON-ENGLISH REDACTED] | GUI [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] |
 | --- | --- | --- | --- |
@@ -4161,8 +4154,8 @@ GUI [NON-ENGLISH REDACTED] **Pressure specification** [NON-ENGLISH REDACTED] **[
 
 | `OPT_DESIGN` | GUI [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] tree leaf | MCP [NON-ENGLISH REDACTED] |
 |--------------|---------|---------------|----------|
-| `P-OUT` | Outlet pressure | `\Data\Blocks\&lt;ID&gt;\Input\P_OUT` | `set_opt_design(..., value=&quot;P-OUT&quot;)` [NON-ENGLISH REDACTED] `set_p_out(..., value=..., unit=...)` |
-| `P-DROP` | Pressure drop | `\Data\Blocks\&lt;ID&gt;\Input\P_DROP` | `set_opt_design(..., value=&quot;P-DROP&quot;)` [NON-ENGLISH REDACTED] `set_p_drop(..., value=..., unit=...)` |
+| `P-OUT` | Outlet pressure | `\Data\Blocks\<ID>\Input\P_OUT` | `set_opt_design(..., value="P-OUT")` [NON-ENGLISH REDACTED] `set_p_out(..., value=..., unit=...)` |
+| `P-DROP` | Pressure drop | `\Data\Blocks\<ID>\Input\P_DROP` | `set_opt_design(..., value="P-DROP")` [NON-ENGLISH REDACTED] `set_p_drop(..., value=..., unit=...)` |
 
 **[NON-ENGLISH REDACTED]**：
 
@@ -4246,7 +4239,7 @@ Agent [NON-ENGLISH REDACTED]：
 |------|------|------|
 | completion [NON-ENGLISH REDACTED] Valve Operation，Outlet pressure [NON-ENGLISH REDACTED] | `MODE=ADIAB-FLASH` + `P-OUT` [NON-ENGLISH REDACTED] `P_OUT` | `configure_valve_pressure_changer_outlet(...)` |
 | completion [NON-ENGLISH REDACTED] Valve Operation，Pressure drop [NON-ENGLISH REDACTED] | `MODE=ADIAB-FLASH` + `P-DROP` [NON-ENGLISH REDACTED] `P_DROP` | `configure_valve_pressure_changer_pressure_drop(...)` |
-| `set_p_out() missing 1 required positional argument: &#x27;unit&#x27;` | [NON-ENGLISH REDACTED] `set_p_out` [NON-ENGLISH REDACTED] value | [NON-ENGLISH REDACTED] `configure_valve_pressure_changer_outlet` / `configure_valve_outlet_pressure_design` [NON-ENGLISH REDACTED] `unit=&quot;MPa&quot;` |
+| `set_p_out() missing 1 required positional argument: 'unit'` | [NON-ENGLISH REDACTED] `set_p_out` [NON-ENGLISH REDACTED] value | [NON-ENGLISH REDACTED] `configure_valve_pressure_changer_outlet` / `configure_valve_outlet_pressure_design` [NON-ENGLISH REDACTED] `unit="MPa"` |
 | completion [NON-ENGLISH REDACTED] Manufacturer/Series/Size | [NON-ENGLISH REDACTED] vendor [NON-ENGLISH REDACTED] preset | [NON-ENGLISH REDACTED] §2.4 [NON-ENGLISH REDACTED] `preset_id`，[NON-ENGLISH REDACTED] `vendor_preset_id` [NON-ENGLISH REDACTED] `apply_valve_vendor_preset` |
 | completion [NON-ENGLISH REDACTED] Manufacturer/Series/Size | `MODE=CALC-PRESSURE` [NON-ENGLISH REDACTED] rating | [NON-ENGLISH REDACTED] `SET-PRESSURE` + `P-OUT`，[NON-ENGLISH REDACTED] vendor preset |
 | vendor [NON-ENGLISH REDACTED] | [NON-ENGLISH REDACTED] | **[NON-ENGLISH REDACTED]** `apply_valve_vendor_preset(preset_id=...)` |
@@ -4275,7 +4268,7 @@ description: Core execution order for generated Aspen scripts. Use for every Asp
 
 ## Unified Capability Call Contract
 
-- Generated Aspen model operations use exactly `client.invoke(&quot;capability&quot;, **keyword_parameters)`.
+- Generated Aspen model operations use exactly `client.invoke("capability", **keyword_parameters)`.
 - The capability name is a static, unqualified registry name. All business parameters are keywords matching the registered signature. Do not pass `client=`.
 - `client.invoke` always returns `capability_result.v1` with root `success`, `capability`, `result`, `error`, and `diagnostics`. The registry owns local-versus-HTTP implementation; generated code never selects transport or retries another namespace.
 - Put required calls inside `runtime.stage(name, lambda: client.invoke(...), required=True)`. Use `required=False` only for optional diagnostics. A failed required capability is upgraded by the runtime to `SlimStageFailure`.
@@ -4319,7 +4312,7 @@ Property method setup is an idempotent ensure step, not a one-shot create step.
 Use:
 
 ```python
-client.invoke(&quot;ensure_property_method&quot;,  method=&quot;UNIQUAC&quot;)
+client.invoke("ensure_property_method",  method="UNIQUAC")
 ```
 
 This must set and read back the active global option-set fields. If Aspen reports `OPTION-SETS (...) already exists`, treat that as non-fatal only when the global method readback still matches the requested method.
@@ -4327,10 +4320,10 @@ This must set and read back the active global option-set fields. If Aspen report
 For block-local methods, use:
 
 ```python
-client.invoke(&quot;configure_block_property_method&quot;,  block_name=&quot;A1&quot;, method=&quot;UNIQUAC&quot;)
+client.invoke("configure_block_property_method",  block_name="A1", method="UNIQUAC")
 ```
 
-Then read back `\Data\Blocks\&lt;BLOCK&gt;\Input\OPSETNAME` for each block.
+Then read back `\Data\Blocks\<BLOCK>\Input\OPSETNAME` for each block.
 
 ## Gating Discipline
 
@@ -4346,7 +4339,7 @@ Then read back `\Data\Blocks\&lt;BLOCK&gt;\Input\OPSETNAME` for each block.
 
 - In `own-agent-slim`, import `SlimTaskSpec`, `SlimTaskOutcome`, `run_slim_task`, `stream_rep_targets`, and `block_rep_targets` from `script_agent_exp.slim_task_runtime`, and model helpers as `import script_agent_exp.safe_aspen_calls as safe`. Define `TASK_SPEC` plus `configure(runtime)`, use `runtime.client`, and enter through `run_slim_task(spec=TASK_SPEC, configure=configure)`.
 - Runtime uniquely owns common fixed session/setup parameters, task identity, GUI policy, health, recorder and CLI. Set units through `TASK_SPEC.inset`; do not generate `AspenHttpClient`, session/setup wrappers or calls, custom CLI, signature filtering/probing, or local-exception HTTP fallback. This restriction is specific to common lifecycle operations, not legitimate model/REP readback wrappers.
-- Legacy `ensure_session(initial_bkp=None, show_gui=None, inset=None)` returns `None` on success and raises on failure; never classify `None` as a failed envelope. `task_name`/`task_key` are not session-method arguments: invalid signatures fail clearly, never silently drop identity. Slim runtime uses its canonical `ensure_runtime_session(*, show_gui=False, inset=&quot;SI&quot;)` receipt without changing regular consumers.
+- Legacy `ensure_session(initial_bkp=None, show_gui=None, inset=None)` returns `None` on success and raises on failure; never classify `None` as a failed envelope. `task_name`/`task_key` are not session-method arguments: invalid signatures fail clearly, never silently drop identity. Slim runtime uses its canonical `ensure_runtime_session(*, show_gui=False, inset="SI")` receipt without changing regular consumers.
 - Initial inherited legacy seeds may execute their existing direct void session call unchanged, with explicit `migration_required` source-contract metadata. New slim generation must use the runtime template; any seed migration is an explicit semantics-preserving edit or a recorded blocker, not a silent process algorithm change. Initial, mini and resume source contracts run before model imports/HTTP/COM.
 
 ## Slim Parent Evidence Ownership
@@ -4416,7 +4409,7 @@ Choose the property method from the strongest available evidence:
 
 ## Phase-Model Overlay Is Part Of The Task Method
 
-A liquid activity-coefficient method and a vapor EOS are separate requirements. Selecting UNIFAC alone does not establish ideal-gas vapor: Aspen&#x27;s default UNIFAC option set can retain REDLICH-KWONG vapor. When the task explicitly requests UNIFAC liquid plus ideal-gas vapor (IG), call the existing `safe.configure_unifac_ideal_vapor(client)` rather than only `ensure_property_method(..., method=&quot;UNIFAC&quot;)`. Require helper success and its readbacks `GMODIFY=YES`, `GVAPOREOS=ESIG`, and retained `GLIQGAMMA=GMUFAC`. Do not replace the whole method with IDEAL or silently preserve RK to obtain convergence.
+A liquid activity-coefficient method and a vapor EOS are separate requirements. Selecting UNIFAC alone does not establish ideal-gas vapor: Aspen's default UNIFAC option set can retain REDLICH-KWONG vapor. When the task explicitly requests UNIFAC liquid plus ideal-gas vapor (IG), call the existing `safe.configure_unifac_ideal_vapor(client)` rather than only `ensure_property_method(..., method="UNIFAC")`. Require helper success and its readbacks `GMODIFY=YES`, `GVAPOREOS=ESIG`, and retained `GLIQGAMMA=GMUFAC`. Do not replace the whole method with IDEAL or silently preserve RK to obtain convergence.
 
 After the trusted run, request the effective liquid and vapor models from the current native REP property-method/block sections and verify UNIFAC / IDEAL GAS for the task-relevant blocks. Include method and phase-model REP targets in the normal final readback transaction; the global option-set name, setter success, or separation targets alone do not prove the vapor overlay participated. Preserve conflicting REP evidence as a blocker (including local option-set overrides), export the checkpoint, and verify the overlay survives reload. If the helper or effective-model evidence is unavailable, report a capability boundary; do not invent an operation or declare task completion from a method label.
 
@@ -4430,7 +4423,7 @@ handles before final selection.
 Use this as a generic pattern:
 
 - Pick candidates from the component class and task wording, not from a previous
-  case&#x27;s numeric optimum.
+  case's numeric optimum.
 - Run the same base topology under each candidate method when Aspen can converge
   it.
 - Compare task-level responses from REP/Markdown evidence: product quality,
@@ -4451,16 +4444,16 @@ product-rate specs, stage count, and feed locations.
 Set the flowsheet-level method before the first run and before relying on stream/block results:
 
 ```python
-pm = client.invoke(&quot;ensure_property_method&quot;,  method=&quot;NRTL&quot;)
-if not pm.get(&quot;success&quot;):
+pm = client.invoke("ensure_property_method",  method="NRTL")
+if not pm.get("success"):
     raise RuntimeError(pm)
 ```
 
 or, when using raw operations:
 
 ```python
-pm = client.invoke(&quot;set_property_method&quot;, method=&quot;NRTL&quot;)
-if not (pm.get(&quot;result&quot;) or {}).get(&quot;success&quot;):
+pm = client.invoke("set_property_method", method="NRTL")
+if not (pm.get("result") or {}).get("success"):
     raise RuntimeError(pm)
 ```
 
@@ -4468,13 +4461,13 @@ Treat an `OPTION-SETS already exists` response as non-fatal only when readback c
 
 ## SRK Free-Water Setup And Warning Repair
 
-After successful `safe.ensure_property_method(client, method=&quot;SRK&quot;)`, proactively
+After successful `safe.ensure_property_method(client, method="SRK")`, proactively
 call `safe.configure_srk_free_water_steamnbs(client)` for SRK/free-water setup.
 Map `FREE-WATER METHOD SHOULD BE STEAMNBS WHEN THE MAIN PROPERTY METHOD IS SRK`
 and `DEFAULT FREE-WATER METHOD IS STEAM-TA` to this same helper, not an override.
 The helper is registered Python/ReAct tooling backed by HTTP `typed helper write surface` /
 `typed readback helper such as read_stream_output(...)`; it is not a standalone native HTTP operation. Prefer
-`client.invoke(&quot;configure_srk_free_water_steamnbs&quot;)` for its registered local
+`client.invoke("configure_srk_free_water_steamnbs")` for its registered local
 transaction; compatible execute shares the registry and typed
 `safe.configure_srk_free_water_steamnbs(client)` remains valid. Invoke returns
 an envelope; typed helpers return direct payloads. Never retry through native transport.
@@ -4530,9 +4523,9 @@ When a task explicitly asks to check binary interaction parameters, call the
 compact helper after components and the global property method are in place:
 
 ```python
-client.invoke(&quot;add_components_by_cas&quot;,  components=[...])
-client.invoke(&quot;ensure_property_method&quot;,  method=&quot;NRTL&quot;)
-bip = client.invoke(&quot;check_binary_interaction_parameters&quot;)
+client.invoke("add_components_by_cas",  components=[...])
+client.invoke("ensure_property_method",  method="NRTL")
+bip = client.invoke("check_binary_interaction_parameters")
 ```
 
 No inputs are required. The helper auto-discovers component IDs from the live
@@ -4557,12 +4550,12 @@ claim BIP completeness from `set_property_method` alone.
 When a task supplies a constant relative volatility:
 
 - Do not assume the Aspen default property method reproduces that alpha.
-- Either use the task&#x27;s constant-alpha calculation as a separate analytic reference, or use a trusted Aspen base/standard model property method and state that the Aspen result is a property-package approximation.
-- If scoring or validation is tied to a standard BKP/APW, prefer matching the standard model&#x27;s property method over inventing a method from the case id.
+- Either use the task's constant-alpha calculation as a separate analytic reference, or use a trusted Aspen base/standard model property method and state that the Aspen result is a property-package approximation.
+- If scoring or validation is tied to a standard BKP/APW, prefer matching the standard model's property method over inventing a method from the case id.
 
 ## Block-Local Methods
 
-This skill covers the global property method. If different blocks or cases must use different methods, also use `block-wise-property-methods` and verify each block&#x27;s `OPSETNAME` independently.
+This skill covers the global property method. If different blocks or cases must use different methods, also use `block-wise-property-methods` and verify each block's `OPSETNAME` independently.
 
 ```
 
@@ -4571,11 +4564,11 @@ Reason: selected skill for task block family
 ```text
 ---
 name: aspen-material-stream-composition-must-be-specified
-description: &gt;-
+description: >-
   Choose MATERIAL stream state specs (TP/TV/PV) from task variables, set
   MASS-FLOW basis before kg/h component flows, and map Component Flow,
   Fraction, or Concentration must be specified to incomplete stream
-  composition on Data\Streams\&lt;StreamName&gt;.
+  composition on Data\Streams\<StreamName>.
 ---
 
 # Stream State Spec Selection
@@ -4586,12 +4579,12 @@ Use this skill when a task describes stream state with different variable combin
   `safe.set_material_stream(client, *, stream_name, mixed_spec, basis,
   component_flows, flow_unit, temperature/pressure/vapor_fraction...)`. The
   `basis` keyword is mandatory. For molar component flows use
-  `basis=&quot;MOLE-FLOW&quot;` with `flow_unit=&quot;kmol/hr&quot;`; for mass component flows use
-  `basis=&quot;MASS-FLOW&quot;` with an explicit mass unit such as `kg/hr`.
-- **Task feed in kg/h (mass flow):** After components exist, set the MATERIAL stream mixed spec and state (`TP` / `TV` / `PV` as required), then call `set_basis_mixed(MASS-FLOW)` **before** component flow writes. Use `set_flow_mixed` with the task&#x27;s numeric mass-flow rates, **canonical component IDs**, and an explicit mass-flow unit such as `unit=&quot;kg/hr&quot;` (the tool normalizes exact `kg/h` input to `kg/hr`). Do **not** rely on `MASS-FLOW` basis alone and do **not** omit `unit` for component-flow values; the tool should reject flow-basis writes without a unit. Do **not** convert kg/h to kmol/h unless the only live tool path is truly molar-flow and you document the molecular-weight conversion.
-- **Unit continuity:** Prefer the units stated in the task for stream flow setters and probe axes whenever the live tool accepts them. If the task gives `kg/hr`, keep `unit=&quot;kg/hr&quot;` rather than switching to `kg/sec`, `lb/hr`, or `kmol/hr` unless there is a documented conversion reason and a `unit_reconciliation` entry. Always pass the `unit` keyword explicitly on component-flow setters.
+  `basis="MOLE-FLOW"` with `flow_unit="kmol/hr"`; for mass component flows use
+  `basis="MASS-FLOW"` with an explicit mass unit such as `kg/hr`.
+- **Task feed in kg/h (mass flow):** After components exist, set the MATERIAL stream mixed spec and state (`TP` / `TV` / `PV` as required), then call `set_basis_mixed(MASS-FLOW)` **before** component flow writes. Use `set_flow_mixed` with the task's numeric mass-flow rates, **canonical component IDs**, and an explicit mass-flow unit such as `unit="kg/hr"` (the tool normalizes exact `kg/h` input to `kg/hr`). Do **not** rely on `MASS-FLOW` basis alone and do **not** omit `unit` for component-flow values; the tool should reject flow-basis writes without a unit. Do **not** convert kg/h to kmol/h unless the only live tool path is truly molar-flow and you document the molecular-weight conversion.
+- **Unit continuity:** Prefer the units stated in the task for stream flow setters and probe axes whenever the live tool accepts them. If the task gives `kg/hr`, keep `unit="kg/hr"` rather than switching to `kg/sec`, `lb/hr`, or `kmol/hr` unless there is a documented conversion reason and a `unit_reconciliation` entry. Always pass the `unit` keyword explicitly on component-flow setters.
 - Choose the spec mode from the variables explicitly provided for each stream.
-- Default mapping when the task wording is clear: `T + P -&gt; TP`, `T + vapor fraction -&gt; TV`, `P + vapor fraction or a defensible saturated-pressure statement -&gt; PV`.
+- Default mapping when the task wording is clear: `T + P -> TP`, `T + vapor fraction -> TV`, `P + vapor fraction or a defensible saturated-pressure statement -> PV`.
 - Handle each stream independently if the task mixes different state-spec styles.
 - Preserve independent feed partitions, component amounts and phase/state even at equal T/P: equal T/P does not imply thermodynamic equivalence. A summed-composition TP stream can flash differently and change total inlet enthalpy. Use verified shared material inlets or a real adiabatic Mixer carrying its computed outlet state, not a fresh TP reset. Any permitted feed aggregation requires current-run phase/enthalpy readbacks, explicit units/property scope, total enthalpy-flow and energy-balance evidence; otherwise retain the separate feeds.
 - For MATERIAL stream object-level completion, set the chosen mixed spec first, then the minimum state fields for that mode, then the first accepted component flow.
@@ -4600,13 +4593,13 @@ Use this skill when a task describes stream state with different variable combin
 
 ## Completion diagnostics (Material streams)
 
-If **Material Stream Config** / stream input completion or Next shows **`Component Flow, Fraction, or Concentration must be specified.`**, the **stream&#x27;s composition/amount specification is incomplete** on **`Data\Streams\&lt;StreamName&gt;\Input\...`** (at least one of component flow, fraction, or concentration, consistent with the chosen basis). This is a **hard workflow gate**: the flowsheet will not advance until that stream is finished—fix the landed stream&#x27;s basis + state + component-side specs before downstream blocks.
+If **Material Stream Config** / stream input completion or Next shows **`Component Flow, Fraction, or Concentration must be specified.`**, the **stream's composition/amount specification is incomplete** on **`Data\Streams\<StreamName>\Input\...`** (at least one of component flow, fraction, or concentration, consistent with the chosen basis). This is a **hard workflow gate**: the flowsheet will not advance until that stream is finished—fix the landed stream's basis + state + component-side specs before downstream blocks.
 
 ## Material stream completion messages
 
 | Aspen message (typical) | Meaning | First fix |
 | --- | --- | --- |
-| `Component Flow, Fraction, or Concentration must be specified.` | Composition/flow side not closed for this MATERIAL stream. | On **`Data\Streams\&lt;StreamName&gt;`**, complete basis + (as required) total flow and component flow / fraction / concentration per the active spec; re-run `check_stream_completion` / workflow Next. |
+| `Component Flow, Fraction, or Concentration must be specified.` | Composition/flow side not closed for this MATERIAL stream. | On **`Data\Streams\<StreamName>`**, complete basis + (as required) total flow and component flow / fraction / concentration per the active spec; re-run `check_stream_completion` / workflow Next. |
 
 ## Task mass flow (kg/h) and `material_stream_variables`
 
@@ -4614,9 +4607,9 @@ When the problem statement gives **per-component flow rates in kg/h** (or otherw
 
 1. Complete stream spec order for MATERIAL streams still applies: mixed spec mode first (`set_mixed_spec_mixed`), then basis, then intensive state for that mode, then flows.
 2. Set **`set_basis_mixed(MASS-FLOW)`** so Aspen treats subsequent flow entries in a **mass-flow** sense for that stream.
-3. Call **`set_flow_mixed`** once per component with the **numeric values from the task**, **canonical `component_name` IDs** from the live component table, and an explicit mass-flow unit such as `unit=&quot;kg/hr&quot;` (or `unit=&quot;kg/h&quot;`, normalized by the tool).
+3. Call **`set_flow_mixed`** once per component with the **numeric values from the task**, **canonical `component_name` IDs** from the live component table, and an explicit mass-flow unit such as `unit="kg/hr"` (or `unit="kg/h"`, normalized by the tool).
 
-**Schema vs chemistry:** Inspecting `set_flow_mixed` should show `kg/hr` (and may show `kg/h`) in the `unit` enum. If a stale schema lists only molar or standard-volumetric units, refresh the tool surface or call the HTTP operation with explicit `unit=&quot;kg/hr&quot;` if available; do **not** omit `unit` and rely on basis semantics. If the only safe path is truly molar flow, then document a **defensible kg/h → kmol/h** conversion using molecular weights and set **`MOLE-FLOW`** basis instead—do not guess.
+**Schema vs chemistry:** Inspecting `set_flow_mixed` should show `kg/hr` (and may show `kg/h`) in the `unit` enum. If a stale schema lists only molar or standard-volumetric units, refresh the tool surface or call the HTTP operation with explicit `unit="kg/hr"` if available; do **not** omit `unit` and rely on basis semantics. If the only safe path is truly molar flow, then document a **defensible kg/h → kmol/h** conversion using molecular weights and set **`MOLE-FLOW`** basis instead—do not guess.
 
 **Validation:** Prefer `check_stream_completion` / readback on the stream after writes. Treat any **`unit_warning`** on a flow setter as evidence of wrong basis or wrong unit, not as a success.
 
@@ -4633,7 +4626,7 @@ When the problem statement gives **per-component flow rates in kg/h** (or otherw
   - `create_material_stream`
   - add components successfully
   - `set_mixed_spec_mixed(TP)`
-  - `set_basis_mixed(MOLE-FLOW)` **or** `set_basis_mixed(MASS-FLOW)` when the task specifies mass flows (e.g. kg/h); match basis to the task&#x27;s stated quantity type.
+  - `set_basis_mixed(MOLE-FLOW)` **or** `set_basis_mixed(MASS-FLOW)` when the task specifies mass flows (e.g. kg/h); match basis to the task's stated quantity type.
   - `set_temp_mixed`
   - `set_pres_mixed`
   - one accepted `set_flow_mixed` with explicit `unit` when basis is a flow basis
@@ -4671,7 +4664,7 @@ When the problem statement gives **per-component flow rates in kg/h** (or otherw
 
 Component names in task prose are not stream-table keys. Resolve by CAS, choose the intended Aspen `component_id`, add by CAS, verify the live component table, and then use that same canonical ID in every `component_flows` / `set_flow_mixed` key. Do not switch back to the prose name after landing.
 
-For common normal paraffins, use the established canonical IDs when the task names these compounds: propane `C3` (CAS 74-98-6), n-butane `NC4` (CAS 106-97-8), n-pentane `NC5` (CAS 109-66-0), and n-hexane `NC6` (CAS 110-54-3). In particular, after adding n-pentane as `NC5`, write stream composition with `component_name=&quot;NC5&quot;`, not `N-PENTANE`. If the live table does not contain the intended ID, stop before composition writes and repair component landing; do not rely on runtime alias guessing.
+For common normal paraffins, use the established canonical IDs when the task names these compounds: propane `C3` (CAS 74-98-6), n-butane `NC4` (CAS 106-97-8), n-pentane `NC5` (CAS 109-66-0), and n-hexane `NC6` (CAS 110-54-3). In particular, after adding n-pentane as `NC5`, write stream composition with `component_name="NC5"`, not `N-PENTANE`. If the live table does not contain the intended ID, stop before composition writes and repair component landing; do not rely on runtime alias guessing.
 
 ```
 
@@ -4680,7 +4673,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: functional-role-semantics-validation
-description: &gt;-
+description: >-
   Validates process-functional roles before or during Aspen repair work. Covers
   hot/cold sides, feed/product intent, absorber/stripper direction, extract/raffinate
   meaning, and similar role semantics that topology or completion alone cannot prove.
@@ -4693,8 +4686,8 @@ description: &gt;-
 
 ## When this skill applies
 
-Use this skill when Aspen work has moved beyond &quot;does the node exist&quot; and into
-&quot;does this object play the intended process role&quot;.
+Use this skill when Aspen work has moved beyond "does the node exist" and into
+"does this object play the intended process role".
 
 Typical triggers:
 
@@ -4717,7 +4710,7 @@ Those only prove a **surface configuration** exists. They do **not** prove the o
 
 ## Vapor/liquid phase-product contract
 
-Stream IDs and local VAPOR/LIQUID constants are arbitrary, not role evidence. Bind quantities to `block -&gt; native port -&gt; connected stream -&gt; same-run phase/vapor_fraction`; reconcile native BKP topology/stored phase results with trusted REP outlet declarations. Flash2 uses `F(IN)`, `V(OUT)` and `L(OUT)`; verify actual landing, never ordered outlet assignment. Discover Flash3/REquil family-native ports instead of inventing tokens. Names-only mismatches require consistent answer/target/formula remapping; task-bound or downstream physical mismatches require reconnection and rerun. Renaming is not physical repair. Missing/conflicting phase evidence remains unresolved. See `vapor-liquid-outlet-role-validation` for the dedicated readback contract.
+Stream IDs and local VAPOR/LIQUID constants are arbitrary, not role evidence. Bind quantities to `block -> native port -> connected stream -> same-run phase/vapor_fraction`; reconcile native BKP topology/stored phase results with trusted REP outlet declarations. Flash2 uses `F(IN)`, `V(OUT)` and `L(OUT)`; verify actual landing, never ordered outlet assignment. Discover Flash3/REquil family-native ports instead of inventing tokens. Names-only mismatches require consistent answer/target/formula remapping; task-bound or downstream physical mismatches require reconnection and rerun. Renaming is not physical repair. Missing/conflicting phase evidence remains unresolved. See `vapor-liquid-outlet-role-validation` for the dedicated readback contract.
 
 ## Three-layer validation model
 
@@ -4741,7 +4734,7 @@ Run this pass before the first serious simulation and again whenever semantic wa
 4. Check that specs are attached to the branch / product / stage that owns the intended role.
 5. Sanity-check the expected direction:
    - cold side should not be configured to give up heat
-   - absorber-like service should not be wired/spec&#x27;d like a stripper
+   - absorber-like service should not be wired/spec'd like a stripper
    - extract/raffinate products should not be swapped just because both outlets exist
    - top/bottom products should still match the intended column service
    - if product composition readbacks show the target component is enriched in
@@ -4772,11 +4765,11 @@ Preferred recovery order:
 These warnings often belong to the same class:
 
 - `COLD SIDE STREAM ... IS LOSING HEAT.`
-- `WRONG SPEC OF HOT &amp; COLD SIDES`
+- `WRONG SPEC OF HOT & COLD SIDES`
 - top/bottom product or phase-role inconsistencies
 - absorber / stripper configuration contradictions
 - extraction products behaving opposite to the task wording
-- repeated probe rows where the &quot;target product&quot; stream is consistently lean in
+- repeated probe rows where the "target product" stream is consistently lean in
   the target component while another product stream is rich
 
 The exact text is less important than the pattern: **the model can execute, but the configured role contradicts the intended process function**.
@@ -4791,7 +4784,7 @@ The exact text is less important than the pattern: **the model can execute, but 
 
 ### Paired Heater duty-balance consistency
 
-For tasks that ask for &quot;two Heater blocks with a heat stream transferring heat between the blocks&quot;, treat the heat stream as the shared contract between the blocks:
+For tasks that ask for "two Heater blocks with a heat stream transferring heat between the blocks", treat the heat stream as the shared contract between the blocks:
 
 - Model the hot process stream and cold process stream through separate Heater blocks.
 - Connect a heat stream from the hot-side Heater energy outlet to the cold-side Heater energy inlet.
@@ -4811,7 +4804,7 @@ For RadFrac, treat condenser mode and top-product phase as one semantic bundle:
 ## How this skill should influence agent behavior
 
 - Prefer one deliberate role-consistency pass over many blind run-fix loops.
-- If a warning sounds semantic, widen the search from &quot;what variable is missing&quot; to &quot;what function is this object meant to serve&quot;.
+- If a warning sounds semantic, widen the search from "what variable is missing" to "what function is this object meant to serve".
 - Use family-specific skills afterward for the concrete fix; this skill is the generic decision layer that tells the agent **where to look first**.
 
 ```
@@ -4840,7 +4833,7 @@ summary = safe.finalize_task_summary_with_llm_rep_readback(
     summary,
     final_bundle=final,
     rep_readback_targets=targets,
-    llm_rep_readback_artifact_dir=out / &quot;artifacts&quot;,
+    llm_rep_readback_artifact_dir=out / "artifacts",
 )
 ```
 
@@ -4867,7 +4860,7 @@ Each target is a dict:
 - `quantity` — semantic name (see table below)
 - Optional: `component`, `inlet_stream`, `outlet_stream`, `reactant_component`, `profile_phase`, `stage`, `basis_hint`, `notes`
 
-Store the list on `summary[&quot;rep_readback_targets&quot;]` before collection.
+Store the list on `summary["rep_readback_targets"]` before collection.
 
 ## Quantity map (REP-readable)
 
@@ -4890,15 +4883,15 @@ DSTWU REP prints `REBOILER HEAT DUTY` and `ACTUAL REFLUX RATIO`. It does not pri
 
 ```python
 targets = [
-    {&quot;request_id&quot;: &quot;hx_area&quot;, &quot;kind&quot;: &quot;block&quot;, &quot;object_name&quot;: &quot;HX&quot;, &quot;quantity&quot;: &quot;heatx_area&quot;},
-    {&quot;request_id&quot;: &quot;hx_duty&quot;, &quot;kind&quot;: &quot;block&quot;, &quot;object_name&quot;: &quot;HX&quot;, &quot;quantity&quot;: &quot;heatx_duty&quot;},
-    {&quot;request_id&quot;: &quot;h2_out_temp&quot;, &quot;kind&quot;: &quot;stream&quot;, &quot;object_name&quot;: &quot;H2&quot;, &quot;quantity&quot;: &quot;temperature&quot;},
+    {"request_id": "hx_area", "kind": "block", "object_name": "HX", "quantity": "heatx_area"},
+    {"request_id": "hx_duty", "kind": "block", "object_name": "HX", "quantity": "heatx_duty"},
+    {"request_id": "h2_out_temp", "kind": "stream", "object_name": "H2", "quantity": "temperature"},
 ]
 safe.finalize_task_summary_with_llm_rep_readback(
     summary,
     final_bundle=final,
     rep_readback_targets=targets,
-    llm_rep_readback_artifact_dir=out / &quot;artifacts&quot;,
+    llm_rep_readback_artifact_dir=out / "artifacts",
 )
 ```
 
@@ -4906,13 +4899,13 @@ safe.finalize_task_summary_with_llm_rep_readback(
 
 ```python
 {
-    &quot;request_id&quot;: &quot;r1_bz_conv&quot;,
-    &quot;kind&quot;: &quot;derived&quot;,
-    &quot;object_name&quot;: &quot;R1&quot;,
-    &quot;quantity&quot;: &quot;conversion&quot;,
-    &quot;reactant_component&quot;: &quot;BZ&quot;,
-    &quot;inlet_stream&quot;: &quot;F2&quot;,
-    &quot;outlet_stream&quot;: &quot;P1&quot;,
+    "request_id": "r1_bz_conv",
+    "kind": "derived",
+    "object_name": "R1",
+    "quantity": "conversion",
+    "reactant_component": "BZ",
+    "inlet_stream": "F2",
+    "outlet_stream": "P1",
 }
 ```
 
@@ -4920,7 +4913,7 @@ safe.finalize_task_summary_with_llm_rep_readback(
 
 Custom unit sets use COM helpers during **setup** (`configure_custom_unit_set`, `read_active_unit_set`, `verify_custom_unit_set`). **INSET routing, METCBAR template default, bar-scale `set_pres`, and INSET-switch hazards** are in **`aspen-custom-unit-set`** (default-injected).
 
-Common setup mistakes: `configure_inset_unit_system(&quot;METCBAR&quot;)` (use `activate_custom_unit_set`); task **bar** written as **MPa** (use `unit=&quot;bar&quot;` — legal under any INSET). Re-read critical `PRES` after any INSET change.
+Common setup mistakes: `configure_inset_unit_system("METCBAR")` (use `activate_custom_unit_set`); task **bar** written as **MPa** (use `unit="bar"` — legal under any INSET). Re-read critical `PRES` after any INSET change.
 
 Final displayed stream/block numbers for scoring use LLM REP readback after the trusted run. Derived metrics use those raw readbacks as inputs and must store the formula and source `request_id`s.
 
@@ -4934,22 +4927,22 @@ Recommended targets:
 
 ```python
 targets = [
-    {&quot;request_id&quot;: &quot;c1_reflux_ratio&quot;, &quot;kind&quot;: &quot;block&quot;, &quot;object_name&quot;: &quot;C1&quot;, &quot;quantity&quot;: &quot;reflux_ratio&quot;},
-    {&quot;request_id&quot;: &quot;c1_reflux_flow&quot;, &quot;kind&quot;: &quot;block&quot;, &quot;object_name&quot;: &quot;C1&quot;, &quot;quantity&quot;: &quot;reflux_flow&quot;},
-    {&quot;request_id&quot;: &quot;c1_distillate_flow&quot;, &quot;kind&quot;: &quot;block&quot;, &quot;object_name&quot;: &quot;C1&quot;, &quot;quantity&quot;: &quot;distillate_flow&quot;},
+    {"request_id": "c1_reflux_ratio", "kind": "block", "object_name": "C1", "quantity": "reflux_ratio"},
+    {"request_id": "c1_reflux_flow", "kind": "block", "object_name": "C1", "quantity": "reflux_flow"},
+    {"request_id": "c1_distillate_flow", "kind": "block", "object_name": "C1", "quantity": "distillate_flow"},
     {
-        &quot;request_id&quot;: &quot;c1_internal_lv_basis&quot;,
-        &quot;kind&quot;: &quot;profile&quot;,
-        &quot;object_name&quot;: &quot;C1&quot;,
-        &quot;quantity&quot;: &quot;internal_liquid_vapor_ratio&quot;,
-        &quot;basis_hint&quot;: &quot;Use an internal stage/profile basis away from a total-condenser stage where vapor flow is zero.&quot;,
+        "request_id": "c1_internal_lv_basis",
+        "kind": "profile",
+        "object_name": "C1",
+        "quantity": "internal_liquid_vapor_ratio",
+        "basis_hint": "Use an internal stage/profile basis away from a total-condenser stage where vapor flow is zero.",
     },
     {
-        &quot;request_id&quot;: &quot;c1_condenser_condensed_vapor&quot;,
-        &quot;kind&quot;: &quot;derived&quot;,
-        &quot;object_name&quot;: &quot;C1&quot;,
-        &quot;quantity&quot;: &quot;reflux_plus_distillate&quot;,
-        &quot;basis_hint&quot;: &quot;For a total condenser, total vapor condensed is reflux plus distillate/top liquid product on a common molar-flow unit basis.&quot;,
+        "request_id": "c1_condenser_condensed_vapor",
+        "kind": "derived",
+        "object_name": "C1",
+        "quantity": "reflux_plus_distillate",
+        "basis_hint": "For a total condenser, total vapor condensed is reflux plus distillate/top liquid product on a common molar-flow unit basis.",
     },
 ]
 ```
@@ -4979,7 +4972,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: reactor-reaction-setup-high-level
-description: &gt;-
+description: >-
   Guides Aspen reactor reaction setup through high-level helpers. Use when a
   task configures RYield, RStoic, REquil, RPlug, RCSTR, component yield tables, reaction stoichiometry,
   conversion rows, equilibrium reactions, or reactor reaction sets.
@@ -5005,14 +4998,14 @@ and records the original percentage. It never renormalizes incomplete mass.
 
 Molar flows require `molecular_weights` records with `quantity`, matching
 `component_id`, `cas`, `identity_verified=True`, `identity_source`, `source`,
-and `source_kind=&#x27;external_given&#x27;` or `&#x27;native_component_property&#x27;`.
+and `source_kind='external_given'` or `'native_component_property'`.
 `verify_ryield_molecular_weights(...)` accepts explicit external reference MW
 only after native identity is independently verified. Native property records
 also need matching annotated `native_readback`. Use registered MW units
 (`kg/kmol`, `g/mol`, `kg/mol`), not handwritten component constants. This
-validates provenance and unit conversion, not an external source&#x27;s accuracy.
+validates provenance and unit conversion, not an external source's accuracy.
 An independent non-reacting property-only native run may supply
-`source_kind=&#x27;native_nonreactive_flow_ratio&#x27;` with annotated `mass_flow`,
+`source_kind='native_nonreactive_flow_ratio'` with annotated `mass_flow`,
 `mole_flow`, and `nonreactive_evidence` containing `nonreactive=True`, raw-zero
 status, owned task hash, native run ID and current REP SHA256. Convert both
 flows through UNIT_REGISTRY and retain identity/source readbacks. This is
@@ -5062,25 +5055,25 @@ Count physical vessels, not reaction equations. Several reactions in one named r
 ```python
 from script_agent_exp import safe_aspen_calls as safe
 
-rstoic_stoich = client.invoke(&quot;configure_rstoic_stoichiometry&quot;,
-    block_name=&quot;R1&quot;,
+rstoic_stoich = client.invoke("configure_rstoic_stoichiometry",
+    block_name="R1",
     reaction_number=1,
-    reactants={&quot;TOLUENE&quot;: 1.0, &quot;H2&quot;: 1.0},
-    products={&quot;BENZENE&quot;: 1.0, &quot;METHANE&quot;: 1.0},
+    reactants={"TOLUENE": 1.0, "H2": 1.0},
+    products={"BENZENE": 1.0, "METHANE": 1.0},
 )
-rstoic_conversion = client.invoke(&quot;configure_rstoic_fractional_conversions&quot;,
-    block_name=&quot;R1&quot;,
+rstoic_conversion = client.invoke("configure_rstoic_fractional_conversions",
+    block_name="R1",
     conversions=[
-        {&quot;reaction_number&quot;: 1, &quot;component_id&quot;: &quot;TOLUENE&quot;, &quot;conversion&quot;: 0.75},
+        {"reaction_number": 1, "component_id": "TOLUENE", "conversion": 0.75},
     ],
 )
-summary.setdefault(&quot;results&quot;, {})[&quot;rstoic_reaction_setup&quot;] = {
-    &quot;stoichiometry&quot;: rstoic_stoich,
-    &quot;conversion&quot;: rstoic_conversion,
+summary.setdefault("results", {})["rstoic_reaction_setup"] = {
+    "stoichiometry": rstoic_stoich,
+    "conversion": rstoic_conversion,
 }
 ```
 
-Pass positive magnitudes in `reactants` and `products`; the helper handles Aspen&#x27;s
+Pass positive magnitudes in `reactants` and `products`; the helper handles Aspen's
 signed coefficient convention. Preserve the helper return payload in
 `summary.json` so validators/scorers can inspect conversion rows and readbacks.
 
@@ -5107,26 +5100,26 @@ flowsheet-complete override if the RStoic block itself still reports
 Example for calculated heat with two reaction rows:
 
 ```python
-rstoic_heat_ref = client.invoke(&quot;configure_rstoic_calculated_heat_reference&quot;,
-    block_name=&quot;R1&quot;,
+rstoic_heat_ref = client.invoke("configure_rstoic_calculated_heat_reference",
+    block_name="R1",
     rows=[
         {
-            &quot;reaction_number&quot;: 1,
-            &quot;reference_component_id&quot;: &quot;TOLUENE&quot;,
-            &quot;reference_phase&quot;: &quot;V&quot;,
+            "reaction_number": 1,
+            "reference_component_id": "TOLUENE",
+            "reference_phase": "V",
         },
         {
-            &quot;reaction_number&quot;: 2,
-            &quot;reference_component_id&quot;: &quot;BENZENE&quot;,
-            &quot;reference_phase&quot;: &quot;V&quot;,
+            "reaction_number": 2,
+            "reference_component_id": "BENZENE",
+            "reference_phase": "V",
         },
     ],
     reference_temperature=298.15,
-    reference_temperature_unit=&quot;K&quot;,
+    reference_temperature_unit="K",
     reference_pressure=1.0,
-    reference_pressure_unit=&quot;atm&quot;,
+    reference_pressure_unit="atm",
 )
-summary.setdefault(&quot;results&quot;, {})[&quot;rstoic_reaction_setup&quot;][&quot;heat_reference&quot;] = rstoic_heat_ref
+summary.setdefault("results", {})["rstoic_reaction_setup"]["heat_reference"] = rstoic_heat_ref
 ```
 
 For any reaction-mode switch that creates follow-through rows or table cells
@@ -5141,33 +5134,33 @@ when Next/completion still names the reaction sheet.
 ```python
 from script_agent_exp import safe_aspen_calls as safe
 
-requil_reactions = client.invoke(&quot;configure_requil_equilibrium_reactions&quot;,
-    block_name=&quot;R1&quot;,
+requil_reactions = client.invoke("configure_requil_equilibrium_reactions",
+    block_name="R1",
     nphase=2,
-    spec_opt=&quot;TP&quot;,
+    spec_opt="TP",
     temperature=450.0,
-    temperature_unit=&quot;F&quot;,
+    temperature_unit="F",
     pressure=1.0,
-    pressure_unit=&quot;atm&quot;,
+    pressure_unit="atm",
     reactions=[
         {
-            &quot;reaction_number&quot;: 1,
-            &quot;reactants&quot;: {&quot;MEOH&quot;: 1.0},
-            &quot;products&quot;: {&quot;CO&quot;: 1.0, &quot;H2&quot;: 2.0},
-            &quot;delta&quot;: 0.0,
+            "reaction_number": 1,
+            "reactants": {"MEOH": 1.0},
+            "products": {"CO": 1.0, "H2": 2.0},
+            "delta": 0.0,
         },
         {
-            &quot;reaction_number&quot;: 2,
-            &quot;reactants&quot;: {&quot;CO&quot;: 1.0, &quot;H2O&quot;: 1.0},
-            &quot;products&quot;: {&quot;CO2&quot;: 1.0, &quot;H2&quot;: 1.0},
-            &quot;delta&quot;: 0.0,
+            "reaction_number": 2,
+            "reactants": {"CO": 1.0, "H2O": 1.0},
+            "products": {"CO2": 1.0, "H2": 1.0},
+            "delta": 0.0,
         },
     ],
 )
-summary.setdefault(&quot;results&quot;, {})[&quot;requil_reaction_setup&quot;] = requil_reactions
+summary.setdefault("results", {})["requil_reaction_setup"] = requil_reactions
 ```
 
-After REquil reaction setup, keep the existing REquil skill&#x27;s round-trip and
+After REquil reaction setup, keep the existing REquil skill's round-trip and
 product-readback gates: completion must be trusted after BKP/reload evidence, and
 product values must come from Aspen outlet/REP readbacks.
 
@@ -5176,14 +5169,14 @@ product values must come from Aspen outlet/REP readbacks.
 A `RYield` block needs an actual numeric component-yield table, not just operating
 conditions. Configure and verify the following dependency bundle before running
 or declaring input completeness. Iteration scheduling belongs to the runtime:
-verified components and topology -&gt; legal flash selector and its complete input
-pair -&gt; `set_user_yield=NO` -&gt; one high-level yield helper call for every intended
-non-inert product component -&gt; per-row readback -&gt; block completion and Next.
+verified components and topology -> legal flash selector and its complete input
+pair -> `set_user_yield=NO` -> one high-level yield helper call for every intended
+non-inert product component -> per-row readback -> block completion and Next.
 `NO` selects built-in Component yields; `YES/NO2/NO3` selects a user-subroutine
-route and is not an &quot;enable yield table&quot; flag.
+route and is not an "enable yield table" flag.
 
-Use `client.invoke(&quot;configure_ryield_component_yield&quot;, block_name=..., component_id=...,
-substream=&#x27;MIXED&#x27;, basis=&#x27;MASS&#x27;, mass_yield=..., mass_yield_unit=&#x27;1&#x27;)` for an
+Use `client.invoke("configure_ryield_component_yield", block_name=..., component_id=...,
+substream='MIXED', basis='MASS', mass_yield=..., mass_yield_unit='1')` for an
 explicit mass ratio. Explicit task mass percentages are divided by 100 exactly
 once. MASS yield is product mass/non-inert feed mass, not outlet mole fraction.
 For MOLE supply `mole_yield`, `mole_yield_unit`, verified
@@ -5193,15 +5186,15 @@ Do not pass `kmol/hr` or `kg/hr` to either yield branch or normalize an outlet
 molar ratio directly into native yield cells.
 
 The helper owns materialization of the visible component row in **both**
-`Data\Blocks\&lt;block&gt;\Input\BASIS` and
-`Data\Blocks\&lt;block&gt;\Input\MOLE_YIELD`. The latter is the native table name
+`Data\Blocks\<block>\Input\BASIS` and
+`Data\Blocks\<block>\Input\MOLE_YIELD`. The latter is the native table name
 also when the row basis is MASS; do not invent a `MASS_YIELD` tree leaf.
 Do not replace the helper with `COMP_LIST` labels, guessed `#component` leaves,
 or `set_yield` (that sets the user subroutine name).
 
 For each intended row require helper `success=True`, then verify
 `basis_result.after` matches the requested basis and
-`mole_yield_result.after` matches the helper&#x27;s reconciled `yield_value_written`, with
+`mole_yield_result.after` matches the helper's reconciled `yield_value_written`, with
 matching component/substream and actual row/value-cell evidence. Preserve these
 payloads. Also use `table_dump` on the BASIS and MOLE_YIELD roots to verify
 logical component/substream rows and numeric cells; do not guess component leaf
@@ -5247,7 +5240,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: sequential-reaction-topology
-description: &gt;-
+description: >-
   Counts Aspen reactor blocks from physical vessels in the task and figure, not
   from the number of reaction equations. Use when a task has a main reaction and
   a side reaction, series reactions inside one reactor, or more than one reactor
@@ -5260,7 +5253,7 @@ description: &gt;-
 
 Count physical vessels, not reaction equations.
 
-A vessel is a reactor the task names or the figure draws: &quot;the reactor&quot;, &quot;the first reactor&quot;, &quot;the second reactor&quot;, or one reactor icon. Every equation the task places in that vessel is a `reaction_number` row on that one block. RStoic applies those rows in order. &quot;The side reaction consumes a product of the main reaction&quot; and &quot;after the first reaction&quot;, when both belong to the same vessel, are the next row on that block. They are not a new block.
+A vessel is a reactor the task names or the figure draws: "the reactor", "the first reactor", "the second reactor", or one reactor icon. Every equation the task places in that vessel is a `reaction_number` row on that one block. RStoic applies those rows in order. "The side reaction consumes a product of the main reaction" and "after the first reaction", when both belong to the same vessel, are the next row on that block. They are not a new block.
 
 Create another reactor block only when the task or the figure shows another vessel. That is a second named reactor, a stream that leaves one reactor and enters the next, or a temperature and pressure the task assigns to a different reactor. Do not create one block per equation.
 
@@ -5272,7 +5265,7 @@ Same vessel:
 
 1. Create one RStoic for that vessel.
 2. Write each reaction with `configure_rstoic_stoichiometry(..., reaction_number=N)` and the matching conversion row on that same block.
-3. Set that block&#x27;s temperature and pressure once.
+3. Set that block's temperature and pressure once.
 
 Separate vessels:
 
@@ -5302,7 +5295,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: native-reactor-module-comparison
-description: &gt;-
+description: >-
   Guides own-agent scripts for tasks that compare Aspen native reactor modules
   such as REquil, RGibbs, RStoic, RPlug, and RCSTR without substituting runnable
   stoichiometric surrogates.
@@ -5359,7 +5352,7 @@ from script_agent_exp.script_runtime.rep_parser import load_rep
 from script_agent_exp import safe_aspen_calls as safe
 
 
-def sum_component_kmol_hr_from_rep(rep_path: Path, stream_ids: list[str], component_id: str) -&gt; dict[str, object]:
+def sum_component_kmol_hr_from_rep(rep_path: Path, stream_ids: list[str], component_id: str) -> dict[str, object]:
     rep_text = load_rep(str(rep_path))
     tables = safe.extract_all_stream_tables_from_rep_text(rep_text)
     component = component_id.strip().upper()
@@ -5369,32 +5362,32 @@ def sum_component_kmol_hr_from_rep(rep_path: Path, stream_ids: list[str], compon
         row = tables.get(stream_id.strip().upper())
         if not row:
             continue
-        value = (row.get(&quot;components_kmol_s&quot;) or {}).get(component)
+        value = (row.get("components_kmol_s") or {}).get(component)
         if value is None:
             continue
         contributing[stream_id.strip().upper()] = float(value)
         total_kmol_s += float(value)
     return {
-        &quot;success&quot;: bool(contributing),
-        &quot;component_id&quot;: component,
-        &quot;stream_ids&quot;: [stream_id.strip().upper() for stream_id in stream_ids],
-        &quot;components_kmol_s&quot;: contributing,
-        &quot;total_kmol_s&quot;: total_kmol_s if contributing else None,
-        &quot;total_kmol_hr&quot;: total_kmol_s * 3600.0 if contributing else None,
-        &quot;source&quot;: &quot;current-run REP stream table component flow&quot;,
+        "success": bool(contributing),
+        "component_id": component,
+        "stream_ids": [stream_id.strip().upper() for stream_id in stream_ids],
+        "components_kmol_s": contributing,
+        "total_kmol_s": total_kmol_s if contributing else None,
+        "total_kmol_hr": total_kmol_s * 3600.0 if contributing else None,
+        "source": "current-run REP stream table component flow",
     }
 
 
-requil_h2 = sum_component_kmol_hr_from_rep(rep_path, [&quot;V1&quot;, &quot;L1&quot;], &quot;H2&quot;)
-rgibbs_h2 = sum_component_kmol_hr_from_rep(rep_path, [&quot;V2&quot;], &quot;H2&quot;)
+requil_h2 = sum_component_kmol_hr_from_rep(rep_path, ["V1", "L1"], "H2")
+rgibbs_h2 = sum_component_kmol_hr_from_rep(rep_path, ["V2"], "H2")
 
-summary[&quot;results&quot;][&quot;product_h2_kmol_hr&quot;] = requil_h2[&quot;total_kmol_hr&quot;]
-summary[&quot;results&quot;][&quot;product_hydrogen_kmol_hr&quot;] = requil_h2[&quot;total_kmol_hr&quot;]
-summary[&quot;results&quot;][&quot;requil_product_h2_readback&quot;] = requil_h2
-summary[&quot;results&quot;][&quot;rgibbs_product_h2_readback&quot;] = rgibbs_h2
-summary[&quot;results&quot;][&quot;result_source&quot;] = (
-    &quot;H2 product flow is summed from current-run Aspen REP outlet stream tables; &quot;
-    &quot;REquil uses both material outlets V1 and L1, RGibbs uses V2.&quot;
+summary["results"]["product_h2_kmol_hr"] = requil_h2["total_kmol_hr"]
+summary["results"]["product_hydrogen_kmol_hr"] = requil_h2["total_kmol_hr"]
+summary["results"]["requil_product_h2_readback"] = requil_h2
+summary["results"]["rgibbs_product_h2_readback"] = rgibbs_h2
+summary["results"]["result_source"] = (
+    "H2 product flow is summed from current-run Aspen REP outlet stream tables; "
+    "REquil uses both material outlets V1 and L1, RGibbs uses V2."
 )
 ```
 
@@ -5404,12 +5397,12 @@ Use the exact keys `product_h2_kmol_hr` or `product_hydrogen_kmol_hr` for the pr
 
 - RStoic conversion values must match the task.
 - For RStoic, put conversion evidence in a structured summary key, not only in prose. A good shape is:
-  `results.rstoic_conversion_evidence = [{&quot;block_name&quot;: &quot;R1&quot;, &quot;reaction_number&quot;: 1, &quot;key_component&quot;: &quot;TOLUENE&quot;, &quot;conversion_fraction&quot;: 0.75, &quot;source&quot;: &quot;configure_rstoic_fractional_conversions/readback&quot;}]`.
+  `results.rstoic_conversion_evidence = [{"block_name": "R1", "reaction_number": 1, "key_component": "TOLUENE", "conversion_fraction": 0.75, "source": "configure_rstoic_fractional_conversions/readback"}]`.
 - When using `configure_rstoic_fractional_conversions(...)`, preserve its returned `rows[*].conversion`, `rows[*].component_id`, and `rows[*].readback` in the final summary so validator/scorer can identify the native conversion setting.
 - RPlug geometry such as length and diameter must be configured and evidenced.
 - RCSTR volume must be configured and evidenced.
 - If a property-method warning is accepted as a narrow PER_ERROR exception,
-  record raw and effective status; otherwise do not change the task&#x27;s property
+  record raw and effective status; otherwise do not change the task's property
   method merely to make the scalar status clean.
 
 ```
@@ -5425,9 +5418,9 @@ description: Handle flash tasks by choosing topology from real phase structure, 
 # Flash Control Chain
 
 - Choose topology from the real phase structure: `Flash2`, `Flash3`, `Mixer`, and `Dupl` have different jobs.
-- **Independent-feed energy boundary:** Preserve each task-specified feed&#x27;s composition, amount, T/P, and phase/state independently. Equal feed temperature and pressure do **not** make a summed-composition `TP` stream thermodynamically equivalent: phase equilibrium and nonideal mixing enthalpy depend on composition. A fresh combined `TP` stream can change total inlet enthalpy and therefore an adiabatic flash result.
+- **Independent-feed energy boundary:** Preserve each task-specified feed's composition, amount, T/P, and phase/state independently. Equal feed temperature and pressure do **not** make a summed-composition `TP` stream thermodynamically equivalent: phase equilibrium and nonideal mixing enthalpy depend on composition. A fresh combined `TP` stream can change total inlet enthalpy and therefore an adiabatic flash result.
 - Inspect `list_block_ports` before wiring multiple feeds; a single material inlet can be a shared collection, not a one-stream limit. Use verified collection connections or an upstream adiabatic `Mixer`, preserving all independent inlet states; never invent numbered ports or replace the mixer outlet with a specified total-flow `TP` feed.
-- For property-method comparisons, keep feed partition/state identical across branches and verify each branch&#x27;s property scope; if upstream mixers are used, verify their method basis too. Before trusting outputs, record live feed ownership plus current-run inlet phase/enthalpy evidence and energy-balance closure. Convergence and summed component balances alone do not prove feed-state fidelity.
+- For property-method comparisons, keep feed partition/state identical across branches and verify each branch's property scope; if upstream mixers are used, verify their method basis too. Before trusting outputs, record live feed ownership plus current-run inlet phase/enthalpy evidence and energy-balance closure. Convergence and summed component balances alone do not prove feed-state fidelity.
 - Set `SPEC_OPT` before writing dependent pressure, temperature, or duty values.
 - After changing `SPEC_OPT`, write the full dependent variable set explicitly. Do not assume Aspen or the wrapper will keep an old `TEMP`, `PRES`, or `DUTY` value consistent with the new mode.
 - If completion still asks for flash temperature or pressure, verify `SPEC_OPT` readback before changing numeric values. A successful setter call does not prove Aspen actually left the old flash mode.
@@ -5438,13 +5431,13 @@ description: Handle flash tasks by choosing topology from real phase structure, 
 - Differential simple distillation of a finite charge is a sequence of equilibrium `Flash2` steps, not one flash and not a column. A stated fraction of the charge is vaporized, and both the remaining liquid and the accumulated vapor are required. Each step removes a small vapor cut on a `PV` spec; the liquid outlet feeds the next step; the vapor outlets are mixed into the accumulated vapor product. Use enough equal cuts that the product of the remaining-liquid fractions matches the requested residual fraction. Connect each vapor stream to the vapor outlet port and each liquid stream to the liquid outlet port. An analytical constant-relative-volatility integration may be kept as a reference; it does not replace the flash sequence.
 - **Heat-driven flash / evaporation stages:** If a `Flash2` has a material feed plus a connected inlet heat stream, `TP` is an invalid final `SPEC_OPT` route. `TP` pins temperature and pressure and makes the heat stream non-causal; code-side setters must reject it with `flash2_heat_stream_tp_invalid` / `flash2_heat_stream_spec_error` so runtime ruff repair can switch the route.
 - **Inlet heat stream SPEC_OPT rule:** For `Flash2` with `HS(IN)`/heat-stream inlet, do not use `TP`. If the task fixes effect temperature while heat duty, steam flow, or an upstream heat cascade should determine the split, use `TQ` and write only `TEMP`. For pressure-controlled routes, use `PQ`, `PV`, or `PD` as appropriate and write only `PRES`.
-- With an inlet heat stream, temperature-family routes such as `TQ`, `TV`, and `TD` mean &quot;write `TEMP` only&quot;. Do **not** write `PRES`, `DUTY`, or `VFRAC` after selecting one of these routes; Aspen may accept the setter call but export/read back an inconsistent `SPEC-OPT=TQ` plus residual pressure state.
-- With an inlet heat stream, pressure-family routes such as `PQ` and `PV` mean &quot;write `PRES` only&quot;. Do **not** write `TEMP`, `DUTY`, or `VFRAC` after selecting one of these routes; temperature/vapor fraction become responses.
+- With an inlet heat stream, temperature-family routes such as `TQ`, `TV`, and `TD` mean "write `TEMP` only". Do **not** write `PRES`, `DUTY`, or `VFRAC` after selecting one of these routes; Aspen may accept the setter call but export/read back an inconsistent `SPEC-OPT=TQ` plus residual pressure state.
+- With an inlet heat stream, pressure-family routes such as `PQ` and `PV` mean "write `PRES` only". Do **not** write `TEMP`, `DUTY`, or `VFRAC` after selecting one of these routes; temperature/vapor fraction become responses.
 - The same rule applies even if a wrapper says `set_pres(...)` succeeded. For heat-stream-fed `Flash2`, successful dependent setters are not enough; the script must preserve the one-variable route semantics before run/export.
 - If a task fixes effect temperatures in an evaporator cascade, use `TQ`, write only `TEMP`, and let pressure/composition be response variables. If the task fixes pressure instead, use a pressure-family route and write only `PRES`.
 - If a heat-driven evaporator fails in one fixed-variable route, probe the other block variable, especially a small temperature or pressure bracket, before declaring the heat cascade infeasible.
 - **Idle manipulated variable diagnostic:** If changing heat duty, steam flow, or heat-stream inputs does not move product composition while affected Flash2 blocks still read back as `TP`, treat this as a model-fidelity / route mistake first. Re-read `SPEC_OPT` and replan onto a heat-coupled flash route before concluding the task has no solution.
-- If material split readbacks look physically right but run status or `PER_ERROR` is still bad, keep the run-status/setup-state problem visible. Do not &quot;repair&quot; by changing the reported split until you have checked completion, `SPEC_OPT`, unit basis, and current REP/export trust.
+- If material split readbacks look physically right but run status or `PER_ERROR` is still bad, keep the run-status/setup-state problem visible. Do not "repair" by changing the reported split until you have checked completion, `SPEC_OPT`, unit basis, and current REP/export trust.
 - Use REP stream evidence to confirm outlet phases, interstage connections, and property-method comparisons.
 
 ## Vapor/liquid ownership proof
@@ -5453,17 +5446,17 @@ Stream IDs are arbitrary. After connecting, verify `F(IN)` and actual `V(OUT)`/`
 
 ## Compatible pairs
 
-- Plain `TP` =&gt; `TEMP` + `PRES` only when no inlet heat-stream limitation is active; with inlet heat stream, `TP` is invalid and must be rejected.
-- `PV` =&gt; `PRES` + `VFRAC` only when no inlet heat-stream limitation is active; with inlet heat stream, `PV` is a pressure route and only `PRES` should be written.
-- `PD` =&gt; `PRES` + `DUTY`
-- `TQ` =&gt; `TEMP` + heat-stream participation; write only `TEMP` on heat-stream-fed `Flash2`.
-- `PQ` =&gt; `PRES` + heat-stream participation; write only `PRES` on heat-stream-fed `Flash2`.
+- Plain `TP` => `TEMP` + `PRES` only when no inlet heat-stream limitation is active; with inlet heat stream, `TP` is invalid and must be rejected.
+- `PV` => `PRES` + `VFRAC` only when no inlet heat-stream limitation is active; with inlet heat stream, `PV` is a pressure route and only `PRES` should be written.
+- `PD` => `PRES` + `DUTY`
+- `TQ` => `TEMP` + heat-stream participation; write only `TEMP` on heat-stream-fed `Flash2`.
+- `PQ` => `PRES` + heat-stream participation; write only `PRES` on heat-stream-fed `Flash2`.
 
 ## Aspen HTTP setter order for TQ
 
 ```python
-client.invoke(&quot;set_spec_opt&quot;, block_name=&quot;A1&quot;, value=&quot;TQ&quot;)
-client.invoke(&quot;set_temp&quot;, block_name=&quot;A1&quot;, value=50.0, unit=&quot;C&quot;)
+client.invoke("set_spec_opt", block_name="A1", value="TQ")
+client.invoke("set_temp", block_name="A1", value=50.0, unit="C")
 # verify readback on SPEC_OPT and TEMP before run/export
 ```
 
@@ -5471,12 +5464,12 @@ Connecting a heat stream is topology only; it does not replace block-side `SPEC_
 
 ## Bar-scale pressure on `set_pres` (Flash2 / near-atmospheric flash)
 
-When task text or standard meta gives **bar-scale** flash pressure (e.g. `PRES = -0.05 bar`), write it with an explicit **`unit=&quot;bar&quot;`** on `set_pres`. This is **legal under any INSET** (SI/ENG/MET/METCBAR).
+When task text or standard meta gives **bar-scale** flash pressure (e.g. `PRES = -0.05 bar`), write it with an explicit **`unit="bar"`** on `set_pres`. This is **legal under any INSET** (SI/ENG/MET/METCBAR).
 
 ```python
-client.invoke(&quot;set_spec_opt&quot;, block_name=&quot;F&quot;, value=&quot;TP&quot;)
-client.invoke(&quot;set_temp&quot;, block_name=&quot;F&quot;, value=50.0, unit=&quot;C&quot;)
-client.invoke(&quot;set_pres&quot;, block_name=&quot;F&quot;, value=-0.05, unit=&quot;bar&quot;)
+client.invoke("set_spec_opt", block_name="F", value="TP")
+client.invoke("set_temp", block_name="F", value=50.0, unit="C")
+client.invoke("set_pres", block_name="F", value=-0.05, unit="bar")
 ```
 
 Rules:
@@ -5485,7 +5478,7 @@ Rules:
 - Do **not** convert bar-scale numbers to **`MPa`** unless the task truly specifies MPa.
 - With **absolute** bar units, a **negative** `PRES` means **pressure drop** (Aspen Flash help), not “set MPa outlet pressure”.
 - After `set_pres`, verify `SPEC_OPT` + numeric readback; display unit on readback may differ from the write token.
-- If the flowsheet also uses **SI-only equipment tables** (pump curves, etc.), prefer **`INSET=SI` + `unit=&quot;bar&quot;`** on flash pressure — do not write bar under METCBAR then switch INSET mid-build (rescales stored `PRES`). See `aspen-custom-unit-set`.
+- If the flowsheet also uses **SI-only equipment tables** (pump curves, etc.), prefer **`INSET=SI` + `unit="bar"`** on flash pressure — do not write bar under METCBAR then switch INSET mid-build (rescales stored `PRES`). See `aspen-custom-unit-set`.
 
 Live probe: `python tool_side_generation/healthcheck/bar_pressure_write_probe.py`
 
@@ -5533,9 +5526,9 @@ Avoid introducing extra abstraction layers unless the task or the verified tool 
 ### 1. Direct component routing beats component-group indirection
 If one route lets you say:
 
-- component `H2` -&gt; outlet A
-- component `NC7` -&gt; outlet B
-- component `TOLUENE` -&gt; outlet B
+- component `H2` -> outlet A
+- component `NC7` -> outlet B
+- component `TOLUENE` -> outlet B
 
 directly, prefer that over a route that requires:
 
@@ -5655,12 +5648,12 @@ description: Handles Aspen blocks that expose shared material collection ports. 
 ## Core Rule
 Some Aspen blocks expose one collection port for many material streams. A single live port can accept multiple streams through `Elements.Add(...)`.
 
-Do not assume &quot;one process branch = one visible port&quot;.
+Do not assume "one process branch = one visible port".
 
 ## Common Cases
 - Mixer-like blocks may expose one shared `F(IN)` and one `P(OUT)`. Connect every material feed to `F(IN)`, then connect the mixed product to `P(OUT)`.
 - A connected Mixer may still need a minimal input paragraph before export/run.
-  If history says `BLOCK: &quot;M1&quot; APPEARS IN THE FLOWSHEET, BUT NO BLOCK
+  If history says `BLOCK: "M1" APPEARS IN THE FLOWSHEET, BUT NO BLOCK
   PARAGRAPH HAS BEEN ENTERED FOR IT`, keep the topology and write a coherent
   Mixer spec bundle such as `MTYPE=INSTANTANEOUS`, `NPHASE=1`, `ENERGY_BAL=YES`,
   `MIN_PRES=YES`, and an explicit outlet pressure via `set_pres`. Re-check
@@ -5700,30 +5693,30 @@ Canonical generated form:
 
 ```python
 runtime.stage(
-    &quot;C1_ports_before_connect&quot;,
+    "C1_ports_before_connect",
     lambda: client.invoke(
-        &quot;list_block_ports&quot;,
-        block_name=&quot;C1&quot;,
+        "list_block_ports",
+        block_name="C1",
     ),
     required=False,
 )
 
 runtime.stage(
-    &quot;connect_C1&quot;,
+    "connect_C1",
     lambda: client.invoke(
-        &quot;connect_material_inlet_outlet&quot;,
-        block_name=&quot;C1&quot;,
-        inlet_stream=&quot;F1&quot;,
-        outlet_stream=&quot;P1&quot;,
+        "connect_material_inlet_outlet",
+        block_name="C1",
+        inlet_stream="F1",
+        outlet_stream="P1",
     ),
     required=True,
 )
 
 runtime.stage(
-    &quot;C1_ports_after_connect&quot;,
+    "C1_ports_after_connect",
     lambda: client.invoke(
-        &quot;list_block_ports&quot;,
-        block_name=&quot;C1&quot;,
+        "list_block_ports",
+        block_name="C1",
     ),
     required=False,
 )
@@ -5756,7 +5749,7 @@ When real-time port-dependent selection is necessary, implement that behavior on
 - Naming streams `P1`, `P2`, etc. when those names are also used for pump blocks.
 - Using descriptive stream IDs such as `BZIN`, `H2RCY`, or `PRODUCT`; those violate the script-agent Aspen naming rule even if they are semantically clear.
 - Dropping recycle, purge, or product branches because only one material port is visible.
-- Marking a required stream as &quot;logical only&quot; or &quot;retained in name mapping&quot; after failing to connect it physically.
+- Marking a required stream as "logical only" or "retained in name mapping" after failing to connect it physically.
 
 ```
 
@@ -5780,7 +5773,7 @@ Use this skill when a tower is being approximated with `RadFrac` but its service
 4. When `CONDENSER=PARTIAL-V` and the top product is vapor, keep the product
    outlet on `VD(OUT)` but choose the operating-spec variable from the visible
    UI/spec row. If the row says `Distillate rate`, write **`BASIS_D`**
-   (`Data\Blocks\&lt;BLK&gt;\Input\BASIS_D`) with the task molar-flow unit. Use
+   (`Data\Blocks\<BLK>\Input\BASIS_D`) with the task molar-flow unit. Use
    **`BASIS_RDV`** / `set_basis_rdv` only when the task or live UI explicitly
    exposes a vapor-distillate fraction/rate spec rather than the ordinary
    `Distillate rate` row. In generated scripts prefer a helper that preserves
@@ -5800,18 +5793,18 @@ and no free water.
 | `CONDENSER` | Top product port map | Required/validated spec surface | Probe result |
 | --- | --- | --- | --- |
 | `TOTAL` | top liquid product on `LD(OUT)`, bottoms on `B(OUT)` | `BASIS_RR` + `BASIS_D` | `PER_ERROR=0` |
-| `TOTAL` | only top vapor product on `VD(OUT)` | `BASIS_RR` + `BASIS_D` | Fails: `&quot;RDV&quot; IS LESS THAN 1. A LIQUID DISTILLATE STREAM IS NEEDED BUT NOT SPECIFIED.` |
+| `TOTAL` | only top vapor product on `VD(OUT)` | `BASIS_RR` + `BASIS_D` | Fails: `"RDV" IS LESS THAN 1. A LIQUID DISTILLATE STREAM IS NEEDED BUT NOT SPECIFIED.` |
 | `PARTIAL-V` | top vapor product on `VD(OUT)`, bottoms on `B(OUT)` | `BASIS_RR` + `BASIS_D` when the visible row is ordinary `Distillate rate`; also valid with `BASIS_RDV` + `BASIS_RR` + `BASIS_B` when vapor-distillate fraction is explicitly intended | `PER_ERROR=0` |
-| `PARTIAL-V` | only top liquid product on `LD(OUT)` | any ordinary distillate-rate setup | Fails: `&quot;RDV&quot; IS GREATER THAN 0. A VAPOR DISTILLATE STREAM IS NEEDED BUT NOT SPECIFIED.` |
+| `PARTIAL-V` | only top liquid product on `LD(OUT)` | any ordinary distillate-rate setup | Fails: `"RDV" IS GREATER THAN 0. A VAPOR DISTILLATE STREAM IS NEEDED BUT NOT SPECIFIED.` |
 | `PARTIAL-V-L` | both `VD(OUT)` and `LD(OUT)` connected | `BASIS_RDV` + `BASIS_RR` + `BASIS_B` | `PER_ERROR=0` |
 | `PARTIAL-V-L` | only `LD(OUT)` with `RDV=0` | `BASIS_RDV=0` + `BASIS_RR` + `BASIS_D` | `PER_ERROR=0`, but prefer `TOTAL` for true liquid-only service |
 | `PARTIAL-V-L` | only `VD(OUT)` with `RDV=1` | `BASIS_RDV=1` + `BASIS_RR` + `BASIS_B` | `PER_ERROR=0`, but prefer `PARTIAL-V`/`NONE` for true vapor-only service |
-| `PARTIAL-V-L` | any top-port arrangement without `BASIS_RDV` | `BASIS_RR` + `BASIS_D`, or stream `PROD_FLOW` alone | Fails: `&quot;T1&quot; OR &quot;RDV&quot; NEEDS TO BE SPECIFIED.` |
+| `PARTIAL-V-L` | any top-port arrangement without `BASIS_RDV` | `BASIS_RR` + `BASIS_D`, or stream `PROD_FLOW` alone | Fails: `"T1" OR "RDV" NEEDS TO BE SPECIFIED.` |
 | `NONE` with reboiler | top vapor product on `VD(OUT)`, bottoms on `B(OUT)`, feed or pumparound enters stage 1 | Bottoms/boilup-style handles such as `BASIS_B`; no condenser reflux/distillate semantics | `PER_ERROR=0` in the probe with top-stage feed |
-| `NONE` with reboiler | only top liquid product on `LD(OUT)` | bottoms/boilup-style handles | Fails: `&quot;RDV&quot; IS GREATER THAN 0. A VAPOR DISTILLATE STREAM IS NEEDED BUT NOT SPECIFIED.` |
-| `NONE` with reboiler | `VD(OUT)` but no feed/pumparound to top stage when `Q1=0` | bottoms/boilup-style handles | Fails: `WHEN &quot;Q1=0&quot;... THERE MUST BE A FEED/PUMPAROUND ENTERING THE TOP STAGE.` |
+| `NONE` with reboiler | only top liquid product on `LD(OUT)` | bottoms/boilup-style handles | Fails: `"RDV" IS GREATER THAN 0. A VAPOR DISTILLATE STREAM IS NEEDED BUT NOT SPECIFIED.` |
+| `NONE` with reboiler | `VD(OUT)` but no feed/pumparound to top stage when `Q1=0` | bottoms/boilup-style handles | Fails: `WHEN "Q1=0"... THERE MUST BE A FEED/PUMPAROUND ENTERING THE TOP STAGE.` |
 
-Do not collapse this map to &quot;`Condenser=None` or `PARTIAL-V` means `VD(OUT)`&quot;.
+Do not collapse this map to "`Condenser=None` or `PARTIAL-V` means `VD(OUT)`".
 `PARTIAL-V-L` is governed by `RDV`; `RDV=0` and `RDV=1` are legal boundary
 cases, while mixed vapor-liquid service needs both top ports and an explicit
 `BASIS_RDV`. `NONE` also has an independent top-stage feed/pumparound
@@ -5821,9 +5814,9 @@ requirement when condenser duty is zero.
 For tasks that say a saturated vapor feed enters at or near the bottom of a RadFrac column:
 
 1. Put the feed on the intended bottom-side stage, often `NSTAGE`.
-2. Set feed convention explicitly with `FEED_CONVEN/&lt;stream&gt;` and `FEED_CONVE2/&lt;stream&gt;` as `ON-STAGE-VAP`.
+2. Set feed convention explicitly with `FEED_CONVEN/<stream>` and `FEED_CONVE2/<stream>` as `ON-STAGE-VAP`.
 3. Align feed pressure with the column pressure profile. If using pressure drop, set `OPT_PRES=DP-COL` and `DP_COL`, then choose feed pressure consistent with the feed stage.
-4. Choose one distillate operating spec: material-balance molar flow (`BASIS_D`) **or** distillate/feed ratio (`D:F`), never both. Writing these numeric leaves can change the active `COL-SPECS` selection; `D:F` is not a harmless annotation after `BASIS_RR + BASIS_D`. In `configure_radfrac_bottom_vapor_feed`, explicit `distillate_flow` takes precedence when both arguments are present; `d_over_f` is recorded as inactive evidence, not sent to Aspen. Use only `d_over_f` to request the ratio route. The helper preserves the existing end-effect -&gt; stage/pressure -&gt; feed convention -&gt; reflux -&gt; selected draw write order; it does not clear old specs on an inherited column. Verify active UI/COL-SPECS rows before switching an inherited basis, and do not invent selector paths.
+4. Choose one distillate operating spec: material-balance molar flow (`BASIS_D`) **or** distillate/feed ratio (`D:F`), never both. Writing these numeric leaves can change the active `COL-SPECS` selection; `D:F` is not a harmless annotation after `BASIS_RR + BASIS_D`. In `configure_radfrac_bottom_vapor_feed`, explicit `distillate_flow` takes precedence when both arguments are present; `d_over_f` is recorded as inactive evidence, not sent to Aspen. Use only `d_over_f` to request the ratio route. The helper preserves the existing end-effect -> stage/pressure -> feed convention -> reflux -> selected draw write order; it does not clear old specs on an inherited column. Verify active UI/COL-SPECS rows before switching an inherited basis, and do not invent selector paths.
 5. If the REP says `COLUMN DRIES UP OR COLUMN FLOWS VIOLATE BUILT-IN LIMITS`, re-check feed convention, pressure profile, product draw basis, stage count, and product outlet roles before changing solver tolerances.
 
 In generated hardcoded scripts, prefer `configure_radfrac_bottom_vapor_feed(...)`
@@ -5835,20 +5828,20 @@ generated scripts must not modify `sys.path` or scan legacy experiments paths.
 
 `TOTAL/NONE` is not an ordinary two-numerical-spec distillation column. Aspen counts `Reboiler=None` as an operating specification, so only one additional numerical operating spec remains. `BASIS_RR + BASIS_D` can therefore be overspecified even when no `D:F` setter exists. Keep the requested `NONE`; do not introduce a kettle reboiler to make the pair fit. With reflux ratio as the chosen handle, a material-balance distillate estimate belongs in diagnostic/target evidence, not another setter.
 
-Use `configure_radfrac_operating_spec_bundle(..., condenser=&quot;TOTAL&quot;, reboiler=&quot;NONE&quot;, reflux_ratio=...)` after end effects and feed conventions are landed. The bottom-vapor-feed helper delegates to this bundle; explicit flow still precedes ratio for the ordinary `TOTAL/KETTLE` case. In `TOTAL/NONE`, reflux takes precedence over supplied draw estimates; the unused values and reason are recorded explicitly. The total-condenser helper accepts `reboiler=&quot;NONE&quot;` rather than forcing its default kettle representation. No helper clears inherited specs or writes a guessed selector. Setter rejection remains fatal. Inspect the actual `COL-SPECS` table, end-mode readback, completion and current-run evidence: populated numeric leaves alone do not prove active specification membership. `BASIS_RDV=0` in a total-condenser backup is a product-phase condition, not proof of an extra independent operating spec. For inherited or utility-exchanger configurations, live active rows remain authoritative. `COL-SPECS` is a serialized BKP/UI section and is not necessarily an Aspen tree node: a failed tree-table lookup must remain visible rather than trigger guessed selector paths. `collect_radfrac_operating_spec_state` records native numerical-leaf values and `node_props` prompts, end modes and completion. In verified `TOTAL/NONE` readback, the draw-leaf prompt explicitly states that only one Operating Specification is allowed; RR is populated while the unselected draw leaves remain unset. Combine this with same-session exported BKP `COL-SPECS`, setter rejection and run evidence; do not label it as a successful GUI active-row table readback.
+Use `configure_radfrac_operating_spec_bundle(..., condenser="TOTAL", reboiler="NONE", reflux_ratio=...)` after end effects and feed conventions are landed. The bottom-vapor-feed helper delegates to this bundle; explicit flow still precedes ratio for the ordinary `TOTAL/KETTLE` case. In `TOTAL/NONE`, reflux takes precedence over supplied draw estimates; the unused values and reason are recorded explicitly. The total-condenser helper accepts `reboiler="NONE"` rather than forcing its default kettle representation. No helper clears inherited specs or writes a guessed selector. Setter rejection remains fatal. Inspect the actual `COL-SPECS` table, end-mode readback, completion and current-run evidence: populated numeric leaves alone do not prove active specification membership. `BASIS_RDV=0` in a total-condenser backup is a product-phase condition, not proof of an extra independent operating spec. For inherited or utility-exchanger configurations, live active rows remain authoritative. `COL-SPECS` is a serialized BKP/UI section and is not necessarily an Aspen tree node: a failed tree-table lookup must remain visible rather than trigger guessed selector paths. `collect_radfrac_operating_spec_state` records native numerical-leaf values and `node_props` prompts, end modes and completion. In verified `TOTAL/NONE` readback, the draw-leaf prompt explicitly states that only one Operating Specification is allowed; RR is populated while the unselected draw leaves remain unset. Combine this with same-session exported BKP `COL-SPECS`, setter rejection and run evidence; do not label it as a successful GUI active-row table readback.
 
 ## No-Condenser / No-Reboiler Absorbers
 
-When the task explicitly says `Condenser=None` and `Reboiler=None`, preserve that process intent. Do not silently change the model to `PARTIAL-V` plus `KETTLE` just to make completion easier; that turns an absorber into a distillation surrogate and can converge to the wrong product semantics. A generated script that records `PARTIAL-V`/`KETTLE` as a &quot;runnable representation&quot; for this kind of task should remain failing until the no-condenser/no-reboiler configuration has been repaired.
+When the task explicitly says `Condenser=None` and `Reboiler=None`, preserve that process intent. Do not silently change the model to `PARTIAL-V` plus `KETTLE` just to make completion easier; that turns an absorber into a distillation surrogate and can converge to the wrong product semantics. A generated script that records `PARTIAL-V`/`KETTLE` as a "runnable representation" for this kind of task should remain failing until the no-condenser/no-reboiler configuration has been repaired.
 
-Do not infer `Reboiler=None` from &quot;no condenser&quot; alone. If only the condenser is absent and the task gives a bottom-product temperature target, keep `Condenser=None` but allow a real reboiler or bottom operating specification. A cold-feed column with both `Condenser=None` and `Reboiler=None` may be physically unable to reach a warm bottoms-temperature target by varying solvent flow, vapor draw, or a bottom vapor stub.
+Do not infer `Reboiler=None` from "no condenser" alone. If only the condenser is absent and the task gives a bottom-product temperature target, keep `Condenser=None` but allow a real reboiler or bottom operating specification. A cold-feed column with both `Condenser=None` and `Reboiler=None` may be physically unable to reach a warm bottoms-temperature target by varying solvent flow, vapor draw, or a bottom vapor stub.
 
 For no-condenser absorber-like tasks with cold feeds, a warm bottoms-temperature target, and a requested top vapor product flow/composition, use `radfrac-no-condenser-reboiled-bottoms` instead of this no-reboiler repair pattern unless the task explicitly says no reboiler. The required settings are `Condenser=None`, `Reboiler=KETTLE`, `ABSORBER=NO`, a true overhead vapor outlet stream, a bottoms stream, and a bottom energy/spec handle such as boilup ratio or reboiler duty for the Design Spec. Do not set `ABSORBER=YES`, do not use a near-top side draw as the only vapor outlet, and do not vary the top vapor stream flow to satisfy a bottoms-temperature target.
 
 For no-reboiler RadFrac absorbers, Aspen may require a bottom-side vapor/on-stage feed convention even when the physical bulk feed belongs on an upper stage. Use this repair order before changing condenser/reboiler mode:
 
 1. Keep the absorbent as an on-stage liquid feed at its stated upper stage.
-2. Keep the main gas feed at the stated stage, and explicitly set `FEED_CONVEN/&lt;stream&gt;` and `FEED_CONVE2/&lt;stream&gt;` to vapor/on-stage tokens such as `ON-STAGE-VAP`.
+2. Keep the main gas feed at the stated stage, and explicitly set `FEED_CONVEN/<stream>` and `FEED_CONVE2/<stream>` to vapor/on-stage tokens such as `ON-STAGE-VAP`.
 3. If Aspen still needs bottom-stage vapor traffic for `Reboiler=None`, split a small documented fraction of the gas feed to a separate Aspen-safe stream on stage `NSTAGE`; preserve total feed composition and flow across the main and bottom-stub streams.
 4. Set the bottom-stub feed convention with `FEED_CONVEN` / `FEED_CONVE2` as `ON-STAGE-VAP`.
 5. For top gas products, use the true top vapor outlet where possible. If Aspen forbids writing product flow on a top/bottom outlet, use a documented near-top vapor side draw only for the initial product-flow guess, and report the actual top-gas evidence from REP/readbacks.
@@ -5860,11 +5853,11 @@ If a repeated helper call reports `Variable CONDENSER not found` or `Variable RE
 ### `set_dp_col` requires a pressure unit
 
 The HTTP/MCP `set_dp_col` operation **always** requires `unit` (e.g. `atm`, `kPa`,
-`bar`, `mmHg`). Calling `set_dp_col(block_name=&quot;C1&quot;, value=0.0)` without `unit`
-fails at the server with `missing 1 required positional argument: &#x27;unit&#x27;`.
+`bar`, `mmHg`). Calling `set_dp_col(block_name="C1", value=0.0)` without `unit`
+fails at the server with `missing 1 required positional argument: 'unit'`.
 
-- Prefer `configure_radfrac_no_condenser_absorber(..., column_dp=0.0, pressure_unit=&quot;atm&quot;)` — the helper passes `unit=pressure_unit` (or `column_dp_unit`) automatically.
-- If writing `set_dp_col` directly: `set_dp_col(block_name=&quot;C1&quot;, value=0.0, unit=&quot;atm&quot;)`.
+- Prefer `configure_radfrac_no_condenser_absorber(..., column_dp=0.0, pressure_unit="atm")` — the helper passes `unit=pressure_unit` (or `column_dp_unit`) automatically.
+- If writing `set_dp_col` directly: `set_dp_col(block_name="C1", value=0.0, unit="atm")`.
 - `DP_COL` is **pressure drop** (bottom − top), not bottom absolute pressure. For equal top/bottom pressure, use `column_dp=0.0` with a unit; do not skip `set_dp_col` when `OPT_PRES=DP-COL` is selected.
 
 Do not add reflux ratio, distillate flow, boilup, or reboiler duty specs while claiming no-condenser/no-reboiler absorber semantics. If REP says the column dries up or has large final relative errors, revisit feed conventions, the bottom-stub fraction, pressure profile, and product outlet roles before adding a reboiler/condenser.
@@ -5911,7 +5904,7 @@ For a normal distillation column:
 - Do not implement the same statement as `P_bottom = P` and `P_top = P - deltaP`
   unless the task explicitly anchors the bottom pressure.
 
-Examples for &quot;1 atm column, 1 psi pressure drop&quot;:
+Examples for "1 atm column, 1 psi pressure drop":
 
 - Correct top-anchored basis: `top = 1 atm = 760 mmHg = 101325 Pa`;
   `bottom = top + 1 psi = 811.715 mmHg = 108220 Pa`.
@@ -5930,9 +5923,9 @@ For an ordinary RadFrac with `Condenser = Partial-Vapor`, `Reboiler = Kettle`,
 and operating specs shown as `Reflux ratio` plus `Distillate rate`, the
 distillate-rate cell is the native product-rate spec:
 
-- Write `Data\Blocks\&lt;BLK&gt;\Input\BASIS_D`, e.g.
-  `Application.Tree.FindNode(&quot;\Data\Blocks\D1\Input\BASIS_D&quot;)`.
-- Use the task&#x27;s molar-flow unit for the visible `Distillate rate` row; for
+- Write `Data\Blocks\<BLK>\Input\BASIS_D`, e.g.
+  `Application.Tree.FindNode("\Data\Blocks\D1\Input\BASIS_D")`.
+- Use the task's molar-flow unit for the visible `Distillate rate` row; for
   kmol/h tasks the value belongs on `BASIS_D` with a compatible kmol/time unit.
 - Do not route this GUI combination to `BASIS_RDV` / `set_basis_rdv` or to a
   fractional `D:F` surface unless the task or live UI explicitly changes the
@@ -5943,20 +5936,20 @@ Read back `BASIS_RR` and `BASIS_D` before trusting the column setup; a blank
 
 ## Partial-Condenser Temperature
 
-For RadFrac partial condensers, Aspen&#x27;s required condenser-temperature input is
-the `T1` node, not PetroFrac-style `T_COND`. If history says `&quot;T1&quot; OR &quot;RDV&quot;
+For RadFrac partial condensers, Aspen's required condenser-temperature input is
+the `T1` node, not PetroFrac-style `T_COND`. If history says `"T1" OR "RDV"
 NEEDS TO BE SPECIFIED`, use the RadFrac `set_t1` operation, or the compatibility
-alias `set_t_cond` which writes `Data\Blocks\&lt;BLK&gt;\Input\T1`.
+alias `set_t_cond` which writes `Data\Blocks\<BLK>\Input\T1`.
 
 Do not spend repair time searching for `OPT_COND` / `T_COND` under RadFrac unless
 live UI evidence proves that this specific case exposes those nodes. A
-`PARTIAL-V-L` RadFrac can satisfy the translator with `T1=&lt;temperature&gt;` plus the
+`PARTIAL-V-L` RadFrac can satisfy the translator with `T1=<temperature>` plus the
 normal operating specs, or with `BASIS_RDV` when a vapor-fraction spec is intended.
 
 ## Native RadFrac Pressure Modes
 
 Do not flatten every RadFrac pressure-drop task into explicit top/bottom endpoint
-pressures. Some validated Aspen files use RadFrac&#x27;s native pressure-option modes,
+pressures. Some validated Aspen files use RadFrac's native pressure-option modes,
 and those modes carry semantics that are not obvious from `PRES1` / `PRES2` names
 alone.
 
@@ -5979,16 +5972,16 @@ alone.
 
 For the standard RadFrac Pressure tab in `Top / Bottom` view:
 
-- `Data\Blocks\&lt;BLK&gt;\Input\OPT_PRES_TOP` selects the top-of-column pressure
-  option. `STAGE-2` pairs with `Data\Blocks\&lt;BLK&gt;\Input\PRES2`; `DP-COND`
-  pairs with `Data\Blocks\&lt;BLK&gt;\Input\DP_COND`.
-- `Data\Blocks\&lt;BLK&gt;\Input\OPT_PRES` selects the pressure-drop option for the
+- `Data\Blocks\<BLK>\Input\OPT_PRES_TOP` selects the top-of-column pressure
+  option. `STAGE-2` pairs with `Data\Blocks\<BLK>\Input\PRES2`; `DP-COND`
+  pairs with `Data\Blocks\<BLK>\Input\DP_COND`.
+- `Data\Blocks\<BLK>\Input\OPT_PRES` selects the pressure-drop option for the
   rest of the column. `DP-STAGE` pairs with
-  `Data\Blocks\&lt;BLK&gt;\Input\DP_STAGE`; `DP-COL` pairs with
-  `Data\Blocks\&lt;BLK&gt;\Input\DP_COL`.
+  `Data\Blocks\<BLK>\Input\DP_STAGE`; `DP-COL` pairs with
+  `Data\Blocks\<BLK>\Input\DP_COL`.
 - Unit-bearing pressure leaves must be written through unit-aware setters or
   COM unit APIs. A raw `typed helper write surface` write is suitable for enum leaves such as
-  `OPT_PRES_TOP`, but not sufficient when the value&#x27;s unit must be selected on
+  `OPT_PRES_TOP`, but not sufficient when the value's unit must be selected on
   the same Aspen node.
 - For a per-stage pressure-drop task, the usual direct expression is
   `OPT_PRES_TOP=STAGE-2`, `PRES2=PRES1 + deltaP_per_stage`,
@@ -6000,7 +5993,7 @@ as reusable global rules. If a reference file uses a native RadFrac pressure mod
 mirror the mode and verify the resulting pressure profile; do not record the
 case name, task number, or benchmark-specific numeric pattern in this skill.
 
-For ordinary new tasks that only say &quot;column at `P` with pressure drop `deltaP`&quot;
+For ordinary new tasks that only say "column at `P` with pressure drop `deltaP`"
 and give no reference BKP or native mode, keep the default top-anchored basis:
 `P_bottom = P_top + deltaP`.
 
@@ -6008,10 +6001,10 @@ Required final evidence:
 
 - Read back or REP evidence for top and bottom pressures in one unit basis.
 - When using generated scripts, `set_pres2` is the curated operation for direct
-  `Data\Blocks\&lt;BLK&gt;\Input\PRES2` writes. The safe helper
+  `Data\Blocks\<BLK>\Input\PRES2` writes. The safe helper
   `configure_radfrac_total_condenser(..., bottom_pressure=...,
-  bottom_pressure_mode=&quot;pres2&quot;)` preserves explicit `PRES2`; its default
-  `bottom_pressure_mode=&quot;dp_col&quot;` keeps legacy pressure-drop behavior.
+  bottom_pressure_mode="pres2")` preserves explicit `PRES2`; its default
+  `bottom_pressure_mode="dp_col"` keeps legacy pressure-drop behavior.
 - A statement of which end was anchored and why.
 - Feed pressure consistent with the feed stage, not silently copied from the
 wrong end of the column.
@@ -6045,7 +6038,7 @@ at a new pressure (which also changes temperature and enthalpy). Repair coupling
    topology preservation before trusting column results.
 
 A feed stage setting is incomplete until the feed stream pressure is compatible
-with that stage&#x27;s pressure.
+with that stage's pressure.
 
 ## Total-condenser helper signature
 
@@ -6056,7 +6049,7 @@ with that stage&#x27;s pressure.
 For a RadFrac feed that is not already owned by a standard high-level column bundle, use exactly:
 
 ```python
-client.invoke(&quot;set_radfrac_feed_stage&quot;, block_name=&quot;D1&quot;, stream_name=&quot;F1&quot;, value=20)
+client.invoke("set_radfrac_feed_stage", block_name="D1", stream_name="F1", value=20)
 ```
 
 `set_radfrac_feed_stage` accepts `block_name`, `stream_name`, and `value`. Never pass `stage=`, `stage_number=`, or `feed_stage=` to this capability. `feed_stage=` belongs to high-level helpers such as `configure_radfrac_total_condenser`, which translate it internally to `value`.
@@ -6081,7 +6074,7 @@ Keep the repair generic: record the block type, the exact Aspen message, the ope
 
 ## PER_ERROR Ownership Before Probing
 
-Global `PER_ERROR` is a run-health signal, not proof that the task&#x27;s manipulated
+Global `PER_ERROR` is a run-health signal, not proof that the task's manipulated
 block caused the problem. If the current REP says calculations completed with
 warnings and names one or more warning-owning blocks, repair those blocks first.
 Do not change task-fixed inputs on unrelated equipment.
@@ -6108,18 +6101,18 @@ Do not change task-fixed inputs on unrelated equipment.
 with `DEFAULT FREE-WATER METHOD IS STEAM-TA` maps to the registered Python/ReAct
 helper `safe.configure_srk_free_water_steamnbs(client)` (HTTP-backed
 `typed helper write surface` / `typed readback helper such as read_stream_output(...)`, not a new standalone native HTTP operation).
-Prefer `client.invoke(&quot;configure_srk_free_water_steamnbs&quot;)`; compatible execute
+Prefer `client.invoke("configure_srk_free_water_steamnbs")`; compatible execute
 shares the registry, and typed safe helpers remain client-first direct-payload
 calls. Invoke supplies the client and returns a status/result envelope. Never
 retry missing helpers or local errors through native transport.
-Call it proactively after successful `ensure_property_method(..., method=&quot;SRK&quot;)`.
+Call it proactively after successful `ensure_property_method(..., method="SRK")`.
 Require setter success plus
 `\Data\Properties\Specifications\Input\GFREE_WATER=STEAMNBS` readback.
 `FREE_WATER` is not the writable global surface; direct writes return
 `AE_UNDERSPEC`. Preserve exact setter failure and actual returned live options;
 never invent missing fields/tokens or waive failure because an old value matches.
 
-Raw nonzero SRK `PER_ERROR` remains blocking even with a historical service&#x27;s
+Raw nonzero SRK `PER_ERROR` remains blocking even with a historical service's
 effective-zero classification. Rerun until trusted raw `PER_ERROR=0` and the
 advisory disappears, export, and cold-reload to verify persisted setup/status.
 Do not switch the requested method or tune unrelated equipment to hide the
@@ -6147,7 +6140,7 @@ name can fail even when the intended Aspen token is available.
 | Message | Repair |
 | --- | --- |
 | `ID must be eight characters or less` while setting `BRAUN-K10` / `Braun K10` | Use `BK10` through `ensure_property_method` / `set_property_method`, then verify `GBASEOPSET` or `GOPSETNAME`. |
-| `Invalid symbol value` for a property method | Use one exact token from the setter&#x27;s `suggested_methods` / `available_methods`; do not write `GBASEOPSET` directly with the rejected alias. |
+| `Invalid symbol value` for a property method | Use one exact token from the setter's `suggested_methods` / `available_methods`; do not write `GBASEOPSET` directly with the rejected alias. |
 | repeated 300s timeouts after a token rejection | Stop the loop and repair the token first; do not interpret the timeout series as physical property infeasibility. |
 
 Evidence after repair: setter response `success: true`, readback of
@@ -6160,11 +6153,11 @@ These patterns often trace to **wrong `unit=` on a pressure setter**, not to “
 
 | Symptom | Likely mistake | Repair |
 |---|---|---|
-| Flash/RStoic runs but V/L split wrong; column feed composition off | Task/meta **bar** written as **`MPa`** (e.g. `-0.05 bar` → `2.15 MPa`) | `set_pres(..., unit=&quot;bar&quot;)` with task numeric value |
-| Tree `PRES` readback orders of magnitude wrong after INSET change | Wrote bar under METCBAR, then switched global **`INSET` to SI** mid-build | Re-write bar pressures after SI switch, or use **SI + `unit=&quot;bar&quot;`** throughout — see `aspen-custom-unit-set` |
+| Flash/RStoic runs but V/L split wrong; column feed composition off | Task/meta **bar** written as **`MPa`** (e.g. `-0.05 bar` → `2.15 MPa`) | `set_pres(..., unit="bar")` with task numeric value |
+| Tree `PRES` readback orders of magnitude wrong after INSET change | Wrote bar under METCBAR, then switched global **`INSET` to SI** mid-build | Re-write bar pressures after SI switch, or use **SI + `unit="bar"`** throughout — see `aspen-custom-unit-set` |
 | Pump `DELTA P` / outlet pressure ~1e18; downstream **ZERO FEED** | Pump curve / table validated under **SI** while session stayed on another INSET | Force coherent INSET for equipment tables; re-read upstream `PRES` |
 
-**`set_pres(..., unit=&quot;bar&quot;)` is legal under SI/ENG/MET/METCBAR.** Do not “fix” bar tasks by forcing METCBAR unless the task is about display INSET.
+**`set_pres(..., unit="bar")` is legal under SI/ENG/MET/METCBAR.** Do not “fix” bar tasks by forcing METCBAR unless the task is about display INSET.
 
 Load **`aspen-custom-unit-set`** for INSET routing, template default, and live probes.
 
@@ -6174,8 +6167,8 @@ If a `MIXER` block remains `input_incomplete` while topology and feeds look conn
 
 Repair hint:
 
-- Write `set_pres(block_name=&lt;MIXER&gt;, value=&lt;pressure&gt;, unit=&lt;unit&gt;)` using the intended outlet/downstream pressure basis.
-- Then rerun `check_block_completion(&lt;MIXER&gt;)`.
+- Write `set_pres(block_name=<MIXER>, value=<pressure>, unit=<unit>)` using the intended outlet/downstream pressure basis.
+- Then rerun `check_block_completion(<MIXER>)`.
 - For collection mixers, do not gate final engine/export on `required_blocks` until pressure has been written or the mixer has been excluded intentionally.
 
 ## RStoic: Reference Component Required
@@ -6219,7 +6212,7 @@ Messages such as these are physical/specification errors, not evidence results:
 
 - `ZERO FEED`
 - `invalid temperature specifications`
-- `&quot;COLD&quot; stream is hotter than &quot;HOT&quot; stream`
+- `"COLD" stream is hotter than "HOT" stream`
 - `MINIMUM APPROACH TEMPERATURE USED DUE TO TEMPERATURE CROSSOVER`
 - `$OLVER` / solver block did not converge after HeatX blocks report errors
 
@@ -6236,7 +6229,7 @@ Repair hint:
 
 For absorber-like `RadFrac` with `CONDENSER=NONE` and `REBOILER=NONE`, these Aspen messages map to feed-stage and feed-convention repair:
 
-- `FEEDS not complete: SID = &lt;stream&gt;`
+- `FEEDS not complete: SID = <stream>`
 - `Stage must be specified.`
 - `A feed or pumparound stream to the top stage must be specified when Condenser=None or condenser duty is zero.`
 - `A feed or pumparound stream to the bottom stage must be specified when Reboiler=None or reboiler duty is zero.`
@@ -6248,8 +6241,8 @@ Repair hint:
 - Provide both `feed_stages` and `feed_conventions`.
 - Use `set_pres1(...)` for the top/stage-1 pressure before final completion.
 - Gas feeds near the bottom usually need `ON-STAGE-VAP`; liquid absorbent feeds near the top usually need `ON-STAGE-LIQ`.
-- Write both `Data\Blocks\&lt;BLK&gt;\Input\FEED_CONVEN\&lt;stream&gt;` and `Data\Blocks\&lt;BLK&gt;\Input\FEED_CONVE2\&lt;stream&gt;` when not using the helper.
-- Do not guess table paths like `Data\Blocks\&lt;BLK&gt;\Input\FEEDS\&lt;stream&gt;\STAGE`; use `set_feed_stage(...)` or verified live paths.
+- Write both `Data\Blocks\<BLK>\Input\FEED_CONVEN\<stream>` and `Data\Blocks\<BLK>\Input\FEED_CONVE2\<stream>` when not using the helper.
+- Do not guess table paths like `Data\Blocks\<BLK>\Input\FEEDS\<stream>\STAGE`; use `set_feed_stage(...)` or verified live paths.
 - Also load `aspen_agent_skills/guides/radfrac-absorber-like-configuration/SKILL.md` for bottom-stub and product-outlet semantics.
 
 Only tune reflux, boilup, product flows, or convergence methods after the no-condenser/no-reboiler feed completion messages are gone.
@@ -6258,19 +6251,19 @@ Only tune reflux, boilup, product flows, or convergence methods after the no-con
 
 When Next or flowsheet completion reports:
 
-- `PSEUDO-STR not complete: STREAM = &lt;name&gt; Stage must be specified.`
+- `PSEUDO-STR not complete: STREAM = <name> Stage must be specified.`
 - Multiple streams in one message, e.g. `STREAM = PA1 ... STREAM = PA2 ...`
 
 Repair hint:
 
-- The stream `&lt;name&gt;` is a **pseudo-side stream** on PetroFrac block `&lt;blk&gt;`, not an ordinary product stream.
-- Extract **all** `STREAM = &lt;name&gt;` entries from the same Next message and repair every one; completion is not cleared until every listed pseudo stream has its token-specific required fields.
-- Classify pseudo ownership first. For `PA`, call `set_petrofrac_pumparound_specs`; for `STRIPPER`, call `set_petrofrac_side_stripper_specs`; for true `MAINCOL`, call `set_petrofrac_pseudo_stream(block_name=&lt;blk&gt;, stream_name=&lt;name&gt;, pseudo_kind=&#x27;MAINCOL&#x27;, stage=&lt;tray&gt;, phase=&#x27;L&#x27;|&#x27;V&#x27;|&#x27;TV&#x27;|&#x27;TL&#x27;, app=app)`.
+- The stream `<name>` is a **pseudo-side stream** on PetroFrac block `<blk>`, not an ordinary product stream.
+- Extract **all** `STREAM = <name>` entries from the same Next message and repair every one; completion is not cleared until every listed pseudo stream has its token-specific required fields.
+- Classify pseudo ownership first. For `PA`, call `set_petrofrac_pumparound_specs`; for `STRIPPER`, call `set_petrofrac_side_stripper_specs`; for true `MAINCOL`, call `set_petrofrac_pseudo_stream(block_name=<blk>, stream_name=<name>, pseudo_kind='MAINCOL', stage=<tray>, phase='L'|'V'|'TV'|'TL', app=app)`.
 - Compatible fields are branch-specific: `MAINCOL` writes `PS2_STAGE` + `PS2_PHASE`; `PA` writes `PS2_PANO` + `PS2_STATE`; `STRIPPER` writes `PS2_STRNO` + `PS2_SOURCE` + `PS2_S_STAGE` + `PS2_S_PHASE` + `PS2_S_STATE`.
 - Option lists: `OPT_PSEUDO` → `MAINCOL` | `PA` | `STRIPPER`; `PS2_PHASE` → `L` | `V` | `TV` | `TL`.
 - **`Pumparound ID must be specified`** on a PA pseudo stream → the pumparound subobject is missing or `PS2_PANO` is empty. Repair with **`set_petrofrac_pumparound_specs`**, not pseudo page alone.
 - **Side-stripper product streams** → use `set_petrofrac_side_stripper_specs` / `configure_petrofrac_side_stripper_bundle` with a native `Subobjects\Strippers\S-n` row, product flow, reboiler duty, and two independent Liquid Return specs such as `return_flow` + `return_duty`.
-- Real PetroFrac AD probe result: after full native stripper setup, `OPT_PSEUDO\&lt;stream&gt;` and `PS2_*\&lt;stream&gt;` may be absent/null because Aspen stores the complete stripper through `Subobjects\Strippers\S-n` plus `PSTRS_*` linkage. If the stripper subobject exists, indexed leaves are written, Liquid Return specs are complete, and block/global completion is input-complete, do not treat missing `OPT_PSEUDO\&lt;stream&gt;` as a remaining `PSEUDO-STR` failure.
+- Real PetroFrac AD probe result: after full native stripper setup, `OPT_PSEUDO\<stream>` and `PS2_*\<stream>` may be absent/null because Aspen stores the complete stripper through `Subobjects\Strippers\S-n` plus `PSTRS_*` linkage. If the stripper subobject exists, indexed leaves are written, Liquid Return specs are complete, and block/global completion is input-complete, do not treat missing `OPT_PSEUDO\<stream>` as a remaining `PSEUDO-STR` failure.
 - Do not set pumparound pseudo streams to `MAINCOL`, and do not write `PS2_STAGE`/`PS2_PHASE` after selecting `PA`; those fields belong to the `MAINCOL` radio branch.
 - Vacuum/main product columns with `NPA=0` and no `OPT_PSEUDO` labeled children (typical V1/V2) do **not** need this page.
 - Also load `aspen_agent_skills/guides/petrofrac-native-internals/SKILL.md`.
@@ -6280,7 +6273,7 @@ Repair hint:
 Messages such as these indicate a physically inconsistent column specification or feed/traffic setup, not a solver-tolerance problem:
 
 - `COLUMN DRIES UP OR COLUMN FLOWS VIOLATE BUILT-IN LIMITS`
-- `stage &lt;n&gt; dries up`
+- `stage <n> dries up`
 - `dry column`
 - severe final relative errors tied to a dry stage, missing liquid traffic, or missing vapor traffic
 
@@ -6292,10 +6285,10 @@ Repair direction:
 - For `PARTIAL-V` vapor-overhead columns, do not stop at
   `set_condenser(PARTIAL-V)`: provide a coherent product-flow/reflux spec pair.
   If the visible operating-spec row is `Distillate rate`, write
-  **`BASIS_D`** (`Data\Blocks\&lt;BLK&gt;\Input\BASIS_D`) with the task molar-flow
+  **`BASIS_D`** (`Data\Blocks\<BLK>\Input\BASIS_D`) with the task molar-flow
   unit. Use **`BASIS_RDV`** (`set_basis_rdv`) only when the task or live UI
   explicitly exposes a vapor-distillate fraction/rate spec; its readback path is
-  `Data\Blocks\&lt;BLK&gt;\Input\BASIS_RDV`.
+  `Data\Blocks\<BLK>\Input\BASIS_RDV`.
 - For no-condenser/no-reboiler or absorber-like service, repair feed-stage/feed-convention/product-outlet semantics before adding reflux, boilup, or distillate-flow specs.
 - If dry-up persists after topology and specs are coherent, reassess whether the requested separation, pressure profile, stage count, or product draw basis is physically feasible. Report infeasibility with REP/history evidence instead of masking it with solver settings.
 
@@ -6331,8 +6324,8 @@ Use this skill only for reusable Aspen modeling lessons. Do not encode case-spec
 
 Generated scripts must use semantic public names, not ambiguous native tree tokens:
 
-- `client.invoke(&quot;set_radfrac_distillate_rate&quot;, block_name=&quot;C1&quot;, value=99.0, unit=&quot;kmol/hr&quot;)`
-- `client.invoke(&quot;set_radfrac_bottoms_rate&quot;, block_name=&quot;C1&quot;, value=40.0, unit=&quot;kmol/hr&quot;)`
+- `client.invoke("set_radfrac_distillate_rate", block_name="C1", value=99.0, unit="kmol/hr")`
+- `client.invoke("set_radfrac_bottoms_rate", block_name="C1", value=40.0, unit="kmol/hr")`
 - PetroFrac uses `set_petrofrac_distillate_rate` / `set_petrofrac_bottoms_rate`.
 - MultiFrac uses `set_multifrac_distillate_rate` / `set_multifrac_bottoms_rate`; its registered signature intentionally has no `unit` keyword.
 
@@ -6358,7 +6351,7 @@ Do not use generated-facing `set_basis_d` or `set_basis_b`: those native names c
 ## Evidence Trust
 
 - Do not treat `engine_run.success=true` as sufficient proof of a completed simulation. Require current-run status evidence such as `PER_ERROR=0`, converged REP problem status, and real APW/REP/BKP or HIS artifacts.
-- In headless Aspen sessions, `PER_ERROR` may be unavailable even after a successful engine run. Treat &quot;PER_ERROR node not found&quot; as missing evidence, not as convergence. Export and parse the current REP; accept the run only if REP Problem Status says the calculations completed normally and no real nonzero PER_ERROR is reported.
+- In headless Aspen sessions, `PER_ERROR` may be unavailable even after a successful engine run. Treat "PER_ERROR node not found" as missing evidence, not as convergence. Export and parse the current REP; accept the run only if REP Problem Status says the calculations completed normally and no real nonzero PER_ERROR is reported.
 - If APW export destabilizes a headless rerun, preserve REP plus BKP/DEF evidence and make APW export opt-in rather than blocking summary generation.
 - Avoid broad REP-export retry loops after Aspen cannot produce a REP. Use the bounded evidence helper once, preserve diagnostics, and fail clearly if evidence remains untrusted.
 
@@ -6369,7 +6362,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: aspen-pump-outlet-specification
-description: &gt;-
+description: >-
   Configure Aspen PUMP blocks (pressure, curve, or power mode), set Compr type
   early, preserve efficiency semantics, and map Pump completion text such as
   Outlet Specification must be specified to unset OPT_SPEC.
@@ -6381,9 +6374,9 @@ Use this skill for **Aspen `PUMP` blocks** and `Compr` tasks where the answer de
 
 ## Block family note (important)
 
-Aspen exposes **one pump block family: `PUMP`**. Textbook labels such as “Pump HI” in problem statements refer to **operating/spec context**, not a separate Aspen block type. Always use `create_pump` and configure through `Data\Blocks\&lt;BlockName&gt;\Input\OPT_SPEC` and the dependent inputs below.
+Aspen exposes **one pump block family: `PUMP`**. Textbook labels such as “Pump HI” in problem statements refer to **operating/spec context**, not a separate Aspen block type. Always use `create_pump` and configure through `Data\Blocks\<BlockName>\Input\OPT_SPEC` and the dependent inputs below.
 
-## `OPT_SPEC` option list (`Data\Blocks\&lt;BlockName&gt;\Input\OPT_SPEC`)
+## `OPT_SPEC` option list (`Data\Blocks\<BlockName>\Input\OPT_SPEC`)
 
 | Token | Meaning | Follow-up writes |
 | --- | --- | --- |
@@ -6399,15 +6392,15 @@ Aspen exposes **one pump block family: `PUMP`**. Textbook labels such as “Pump
 
 Write in order after topology is connected:
 
-1. `set_opt_spec(block_name, &quot;USE-CURVE&quot;)`
-2. `set_opt_ctype(block_name, &quot;SINGLE-OPER&quot;)` — or `SINGLE-REFE` / `MULTIP` per task
-3. `set_opt_cformat(block_name, &quot;TABLE&quot;)` — for tabulated head vs flow
-4. `set_dep_var(block_name, &quot;HEAD&quot;)` — dependent axis for TABLE curves
-5. `set_indep_var(block_name, &quot;VOL-FLOW&quot;)` — or `MASS-FLOW` if task uses mass flow
-6. `set_pump_curve_table(block_name, curve_points=[{&quot;flow&quot;: …, &quot;head&quot;: …}, …], flow_unit=&quot;m3/hr&quot;, head_unit=&quot;m&quot;, curve_idx=1)`. This call sets `OPT_SPEC=USE-CURVE` itself. A previous `PRES`, `DELP`, `PRATIO`, or `POWER` does not remain the outlet specification.
+1. `set_opt_spec(block_name, "USE-CURVE")`
+2. `set_opt_ctype(block_name, "SINGLE-OPER")` — or `SINGLE-REFE` / `MULTIP` per task
+3. `set_opt_cformat(block_name, "TABLE")` — for tabulated head vs flow
+4. `set_dep_var(block_name, "HEAD")` — dependent axis for TABLE curves
+5. `set_indep_var(block_name, "VOL-FLOW")` — or `MASS-FLOW` if task uses mass flow
+6. `set_pump_curve_table(block_name, curve_points=[{"flow": …, "head": …}, …], flow_unit="m3/hr", head_unit="m", curve_idx=1)`. This call sets `OPT_SPEC=USE-CURVE` itself. A previous `PRES`, `DELP`, `PRATIO`, or `POWER` does not remain the outlet specification.
 7. Optional fidelity: `set_eff`, `set_deff`
 
-`set_pump_curve_table` requires explicit `flow_unit` and `head_unit`. Pass the units printed with the curve. Accepted `flow_unit` values include `m3/hr`, `cum/hr`, `l/min`, `gpm`, and `cuft/min`. Accepted `head_unit` values include `m`, `ft`, `cm`, and `in`. Point values use those API units. Aspen&#x27;s block-level `HEAD_UNITS` enum is `METER` or `FT`; the helper writes that token. Do not write `HEAD_UNITS` directly. The worked example below is the verified call.
+`set_pump_curve_table` requires explicit `flow_unit` and `head_unit`. Pass the units printed with the curve. Accepted `flow_unit` values include `m3/hr`, `cum/hr`, `l/min`, `gpm`, and `cuft/min`. Accepted `head_unit` values include `m`, `ft`, `cm`, and `in`. Point values use those API units. Aspen's block-level `HEAD_UNITS` enum is `METER` or `FT`; the helper writes that token. Do not write `HEAD_UNITS` directly. The worked example below is the verified call.
 
 A missing or illegal unit returns `success: false` with `error_code` `PUMP_CURVE_UNIT` and a message that starts `ERROR_CODE=PUMP_CURVE_UNIT`. That is the runtime ruff repair. Add or replace only `flow_unit` and `head_unit` on the existing call. Keep `curve_points`, `curve_idx`, and the pump mode.
 
@@ -6418,26 +6411,26 @@ The curve-table operation replaces the target `curve_idx` rows. Repeating the sa
 Cooling-water circulation pump `CW-P` on `FEED → CW-P → TO-TWR`:
 
 ```python
-client.invoke(&quot;set_opt_spec&quot;, block_name=&quot;CW-P&quot;, value=&quot;USE-CURVE&quot;)
-client.invoke(&quot;set_opt_ctype&quot;, block_name=&quot;CW-P&quot;, value=&quot;SINGLE-OPER&quot;)
-client.invoke(&quot;set_opt_cformat&quot;, block_name=&quot;CW-P&quot;, value=&quot;TABLE&quot;)
-client.invoke(&quot;set_dep_var&quot;, block_name=&quot;CW-P&quot;, value=&quot;HEAD&quot;)
-client.invoke(&quot;set_indep_var&quot;, block_name=&quot;CW-P&quot;, value=&quot;VOL-FLOW&quot;)
+client.invoke("set_opt_spec", block_name="CW-P", value="USE-CURVE")
+client.invoke("set_opt_ctype", block_name="CW-P", value="SINGLE-OPER")
+client.invoke("set_opt_cformat", block_name="CW-P", value="TABLE")
+client.invoke("set_dep_var", block_name="CW-P", value="HEAD")
+client.invoke("set_indep_var", block_name="CW-P", value="VOL-FLOW")
 client.invoke(
-    &quot;set_pump_curve_table&quot;,
-    block_name=&quot;CW-P&quot;,
+    "set_pump_curve_table",
+    block_name="CW-P",
     curve_idx=1,
-    flow_unit=&quot;m3/hr&quot;,
-    head_unit=&quot;m&quot;,
+    flow_unit="m3/hr",
+    head_unit="m",
     curve_points=[
-        {&quot;flow&quot;: 18.0, &quot;head&quot;: 22.0},
-        {&quot;flow&quot;: 12.0, &quot;head&quot;: 28.0},
-        {&quot;flow&quot;: 8.0, &quot;head&quot;: 31.0},
-        {&quot;flow&quot;: 5.0, &quot;head&quot;: 34.0},
+        {"flow": 18.0, "head": 22.0},
+        {"flow": 12.0, "head": 28.0},
+        {"flow": 8.0, "head": 31.0},
+        {"flow": 5.0, "head": 34.0},
     ],
 )
-client.invoke(&quot;set_eff&quot;, block_name=&quot;CW-P&quot;, value=0.72)
-client.invoke(&quot;set_deff&quot;, block_name=&quot;CW-P&quot;, value=0.95)
+client.invoke("set_eff", block_name="CW-P", value=0.72)
+client.invoke("set_deff", block_name="CW-P", value=0.95)
 ```
 
 Verify with REP/U-O-S readback that curve rows and `OPT_SPEC=USE-CURVE` appear under the pump input section.
@@ -6445,7 +6438,7 @@ Verify with REP/U-O-S readback that curve rows and `OPT_SPEC=USE-CURVE` appear u
 ## Pressure-target pump workflow (`OPT_SPEC=PRES`)
 
 1. Connect `F(IN)` / `P(OUT)`.
-2. `set_opt_spec(block_name, &quot;PRES&quot;)`
+2. `set_opt_spec(block_name, "PRES")`
 3. `set_pres(block_name, value=..., unit=...)` — match task unit set
 4. Add `set_eff` / `set_deff` only when task or REP requires them.
 
@@ -6454,8 +6447,8 @@ Verify with REP/U-O-S readback that curve rows and `OPT_SPEC=USE-CURVE` appear u
 Booster pump `B-P` with 450 kPa discharge:
 
 ```python
-client.invoke(&quot;set_opt_spec&quot;, block_name=&quot;B-P&quot;, value=&quot;PRES&quot;)
-client.invoke(&quot;set_pres&quot;, block_name=&quot;B-P&quot;, value=450.0, unit=&quot;kPa&quot;)
+client.invoke("set_opt_spec", block_name="B-P", value="PRES")
+client.invoke("set_pres", block_name="B-P", value=450.0, unit="kPa")
 ```
 
 ## Completion diagnostics (Pump)
@@ -6482,7 +6475,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: compr-analysis-variable-selection
-description: &gt;-
+description: >-
   Selects Aspen COMPR block variables for native Design Spec, Sensitivity, and
   Optimization objects. Use when compressor work, power, pressure, pressure
   ratio, or two-stage/intercooled compression appears in DS/SA/OPT tasks.
@@ -6507,7 +6500,7 @@ rules when the sampled or manipulated object is a compressor.
 
 ## Selected Pressure And Power Identity
 
-Bind every selected numeric cell to its source row, object, variable token, actual exported/readback unit and physical role. A pressure axis (absolute/gauge pressure or pressure ratio) is not a compressor work column; indicated, brake and net power are distinct quantities. Never identify these roles by column position, field suffix, magnitude, or configured `helper-managed manipulated-variable field`/`helper-managed sampled-variable field` alone. Convert actual `AnnotatedQuantity` readbacks through `UNIT_REGISTRY`, keep unknown units unresolved, and replay the accepted manipulated pressure on its owning block with input verification. The final REP/BKP must agree with that selected row&#x27;s pressure and same-role work terms; summed power requires converted, compatible terms, not a mislabeled pressure value.
+Bind every selected numeric cell to its source row, object, variable token, actual exported/readback unit and physical role. A pressure axis (absolute/gauge pressure or pressure ratio) is not a compressor work column; indicated, brake and net power are distinct quantities. Never identify these roles by column position, field suffix, magnitude, or configured `helper-managed manipulated-variable field`/`helper-managed sampled-variable field` alone. Convert actual `AnnotatedQuantity` readbacks through `UNIT_REGISTRY`, keep unknown units unresolved, and replay the accepted manipulated pressure on its owning block with input verification. The final REP/BKP must agree with that selected row's pressure and same-role work terms; summed power requires converted, compatible terms, not a mislabeled pressure value.
 
 ## Serial Compression Optimization
 
@@ -6526,86 +6519,86 @@ store its `repair_feedback` and `agent_instruction`, then stop before
 
 ```python
 compressor_terms = [
-    {&quot;label&quot;: f&quot;W{i}&quot;, &quot;block_name&quot;: block_name, &quot;variable&quot;: &quot;IND-POWER&quot;, &quot;uom&quot;: work_unit}
+    {"label": f"W{i}", "block_name": block_name, "variable": "IND-POWER", "uom": work_unit}
     for i, block_name in enumerate(serial_compressor_blocks, start=1)
 ]
 optimization_config = safe.configure_optimization_multi_block_var_objective(
     client,
-    optimization_name=&quot;OPT-COMP&quot;,
+    optimization_name="OPT-COMP",
     objective_terms=compressor_terms,
-    expression=&quot;+&quot;.join(term[&quot;label&quot;] for term in compressor_terms),
-    vary_block=&lt;compressor_or_upstream_block_that_owns_the_decision&gt;,
-    vary_variable=&lt;live_pressure_or_ratio_token&gt;,
-    vary_uom=&lt;task_pressure_unit&gt;,
-    lower=&lt;physically_valid_lower_bound&gt;,
-    upper=&lt;physically_valid_upper_bound&gt;,
+    expression="+".join(term["label"] for term in compressor_terms),
+    vary_block=<compressor_or_upstream_block_that_owns_the_decision>,
+    vary_variable=<live_pressure_or_ratio_token>,
+    vary_uom=<task_pressure_unit>,
+    lower=<physically_valid_lower_bound>,
+    upper=<physically_valid_upper_bound>,
     constraints=[
         {
-            &quot;constraint_name&quot;: f&quot;C{i}&quot;,
-            &quot;type&quot;: &quot;block_var_bound&quot;,
-            &quot;block_name&quot;: term[&quot;block_name&quot;],
-            &quot;variable&quot;: term[&quot;variable&quot;],
-            &quot;operator&quot;: &quot;GE&quot;,
-            &quot;target&quot;: minimum_work_value,
-            &quot;unit&quot;: work_unit,
-            &quot;label&quot;: f&quot;C{i}&quot;,
+            "constraint_name": f"C{i}",
+            "type": "block_var_bound",
+            "block_name": term["block_name"],
+            "variable": term["variable"],
+            "operator": "GE",
+            "target": minimum_work_value,
+            "unit": work_unit,
+            "label": f"C{i}",
         }
         for i, term in enumerate(compressor_terms, start=1)
     ] if minimum_work_value is not None else None,
-    direction=&quot;MINIMIZE&quot;,
+    direction="MINIMIZE",
 )
-if not optimization_config.get(&quot;success&quot;):
-    summary.setdefault(&quot;analysis_objects&quot;, {}).setdefault(&quot;optimization&quot;, {})[&quot;OPT-COMP&quot;] = optimization_config
-    raise RuntimeError(&quot;compressor Optimization configuration failed; see repair_feedback&quot;)
+if not optimization_config.get("success"):
+    summary.setdefault("analysis_objects", {}).setdefault("optimization", {})["OPT-COMP"] = optimization_config
+    raise RuntimeError("compressor Optimization configuration failed; see repair_feedback")
 final = safe.run_completion_engine_and_export(client, ...)
 targets = [
     {
-        &quot;request_id&quot;: &quot;opt_objective_total&quot;,
-        &quot;kind&quot;: &quot;derived&quot;,
-        &quot;object_name&quot;: &quot;OPT-COMP&quot;,
-        &quot;quantity&quot;: &quot;optimization_objective&quot;,
-        &quot;notes&quot;: &quot;FINAL OBJECTIVE FUNCTION VALUE from the native Optimization object&quot;,
+        "request_id": "opt_objective_total",
+        "kind": "derived",
+        "object_name": "OPT-COMP",
+        "quantity": "optimization_objective",
+        "notes": "FINAL OBJECTIVE FUNCTION VALUE from the native Optimization object",
     },
     {
-        &quot;request_id&quot;: &quot;opt_manipulated_pres&quot;,
-        &quot;kind&quot;: &quot;block&quot;,
-        &quot;object_name&quot;: vary_block,
-        &quot;quantity&quot;: &quot;outlet_pressure&quot;,
-        &quot;notes&quot;: &quot;FINAL VALUE for manipulated pressure in MANIPULATED VARIABLES&quot;,
+        "request_id": "opt_manipulated_pres",
+        "kind": "block",
+        "object_name": vary_block,
+        "quantity": "outlet_pressure",
+        "notes": "FINAL VALUE for manipulated pressure in MANIPULATED VARIABLES",
     },
 ]
 for term in compressor_terms:
     targets.append(
         {
-            &quot;request_id&quot;: f&quot;w_{term[&#x27;block_name&#x27;]}&quot;,
-            &quot;kind&quot;: &quot;block&quot;,
-            &quot;object_name&quot;: term[&quot;block_name&quot;],
-            &quot;quantity&quot;: &quot;indicated_power&quot;,
-            &quot;notes&quot;: f&quot;{term[&#x27;label&#x27;]} / IND-POWER from OPTIMIZATION sampled variables or COMPR block section&quot;,
+            "request_id": f"w_{term['block_name']}",
+            "kind": "block",
+            "object_name": term["block_name"],
+            "quantity": "indicated_power",
+            "notes": f"{term['label']} / IND-POWER from OPTIMIZATION sampled variables or COMPR block section",
         }
     )
     targets.extend(
         [
             {
-                &quot;request_id&quot;: f&quot;{term[&#x27;block_name&#x27;]}_polytropic_method&quot;,
-                &quot;kind&quot;: &quot;block&quot;,
-                &quot;object_name&quot;: term[&quot;block_name&quot;],
-                &quot;quantity&quot;: &quot;polytropic_method&quot;,
-                &quot;notes&quot;: &quot;POLYTROPIC COMPRESSOR USING ... METHOD from COMPR INPUT DATA (e.g. ASME)&quot;,
+                "request_id": f"{term['block_name']}_polytropic_method",
+                "kind": "block",
+                "object_name": term["block_name"],
+                "quantity": "polytropic_method",
+                "notes": "POLYTROPIC COMPRESSOR USING ... METHOD from COMPR INPUT DATA (e.g. ASME)",
             },
             {
-                &quot;request_id&quot;: f&quot;{term[&#x27;block_name&#x27;]}_polytropic_efficiency&quot;,
-                &quot;kind&quot;: &quot;block&quot;,
-                &quot;object_name&quot;: term[&quot;block_name&quot;],
-                &quot;quantity&quot;: &quot;polytropic_efficiency&quot;,
-                &quot;notes&quot;: &quot;POLYTROPIC EFFICIENCY from COMPR INPUT DATA&quot;,
+                "request_id": f"{term['block_name']}_polytropic_efficiency",
+                "kind": "block",
+                "object_name": term["block_name"],
+                "quantity": "polytropic_efficiency",
+                "notes": "POLYTROPIC EFFICIENCY from COMPR INPUT DATA",
             },
             {
-                &quot;request_id&quot;: f&quot;{term[&#x27;block_name&#x27;]}_mechanical_efficiency&quot;,
-                &quot;kind&quot;: &quot;block&quot;,
-                &quot;object_name&quot;: term[&quot;block_name&quot;],
-                &quot;quantity&quot;: &quot;mechanical_efficiency&quot;,
-                &quot;notes&quot;: &quot;MECHANICAL EFFICIENCY from COMPR INPUT DATA&quot;,
+                "request_id": f"{term['block_name']}_mechanical_efficiency",
+                "kind": "block",
+                "object_name": term["block_name"],
+                "quantity": "mechanical_efficiency",
+                "notes": "MECHANICAL EFFICIENCY from COMPR INPUT DATA",
             },
         ]
     )
@@ -6614,7 +6607,7 @@ safe.finalize_task_summary_with_llm_rep_readback(
     final_bundle=final,
     rep_readback_targets=targets,
     llm_rep_readback_artifact_dir=artifact_dir,
-    readbacks={&quot;optimization_config&quot;: optimization_config},
+    readbacks={"optimization_config": optimization_config},
 )
 ```
 
@@ -6654,20 +6647,20 @@ Optimization work objectives when available, and verify Sensitivity output is
 non-empty before reporting a trend.
 
 For direct COMPR result readback in generated scripts, prefer
-`safe.collect_compr_power_readback(client, block_name=&quot;CP&quot;, output_unit=&quot;W&quot;)`.
+`safe.collect_compr_power_readback(client, block_name="CP", output_unit="W")`.
 This helper tries native output leaves such as `IND_POWER`, `BRAKE_POWER`, and
 `WNET`, then returns both `value` and `numeric_value`. Do not build custom
 attempt rows that copy the successful Aspen payload under `payload.result.value`
-while leaving the evidence row&#x27;s own `numeric_value` as `None`; validators treat
+while leaving the evidence row's own `numeric_value` as `None`; validators treat
 that as no numeric compressor power evidence.
 
 ```python
-power = client.invoke(&quot;collect_compr_power_readback&quot;,  block_name=&quot;CP&quot;, output_unit=&quot;W&quot;)
-summary.setdefault(&quot;results&quot;, {})[&quot;compressor_power&quot;] = power
+power = client.invoke("collect_compr_power_readback",  block_name="CP", output_unit="W")
+summary.setdefault("results", {})["compressor_power"] = power
 checks.append({
-    &quot;name&quot;: &quot;compressor_power_read_from_compr_output&quot;,
-    &quot;passed&quot;: bool(power.get(&quot;success&quot;)),
-    &quot;evidence&quot;: power,
+    "name": "compressor_power_read_from_compr_output",
+    "passed": bool(power.get("success")),
+    "evidence": power,
 })
 ```
 
@@ -6699,10 +6692,10 @@ description: Creates and activates Aspen Plus custom or preset unit sets; routes
 
 | Class | Symptom | Root cause | Fix |
 |---|---|---|---|
-| **A. INSET / unit-set routing** | `invalid_inset_value`, preset name missing, REP display units wrong | Wrong helper (`configure_inset_unit_system(&quot;METCBAR&quot;)`), set not created/activated | Paths below + `read_active_unit_set` |
-| **B. Setter semantic unit** | Flash/RStoic runs but V/L wrong; RadFrac dry-up; absurd pump ΔP | Task/meta says **bar** but script writes **MPa** or omits `unit=` | **`unit=&quot;bar&quot;`** (or task token) on `set_pres` / `set_pres_mixed` — legal under **any** INSET |
+| **A. INSET / unit-set routing** | `invalid_inset_value`, preset name missing, REP display units wrong | Wrong helper (`configure_inset_unit_system("METCBAR")`), set not created/activated | Paths below + `read_active_unit_set` |
+| **B. Setter semantic unit** | Flash/RStoic runs but V/L wrong; RadFrac dry-up; absurd pump ΔP | Task/meta says **bar** but script writes **MPa** or omits `unit=` | **`unit="bar"`** (or task token) on `set_pres` / `set_pres_mixed` — legal under **any** INSET |
 
-Class B is **not** “Aspen blocks bar”. Live probes confirm `set_pres(..., unit=&quot;bar&quot;)` under SI/ENG/MET/METCBAR.
+Class B is **not** “Aspen blocks bar”. Live probes confirm `set_pres(..., unit="bar")` under SI/ENG/MET/METCBAR.
 
 When history/REP shows **stage dry-up**, **zero upstream feed**, or **pump/compressor pressure ~1e18**, check Class B and INSET-switch hazards below — not only solver settings. See `aspen-completion-error-hints`.
 
@@ -6718,7 +6711,7 @@ Built-in tokens for `configure_inset_unit_system`:
 
 `ENG`, `ENGUS`, `MET`, `MET-CHEM`, `SI`, `SI-CHEM`
 
-Any other INSET (`MX`, `METCBAR`, …) → **`activate_custom_unit_set`** or **`configure_custom_unit_set`** — not `configure_inset_unit_system(&quot;MX&quot;)` (`invalid_inset_value`).
+Any other INSET (`MX`, `METCBAR`, …) → **`activate_custom_unit_set`** or **`configure_custom_unit_set`** — not `configure_inset_unit_system("MX")` (`invalid_inset_value`).
 
 Do **not** edit BKP files to inject unit sets.
 
@@ -6727,7 +6720,7 @@ Do **not** edit BKP files to inject unit sets.
 Aspen HTTP loads `tasks/standards/template_with_metcbar.apt` by default (`ASPEN_DEFAULT_SESSION_TEMPLATE`; `=off` disables). Fresh sessions expose `Units-Sets\METCBAR` and **`INSET=METCBAR`**.
 
 - **`ensure_session()`** without `inset=` → preserves template INSET.
-- **`ensure_session(..., inset=&quot;SI&quot;)`** → intentional override.
+- **`ensure_session(..., inset="SI")`** → intentional override.
 - Match task/reference INSET; do not force METCBAR on every flowsheet.
 
 ## Choosing an INSET strategy
@@ -6735,18 +6728,18 @@ Aspen HTTP loads `tasks/standards/template_with_metcbar.apt` by default (`ASPEN_
 | Task shape | Recommended approach |
 |---|---|
 | Display/reporting only (METCBAR or custom MX) | Preserve template or activate/configure custom set; verify `unit_types` |
-| **Bar-scale** Flash/RStoic specs **and** SI-validated equipment (pump curves, some legacy tables) | Prefer **`INSET=SI`** + explicit **`unit=&quot;bar&quot;`** on pressure setters — avoid METCBAR for the whole build then a late SI switch |
+| **Bar-scale** Flash/RStoic specs **and** SI-validated equipment (pump curves, some legacy tables) | Prefer **`INSET=SI`** + explicit **`unit="bar"`** on pressure setters — avoid METCBAR for the whole build then a late SI switch |
 | Custom °C + mmHg on ENG base | `configure_custom_unit_set` → `MX` (works on template or built-in sessions) |
 | Reference BKP at `INSET=METCBAR` | Load BKP; avoid global INSET rewrite unless task requires it |
 
 ## INSET switching hazard (mid-session)
 
-**Verified:** Flash/RStoic `PRES` written with `unit=&quot;bar&quot;` under **METCBAR**, then global **`INSET` switched to SI** later (e.g. pump performance table), can **rescale stored block pressures** (e.g. `-0.05` → `-5000` in tree readback) and break downstream traffic.
+**Verified:** Flash/RStoic `PRES` written with `unit="bar"` under **METCBAR**, then global **`INSET` switched to SI** later (e.g. pump performance table), can **rescale stored block pressures** (e.g. `-0.05` → `-5000` in tree readback) and break downstream traffic.
 
 Rules:
 
 - Choose strategy from the table **before** bulk writes.
-- If SI-only tables are required, use **SI throughout** with explicit `unit=&quot;bar&quot;` on pressures, **or** re-write bar pressures **after** the SI switch with `unit=&quot;bar&quot;`.
+- If SI-only tables are required, use **SI throughout** with explicit `unit="bar"` on pressures, **or** re-write bar pressures **after** the SI switch with `unit="bar"`.
 - After any INSET change, re-read Flash/RStoic/feed **`PRES`** before `engine_run`.
 
 ## Mixed unit set (typical: ENG base, °C + mmHg display)
@@ -6754,18 +6747,18 @@ Rules:
 ```python
 import script_agent_exp.safe_aspen_calls as safe
 
-result = client.invoke(&quot;configure_custom_unit_set&quot;,
-    unit_set_name=&quot;MX&quot;,
-    base_set=&quot;ENG&quot;,
-    quantity_units={&quot;TEMPERATURE&quot;: &quot;C&quot;, &quot;PRESSURE&quot;: &quot;mmHg&quot;},
+result = client.invoke("configure_custom_unit_set",
+    unit_set_name="MX",
+    base_set="ENG",
+    quantity_units={"TEMPERATURE": "C", "PRESSURE": "mmHg"},
     set_active=True,
 )
-safe.require_success(result, label=&quot;configure_custom_unit_set&quot;)
+safe.require_success(result, label="configure_custom_unit_set")
 
-verified = client.invoke(&quot;verify_custom_unit_set&quot;,
-    unit_set_name=&quot;MX&quot;,
-    expected_temperature=&quot;C&quot;,
-    expected_pressure=&quot;mmHg&quot;,
+verified = client.invoke("verify_custom_unit_set",
+    unit_set_name="MX",
+    expected_temperature="C",
+    expected_pressure="mmHg",
     require_active_inset=True,
 )
 ```
@@ -6773,11 +6766,11 @@ verified = client.invoke(&quot;verify_custom_unit_set&quot;,
 Step-by-step equivalent:
 
 ```python
-client.invoke(&quot;create_unit_set_from_base&quot;,  unit_set_name=&quot;MX&quot;, base_set=&quot;ENG&quot;)
-client.invoke(&quot;set_unit_set_quantity&quot;,  unit_set_name=&quot;MX&quot;, quantity=&quot;TEMPERATURE&quot;, unit=&quot;C&quot;)
-client.invoke(&quot;set_unit_set_quantity&quot;,  unit_set_name=&quot;MX&quot;, quantity=&quot;PRESSURE&quot;, unit=&quot;mmHg&quot;)
-client.invoke(&quot;activate_custom_unit_set&quot;,  unit_set_name=&quot;MX&quot;)
-bundle = client.invoke(&quot;read_active_unit_set&quot;,  unit_set_name=&quot;MX&quot;)
+client.invoke("create_unit_set_from_base",  unit_set_name="MX", base_set="ENG")
+client.invoke("set_unit_set_quantity",  unit_set_name="MX", quantity="TEMPERATURE", unit="C")
+client.invoke("set_unit_set_quantity",  unit_set_name="MX", quantity="PRESSURE", unit="mmHg")
+client.invoke("activate_custom_unit_set",  unit_set_name="MX")
+bundle = client.invoke("read_active_unit_set",  unit_set_name="MX")
 ```
 
 ## Preset names (e.g. METCBAR)
@@ -6787,35 +6780,35 @@ Reference BKPs and the default HTTP template ship **`METCBAR`** (`Data\Setup\Uni
 When the set exists in the live session:
 
 ```python
-client.invoke(&quot;activate_custom_unit_set&quot;,  unit_set_name=&quot;METCBAR&quot;)
-bundle = client.invoke(&quot;read_active_unit_set&quot;,  unit_set_name=&quot;METCBAR&quot;)
+client.invoke("activate_custom_unit_set",  unit_set_name="METCBAR")
+bundle = client.invoke("read_active_unit_set",  unit_set_name="METCBAR")
 ```
 
-If `METCBAR` is absent (template disabled, old server): load a BKP that defines it, or use **`INSET=SI/MET`** with explicit **`unit=&quot;bar&quot;`** on pressure setters — process specs stay correct even when display defaults differ.
+If `METCBAR` is absent (template disabled, old server): load a BKP that defines it, or use **`INSET=SI/MET`** with explicit **`unit="bar"`** on pressure setters — process specs stay correct even when display defaults differ.
 
 Other named sets use the same **activate** path when listed under `Units-Sets`.
 
-## Writing pressure with `unit=&quot;bar&quot;` (INSET-independent)
+## Writing pressure with `unit="bar"` (INSET-independent)
 
-**Verified:** `set_pres(..., unit=&quot;bar&quot;)` on Flash2 and RStoic under `INSET=SI`, `ENG`, `MET`, and template **METCBAR**.
+**Verified:** `set_pres(..., unit="bar")` on Flash2 and RStoic under `INSET=SI`, `ENG`, `MET`, and template **METCBAR**.
 
 | Fact | Detail |
 |---|---|
 | Legal setter tokens | `bar`, `bara`, `barg`, `MPa`, `kPa`, `psia`, `mmHg`, … on `set_pres` / `set_pres_mixed` |
-| INSET independence | Pass **`unit=&quot;bar&quot;` explicitly**; INSET does not auto-pick setter units |
+| INSET independence | Pass **`unit="bar"` explicitly**; INSET does not auto-pick setter units |
 | Common mistake | Rewriting bar-scale targets as **`MPa`** (e.g. `-0.05 bar` → `2.15 MPa`) — ~40× error |
 | Negative absolute bar | On Flash2/RStoic with **absolute** bar units, **negative value = pressure drop** (near-atmospheric specs) |
 
 ```python
 # Near-atmospheric flash (meta often PRES = -0.05 bar)
-client.invoke(&quot;set_spec_opt&quot;, block_name=&quot;F&quot;, value=&quot;TP&quot;)
-client.invoke(&quot;set_temp&quot;, block_name=&quot;F&quot;, value=50.0, unit=&quot;C&quot;)
-client.invoke(&quot;set_pres&quot;, block_name=&quot;F&quot;, value=-0.05, unit=&quot;bar&quot;)
+client.invoke("set_spec_opt", block_name="F", value="TP")
+client.invoke("set_temp", block_name="F", value=50.0, unit="C")
+client.invoke("set_pres", block_name="F", value=-0.05, unit="bar")
 
 # Reactor flash (meta often PRES = -0.1 bar)
-client.invoke(&quot;set_spec_opt&quot;, block_name=&quot;R&quot;, value=&quot;TP&quot;)
-client.invoke(&quot;set_temp&quot;, block_name=&quot;R&quot;, value=200.0, unit=&quot;C&quot;)
-client.invoke(&quot;set_pres&quot;, block_name=&quot;R&quot;, value=-0.1, unit=&quot;bar&quot;)
+client.invoke("set_spec_opt", block_name="R", value="TP")
+client.invoke("set_temp", block_name="R", value=200.0, unit="C")
+client.invoke("set_pres", block_name="R", value=-0.1, unit="bar")
 ```
 
 Readback may show another display label (e.g. `psia`) while the numeric matches the bar write — trust **setter + task unit**, not REP label alone.
@@ -6861,7 +6854,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: solvent-recycle-closure-semantics
-description: &gt;-
+description: >-
   Distinguishes process accounting closure from numerical recycle-tear closure for
   solvent recovery, makeup, and auxiliary-feed tasks. Use when a task has solvent
   recycle, recovery bottoms, makeup streams, fixed circulation targets, calculator
@@ -6879,7 +6872,7 @@ For split-task continuation flowsheets, this is a hard first-pass rule:
 
 - If an upstream node has already selected a fixed solvent/auxiliary circulation amount, keep that upstream feed specification as the protected design contract.
 - If the recovery column bottoms are a solvent-rich candidate recycle stream, first close the process by **accounting/declaration**: report recovered solvent, fresh makeup required to maintain the protected feed target, and final product/recycle purity evidence.
-- Do **not** build a physical `recovery bottoms -&gt; mixer -&gt; upstream column feed` tear loop on the first pass merely because the task says &quot;connect&quot;, &quot;recycle&quot;, or &quot;return&quot;. In this skill, those words are process-intent words until a reference model or explicit task requirement proves a numerical tear is required.
+- Do **not** build a physical `recovery bottoms -> mixer -> upstream column feed` tear loop on the first pass merely because the task says "connect", "recycle", or "return". In this skill, those words are process-intent words until a reference model or explicit task requirement proves a numerical tear is required.
 - A physical tear loop that destabilizes a previously converged open-loop design is a topology-semantics failure, not a reason to keep tuning RadFrac specs blindly.
 
 First distinguish:
@@ -6893,21 +6886,21 @@ Both can be chemically valid. Pick the one the **task wording** and any **verifi
 
 Use a strict machine-readable enum in generated evidence:
 
-- `closure_semantics.closure_type = &quot;process_accounting&quot;`
-- `closure_semantics.closure_type = &quot;numerical_recycle_tear&quot;`
+- `closure_semantics.closure_type = "process_accounting"`
+- `closure_semantics.closure_type = "numerical_recycle_tear"`
 
-Do not invent hybrid closure types such as &quot;accounting-first physical recycle&quot;. If a mixer outlet feeds an upstream unit, classify it as `numerical_recycle_tear` and prove the physical-tear prerequisites. If recovered material and makeup are only reported against a protected upstream target, classify it as `process_accounting`.
+Do not invent hybrid closure types such as "accounting-first physical recycle". If a mixer outlet feeds an upstream unit, classify it as `numerical_recycle_tear` and prove the physical-tear prerequisites. If recovered material and makeup are only reported against a protected upstream target, classify it as `process_accounting`.
 
 ## Makeup Feed Semantics
 
 A **makeup feed** is an external compensating feed that replaces material lost from the process through products, purge, vents, or waste streams. It is not, by itself, evidence that Aspen must solve a numerical recycle tear.
 
-When a task says &quot;provide a makeup feed&quot;, &quot;make up losses&quot;, or &quot;account for losses&quot;:
+When a task says "provide a makeup feed", "make up losses", or "account for losses":
 
 - Treat the makeup stream as a **loss-accounting handle** unless the task explicitly says the recovered stream replaces the protected upstream feed.
 - Preserve any upstream fixed solvent/auxiliary circulation target as the primary feed contract; compute or report makeup as the difference between that protected target and recovered solvent plus outlet losses.
 - Do not use the makeup stream as a reason to convert a previously fixed solvent feed into a mixer outlet that must be torn back to the upstream unit.
-- If the task asks for losses &quot;from each column&quot; or &quot;from each outlet&quot;, report per-column/per-outlet loss evidence and the makeup formula. This is stronger evidence for process accounting than for physical tear topology.
+- If the task asks for losses "from each column" or "from each outlet", report per-column/per-outlet loss evidence and the makeup formula. This is stronger evidence for process accounting than for physical tear topology.
 - A physical recycle tear still needs independent evidence: a reference topology, explicit numerical recycle convergence requirement, tear stream, purge/circulation policy, and stable initialization basis.
 
 ## Required Decision Order
@@ -6950,27 +6943,27 @@ If any item is missing, use accounting closure and record the missing physical-t
 - The acceptance target is recycle purity/flow after tear convergence, not a declared fixed circulation alone.
 - A stable initialization basis is available and the loop does not invalidate protected upstream column specs.
 
-Plain words such as &quot;connect bottoms&quot;, &quot;return recycle&quot;, or &quot;provide makeup&quot; are not enough by themselves to prefer physical recycle when a fixed upstream solvent target already exists.
+Plain words such as "connect bottoms", "return recycle", or "provide makeup" are not enough by themselves to prefer physical recycle when a fixed upstream solvent target already exists.
 
 ## Wiring Checklist
 
 Before first `engine_run`:
 
-1. Write the material edge plan and name each stream&#x27;s **functional role** (fresh feed, fixed solvent, recovery bottoms, makeup, tear, product).
+1. Write the material edge plan and name each stream's **functional role** (fresh feed, fixed solvent, recovery bottoms, makeup, tear, product).
 2. Confirm which edges are **physical** vs **accounting-only**.
 3. If using accounting closure:
    - keep the fixed upstream feed stream on the upstream unit
    - route recovery to mixer/product/makeup as required
    - do **not** add `mixer outlet → upstream feed` just because a recycle concept exists in the task text
    - record a top-level `closure_semantics` object in `summary.json`:
-     - `closure_type: &quot;process_accounting&quot;`
+     - `closure_type: "process_accounting"`
      - protected upstream solvent/feed target and unit
      - recovered solvent stream flow/composition
      - fresh makeup amount and formula
      - statement that physical tear closure was not required or was deferred
    - include APW/REP evidence from the converged accounting-closure run
 4. If using physical recycle:
-   - set `closure_semantics.closure_type: &quot;numerical_recycle_tear&quot;`; never use a hybrid closure type
+   - set `closure_semantics.closure_type: "numerical_recycle_tear"`; never use a hybrid closure type
    - record `physical_tear_prerequisites` with explicit evidence for task/reference requirement, tear stream, circulation or purge policy, makeup degree of freedom, and stable initialization basis
    - record `missing_physical_tear_prerequisites` as an empty list only when all prerequisites are actually satisfied
    - connect the tear loop completely before run
@@ -7114,7 +7107,7 @@ handle, not just another feed amount:
   solvent satisfying product purity, or a purity/duty tradeoff), then reapplied
   in a final converged run with REP/APW evidence.
 
-Unit trap: Aspen&#x27;s native Sensitivity CSV/REP may export stream flow rows in a
+Unit trap: Aspen's native Sensitivity CSV/REP may export stream flow rows in a
 default reporting basis that differs from the configured `helper-managed manipulated-variable field`. Preserve
 raw rows, but normalize the semantic decision table back to the configured or
 read-back unit before comparing with task values.
@@ -7165,7 +7158,7 @@ When closing a solvent recycle loop, prefer this reasoning order:
 Common valid patterns include:
 
 - The extractive-column solvent feed is the logical circulation stream. The
-  recovery bottoms and makeup stream are mixed downstream, and Aspen&#x27;s
+  recovery bottoms and makeup stream are mixed downstream, and Aspen's
   convergence system closes the loop. A standard solved case may leave the
   explicit Tear Streams table empty, relying on automatic sequencing plus
   convergence options instead of a manually listed tear stream.
@@ -7174,7 +7167,7 @@ Common valid patterns include:
   column receives a circulation/tear feed stream, while the recovered solvent
   and fresh makeup enter a downstream mixer whose outlet is used for balance
   evidence but is not necessarily wired back to the extractive-column inlet.
-  Do not &quot;repair&quot; this by forcing the mixer outlet into the column if the
+  Do not "repair" this by forcing the mixer outlet into the column if the
   standard topology or task diagram shows a separate circulation feed plus a
   makeup/recovery mixer.
 - A calculator, design spec, or equivalent inventory-balance relation computes
@@ -7220,7 +7213,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: optimization-constrained-feed-and-recycle-evidence
-description: &gt;-
+description: >-
   Closes the gap between native Aspen Optimization setup and scoreable optimum/recycle
   evidence. Use when O1 lands on STREAM-VAR but FINAL_VAL contradicts reported design
   inputs, bare MINIMIZE feed hits lower bound without purity constraints, recycle/makeup
@@ -7265,7 +7258,7 @@ When the task asks for *optimum / minimum / best amount* of an **auxiliary, solv
 | Layer | Rule |
 |-------|------|
 | Manipulated | STREAM-VAR on the owning feed stream (`F2`, `SF1`, `MU1`, …) — see optimization-manipulated-variable-selection |
-| Objective | Minimize that stream&#x27;s mole-flow or mass-flow through the constrained stream-feed Optimization helper |
+| Objective | Minimize that stream's mole-flow or mass-flow through the constrained stream-feed Optimization helper |
 | Constraints | **Required** unless the task explicitly has no purity/spec gate — otherwise the solver only finds the lower bound |
 | Reported optimum | From LLM REP readback on optimized stream/block after final run — **not** the initial seed |
 
@@ -7311,7 +7304,7 @@ Do not report a fixed-point makeup iteration result as the part (a) optimum unle
 
 ```
 MINIMIZE F2 MOLE-FLOW, vary F2, bounds 20–250, no CON/DS  →  FINAL_VAL ≈ lower bound
-answer.md: &quot;optimum phenol = 100 kmol/hr (design input)&quot;     →  G2 FAIL
+answer.md: "optimum phenol = 100 kmol/hr (design input)"     →  G2 FAIL
 ```
 
 ### Required readbacks after O1
@@ -7328,33 +7321,33 @@ Use `configure_optimization_stream_var_minimize_flow` / `configure_optimization_
 ```python
 configure_optimization_constrained_stream_var_minimize_flow(
     client,
-    optimization_name=&quot;O1&quot;,
-    objective_stream=&quot;&lt;auxiliary_or_solvent_feed&gt;&quot;,
+    optimization_name="O1",
+    objective_stream="<auxiliary_or_solvent_feed>",
     purity_constraints=[
         {
-            &quot;constraint_name&quot;: &quot;C1&quot;,
-            &quot;stream_name&quot;: &quot;&lt;product_or_recycle_stream&gt;&quot;,
-            &quot;component_name&quot;: &quot;&lt;key_component&gt;&quot;,
-            &quot;lower_bound&quot;: 0.95,
+            "constraint_name": "C1",
+            "stream_name": "<product_or_recycle_stream>",
+            "component_name": "<key_component>",
+            "lower_bound": 0.95,
         },
     ],
-    lower=&lt;lower_bound&gt;,
-    upper=&lt;upper_bound&gt;,
-    step_size=&lt;step_size&gt;,
-    max_step_size=&lt;max_step_size&gt;,
-    vary_uom=&quot;kmol/hr&quot;,
-    fvn_uom=&quot;kmol/hr&quot;,
+    lower=<lower_bound>,
+    upper=<upper_bound>,
+    step_size=<step_size>,
+    max_step_size=<max_step_size>,
+    vary_uom="kmol/hr",
+    fvn_uom="kmol/hr",
 )
 final = run_completion_engine_and_export(...)
 targets = [
     {
-        &quot;request_id&quot;: &quot;opt_feed_flow&quot;,
-        &quot;kind&quot;: &quot;stream&quot;,
-        &quot;object_name&quot;: &quot;&lt;auxiliary_or_solvent_feed&gt;&quot;,
-        &quot;quantity&quot;: &quot;total_flow&quot;,
-        &quot;notes&quot;: &quot;Optimized manipulated feed flow from MANIPULATED VARIABLES or stream table&quot;,
+        "request_id": "opt_feed_flow",
+        "kind": "stream",
+        "object_name": "<auxiliary_or_solvent_feed>",
+        "quantity": "total_flow",
+        "notes": "Optimized manipulated feed flow from MANIPULATED VARIABLES or stream table",
     },
-    {&quot;request_id&quot;: &quot;gate_1_purity&quot;, &quot;kind&quot;: &quot;stream&quot;, &quot;object_name&quot;: &quot;&lt;stream&gt;&quot;, &quot;quantity&quot;: &quot;component_flow&quot;, &quot;component&quot;: &quot;&lt;cid&gt;&quot;},
+    {"request_id": "gate_1_purity", "kind": "stream", "object_name": "<stream>", "quantity": "component_flow", "component": "<cid>"},
 ]
 safe.finalize_task_summary_with_llm_rep_readback(
     summary,
@@ -7364,7 +7357,7 @@ safe.finalize_task_summary_with_llm_rep_readback(
 )
 ```
 
-Before any constraint configuration, call **`list_constraint_recipes(block_types=[...], task_keywords=[&quot;purity&quot;])`** and use recipe **`stream_mole_fraction_ge`** through the helper route; do not hand-code purity rows.
+Before any constraint configuration, call **`list_constraint_recipes(block_types=[...], task_keywords=["purity"])`** and use recipe **`stream_mole_fraction_ge`** through the helper route; do not hand-code purity rows.
 
 ---
 
@@ -7436,7 +7429,7 @@ Optimization
 - [ ] `rep_readback_evidence`: optimized feed/manipulated + objective documented with `found: yes`
 
 Evidence
-- [ ] No &quot;post-run proof only&quot; language in final answer without a converged rerun
+- [ ] No "post-run proof only" language in final answer without a converged rerun
 - [ ] analysis_objects.optimization.success reflects readbacks + usable output, not object creation alone
 ```
 
@@ -7458,8 +7451,8 @@ Evidence
 
 ## Workshop-style example (illustrative pattern only)
 
-**Task fragments:** &quot;optimum auxiliary/solvent feed&quot;, &quot;≥95% product purity&quot;,
-&quot;≥99.5% recycle purity&quot;, &quot;connect recovery bottoms back with makeup&quot;.
+**Task fragments:** "optimum auxiliary/solvent feed", "≥95% product purity",
+"≥99.5% recycle purity", "connect recovery bottoms back with makeup".
 
 | Step | Action |
 |------|--------|
@@ -7469,7 +7462,7 @@ Evidence
 | O1 | MINIMIZE solvent/auxiliary stream MOLE-FLOW via STREAM-VAR + linked CONID rows |
 | Final | One post-optimization REP; report optimum from REP readback/manipulated stream, not seed inputs |
 
-Use the task&#x27;s actual stream and block names. This table is a **pattern**, not a mandate to hardcode any particular flow rate or label set.
+Use the task's actual stream and block names. This table is a **pattern**, not a mandate to hardcode any particular flow rate or label set.
 
 ```
 
@@ -7478,7 +7471,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: split-handoff-inheritance-boundary
-description: &gt;-
+description: >-
   Reminds agents that split-task handoff inheritance is not blind numeric
   inheritance. Use when a downstream task continues, extends, or repairs an
   upstream flowsheet, checkpoint, or handoff.
@@ -7551,16 +7544,16 @@ Before continuing a flowsheet, record:
 
 ```json
 {
-  &quot;handoff_inheritance&quot;: {
-    &quot;semantic_roles_inherited&quot;: [],
-    &quot;topology_intent_inherited&quot;: [],
-    &quot;component_property_basis_inherited&quot;: [],
-    &quot;numeric_values_used_as_seeds&quot;: [],
-    &quot;numeric_values_protected&quot;: [],
-    &quot;paper_locked_facts_preserved&quot;: [],
-    &quot;values_changed_for_downstream_reason&quot;: [],
-    &quot;change_triggers&quot;: [],
-    &quot;handoff_requalified_after_change&quot;: false
+  "handoff_inheritance": {
+    "semantic_roles_inherited": [],
+    "topology_intent_inherited": [],
+    "component_property_basis_inherited": [],
+    "numeric_values_used_as_seeds": [],
+    "numeric_values_protected": [],
+    "paper_locked_facts_preserved": [],
+    "values_changed_for_downstream_reason": [],
+    "change_triggers": [],
+    "handoff_requalified_after_change": false
   }
 }
 ```
@@ -7576,13 +7569,13 @@ For every changed upstream handoff spec, the summary must also record:
 
 ## Generic Rule
 
-Do not equate &quot;continue from upstream&quot; with &quot;freeze all upstream numbers&quot;. Continue the process meaning first; protect numeric parameters only when they are explicitly part of the downstream contract. When downstream evidence shows the inherited numeric closure is wrong, repair the handoff boundary before widening optional downstream features.
+Do not equate "continue from upstream" with "freeze all upstream numbers". Continue the process meaning first; protect numeric parameters only when they are explicitly part of the downstream contract. When downstream evidence shows the inherited numeric closure is wrong, repair the handoff boundary before widening optional downstream features.
 
-For downstream analysis/optimization tasks, also do not equate &quot;fresh Aspen
-session&quot; with &quot;rediscover the train from a minimum prefix&quot;. Reuse the upstream
+For downstream analysis/optimization tasks, also do not equate "fresh Aspen
+session" with "rediscover the train from a minimum prefix". Reuse the upstream
 qualified topology and scaffold evidence; requalify once, then analyze.
 
-Cross-scenario setup descriptions must cover the immediate dependency&#x27;s full
+Cross-scenario setup descriptions must cover the immediate dependency's full
 proven scope (for example T02 → T03 hands off PF+CDU+VDU). Prefer
 `producer_setup_description.md` from the upstream handoff bundle; do not treat a
 nested earlier-hop PF-only note as the T02→T03 authority.
@@ -7645,7 +7638,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: annotated-quantities-unit-reconciliation
-description: &gt;-
+description: >-
   Universal unit policy for Aspen agent evidence: every numeric value carries an
   explicit unit from readback; conversions use UNIT_REGISTRY via convert_quantity;
   agents record unit_reconciliation before decisions. Use for SA/DS/OPT/stream/
@@ -7658,17 +7651,17 @@ description: &gt;-
 
 1. **Tool code annotates; it does not guess units.**
    - Never infer unit from numeric magnitude, LOWER/UPPER grids, or regex.
-   - If Aspen/readback does not provide a unit, set `unit: &quot;unknown&quot;`.
+   - If Aspen/readback does not provide a unit, set `unit: "unknown"`.
 
 2. **Every decision-facing number is an `AnnotatedQuantity`.**
    ```json
    {
-     &quot;value&quot;: 0.0444444444,
-     &quot;unit&quot;: &quot;kmol/s&quot;,
-     &quot;unit_source&quot;: &quot;aspen_sensitivity_export&quot;,
-     &quot;unit_confidence&quot;: &quot;readback&quot;,
-     &quot;variable&quot;: &quot;F2.MOLE-FLOW&quot;,
-     &quot;configured_vary_uom&quot;: &quot;kmol/hr&quot;
+     "value": 0.0444444444,
+     "unit": "kmol/s",
+     "unit_source": "aspen_sensitivity_export",
+     "unit_confidence": "readback",
+     "variable": "F2.MOLE-FLOW",
+     "configured_vary_uom": "kmol/hr"
    }
    ```
 
@@ -7690,7 +7683,7 @@ description: &gt;-
 ## Unit token matching
 
 - Do **not** hand-match unit strings with substring checks or regex branches such
-  as `&quot;MOL/HR&quot; in unit`. Unit tokens can contain other unit tokens
+  as `"MOL/HR" in unit`. Unit tokens can contain other unit tokens
   (`lbmol/hr` contains `mol/hr`), so substring matching is unsafe.
 - Normalize units with `normalize_unit_token(...)`, then convert through
   `UNIT_REGISTRY` with `convert_quantity(...)` or
@@ -7711,20 +7704,20 @@ readback → AnnotatedQuantity
 
 ```json
 {
-  &quot;target_report_unit&quot;: &quot;kmol/hr&quot;,
-  &quot;target_source&quot;: &quot;task_prose&quot;,
-  &quot;steps&quot;: [
+  "target_report_unit": "kmol/hr",
+  "target_source": "task_prose",
+  "steps": [
     {
-      &quot;role&quot;: &quot;manipulated_primary&quot;,
-      &quot;source&quot;: { &quot;value&quot;: 0.0444, &quot;unit&quot;: &quot;kmol/s&quot;, &quot;unit_source&quot;: &quot;sa_export&quot; },
-      &quot;converted&quot;: { &quot;value&quot;: 160.0, &quot;unit&quot;: &quot;kmol/hr&quot;, &quot;conversion&quot;: { &quot;registry_id&quot;: &quot;kmol/s-&gt;kmol/hr&quot;, &quot;factor&quot;: 3600 } },
-      &quot;reason&quot;: &quot;Export basis differs from configured helper-managed manipulated-variable field and task&quot;
+      "role": "manipulated_primary",
+      "source": { "value": 0.0444, "unit": "kmol/s", "unit_source": "sa_export" },
+      "converted": { "value": 160.0, "unit": "kmol/hr", "conversion": { "registry_id": "kmol/s->kmol/hr", "factor": 3600 } },
+      "reason": "Export basis differs from configured helper-managed manipulated-variable field and task"
     }
   ],
-  &quot;setter_plan&quot;: {
-    &quot;operation&quot;: &quot;set_flow_mixed&quot;,
-    &quot;value&quot;: 160.0,
-    &quot;unit&quot;: &quot;kmol/hr&quot;
+  "setter_plan": {
+    "operation": "set_flow_mixed",
+    "value": 160.0,
+    "unit": "kmol/hr"
   }
 }
 ```
@@ -7761,12 +7754,12 @@ with explicit unit — do not invent a factor.
 
 - Task product flow rates are not native component yields. Read the native row prompt and basis: yields may be per unit non-inert feed mass.
 - Converting an absolute product flow between mol/h and kmol/hr does not convert it into a yield. Reconcile each product amount with verified feed mass and component identity/MW first; preserve units and derivation.
-- For a verified mass-fraction yield bundle, use `basis=&quot;MASS&quot;` with explicit dimensionless units, preserve excess/inert components, and verify mass/element balances after running.
+- For a verified mass-fraction yield bundle, use `basis="MASS"` with explicit dimensionless units, preserve excess/inert components, and verify mass/element balances after running.
 - Explicit task mass percentages must be divided by 100 once before dimensionless MASS writes. Keep the original percentage evidence and the derived fraction separately. Do not pass percent digits as dimensionless fractions or infer percent versus fraction from magnitude. Verify the complete yield sum on the native non-inert feed-mass basis, with excess/inert accounting explicit; do not renormalize an incomplete bundle to hide missing mass.
 - A specified-yields normalization warning requires basis or amount repair; do not accept it merely because normalized outlet flows look correct.
 - Native table units and basis come from Aspen readback/prompt/BKP, never from the configured global unit set.
-- Write component yields through `configure_ryield_component_yield(...)`. MOLE requires `mole_yield_unit`, `aspen_mole_yield_unit`, and `native_yield_unit_source` identifying actual Aspen prompt/readback/BKP evidence. Registered `mol/kg`, `kmol/kg`, or `lbmol/lb` conversions describe product amount per non-inert feed mass, not absolute product flow. These examples do not establish the live table&#x27;s native units. Unknown/unregistered units fail closed; never infer them from INSET.
-- Absolute `kmol/hr`, `mol/h`, or `kg/hr` inputs fail before any write. Derive yields separately using verified non-inert feed mass on a consistent time basis. For MASS pass `mass_yield_unit=&quot;dimensionless&quot;`; the helper&#x27;s native MASS default is dimensionless, not kg/hr. Existing `value`/`yield_value`/`unit` aliases remain available.
+- Write component yields through `configure_ryield_component_yield(...)`. MOLE requires `mole_yield_unit`, `aspen_mole_yield_unit`, and `native_yield_unit_source` identifying actual Aspen prompt/readback/BKP evidence. Registered `mol/kg`, `kmol/kg`, or `lbmol/lb` conversions describe product amount per non-inert feed mass, not absolute product flow. These examples do not establish the live table's native units. Unknown/unregistered units fail closed; never infer them from INSET.
+- Absolute `kmol/hr`, `mol/h`, or `kg/hr` inputs fail before any write. Derive yields separately using verified non-inert feed mass on a consistent time basis. For MASS pass `mass_yield_unit="dimensionless"`; the helper's native MASS default is dimensionless, not kg/hr. Existing `value`/`yield_value`/`unit` aliases remain available.
   Do not call low-level `set_basis` / `set_mole_yield` directly from generated
   scripts, because that bypasses helper-owned unit reconciliation.
 - If generated code already used the high-level helper with `value=` / `yield_value=`
@@ -7786,10 +7779,10 @@ with explicit unit — do not invent a factor.
 ```python
 from script_agent_exp import annotated_quantities as aq
 
-q = aq.annotate_quantity(29.0, unit=&quot;mol/h&quot;, unit_source=&quot;bkp_export&quot;, unit_confidence=&quot;readback&quot;)
-out = aq.convert_quantity(q, &quot;kmol/hr&quot;, reason=&quot;task reports kmol/hr&quot;)
-flow = aq.convert_aspen_readback_quantity(readback, &quot;kmol/hr&quot;, variable=&quot;S1.MOLEFLOW&quot;)
-ctx = aq.build_sensitivity_x_annotations(x_values, export_unit=&quot;unknown&quot;, configured_vary_uom=&quot;kmol/hr&quot;)
+q = aq.annotate_quantity(29.0, unit="mol/h", unit_source="bkp_export", unit_confidence="readback")
+out = aq.convert_quantity(q, "kmol/hr", reason="task reports kmol/hr")
+flow = aq.convert_aspen_readback_quantity(readback, "kmol/hr", variable="S1.MOLEFLOW")
+ctx = aq.build_sensitivity_x_annotations(x_values, export_unit="unknown", configured_vary_uom="kmol/hr")
 ```
 
 ## Validator expectations
@@ -7805,7 +7798,7 @@ Reason: selected skill for task block family
 ```text
 ---
 name: process-comparison-evidence-integrity
-description: &gt;-
+description: >-
   Ensures Aspen comparison tasks compare distinct configured cases with trusted
   result evidence. Use when tasks ask to compare property methods, process
   arrangements, flowsheet variants, reactor/column alternatives, or before/after
@@ -7832,7 +7825,7 @@ that can support the stated conclusion.
 
 ## Replaced Specifications And Recovery Changes
 
-When an alternative replaces operating specifications, record the active spec set for each branch and prove superseded specs are cleared/disabled. If the supported surface cannot prove removal, rebuild or reload a clean branch; do not overlay old and new specs. Preserve task-fixed feed amounts/state, component identities, property scope and unchanged conditions across branches. Recalculate recovery from each branch&#x27;s actual component product/feed flows on the same basis; purity, total product rate and recovery are not interchangeable. A recovery decrease or an infeasible alternative is a reportable result, not permission to restore an old spec or tune away the comparison. An explicitly accepted warning-only local-property comparison does not excuse unrelated convergence errors, normalization, or changed task conditions.
+When an alternative replaces operating specifications, record the active spec set for each branch and prove superseded specs are cleared/disabled. If the supported surface cannot prove removal, rebuild or reload a clean branch; do not overlay old and new specs. Preserve task-fixed feed amounts/state, component identities, property scope and unchanged conditions across branches. Recalculate recovery from each branch's actual component product/feed flows on the same basis; purity, total product rate and recovery are not interchangeable. A recovery decrease or an infeasible alternative is a reportable result, not permission to restore an old spec or tune away the comparison. An explicitly accepted warning-only local-property comparison does not excuse unrelated convergence errors, normalization, or changed task conditions.
 
 ## Identical-Result Trap
 
@@ -7861,7 +7854,7 @@ paths for each arrangement and compare arrangement-specific outputs.
 
 ## Before/After Changes
 
-For tasks that ask &quot;increase X by 10%&quot; or compare a modified design to a base
+For tasks that ask "increase X by 10%" or compare a modified design to a base
 case, model or calibrate the changed variable explicitly and prove the readback.
 A base result plus manual scaling is not enough unless the task explicitly asks
 for a hand calculation.
@@ -7885,7 +7878,7 @@ express.
 
 ## Task Baselines Cannot Be Self-Downgraded
 
-A baseline value stated as the task&#x27;s initial measured result or required calibration remains a task obligation, alongside the requested modified-case result. Neither generated contracts, planner notes, summaries nor codegen may relabel it `reference_only`, remove it from acceptance, or substitute the uncalibrated model&#x27;s baseline. Only explicit task wording establishing a nonbinding reference, or an authorized task revision, can change that meaning; preserve the source text and authorization. Record every task-stated baseline with component/metric identity, wet/dry or normalized basis, unit, source and actual current-run readback. Reconcile units and basis before reporting the residual; do not switch wet/dry basis to conceal a miss. A missed or unresolved baseline remains a blocker even if the perturbation is on the same handle, the modified case converges, or a generated contract says PASS. Record facts and let the external deterministic gate decide acceptance.
+A baseline value stated as the task's initial measured result or required calibration remains a task obligation, alongside the requested modified-case result. Neither generated contracts, planner notes, summaries nor codegen may relabel it `reference_only`, remove it from acceptance, or substitute the uncalibrated model's baseline. Only explicit task wording establishing a nonbinding reference, or an authorized task revision, can change that meaning; preserve the source text and authorization. Record every task-stated baseline with component/metric identity, wet/dry or normalized basis, unit, source and actual current-run readback. Reconcile units and basis before reporting the residual; do not switch wet/dry basis to conceal a miss. A missed or unresolved baseline remains a blocker even if the perturbation is on the same handle, the modified case converges, or a generated contract says PASS. Record facts and let the external deterministic gate decide acceptance.
 
 ## Required Pattern
 
@@ -7899,7 +7892,7 @@ A baseline value stated as the task&#x27;s initial measured result or required c
    value and the baseline target readback from Aspen.
 4. Apply the requested perturbation to the same calibrated handle or to the same
    physical relation. For example, if the task says height increases by 10%, use
-   `calibrated_height * 1.10`; do not switch to an unrelated `10 stages -&gt; 11
+   `calibrated_height * 1.10`; do not switch to an unrelated `10 stages -> 11
    stages` surrogate unless the baseline stage-equivalent was first calibrated.
 5. Run the modified case from the calibrated state and record the changed handle
    readback, trusted run evidence, and output metric readback.
@@ -7931,23 +7924,23 @@ Use a native height/rating handle when the task requires packed-height physics. 
 
 ```json
 {
-  &quot;baseline_calibration&quot;: {
-    &quot;target_metric&quot;: &quot;y2&quot;,
-    &quot;target_value&quot;: 0.0,
-    &quot;calibrated_handle&quot;: {&quot;name&quot;: &quot;packed_height&quot;, &quot;value&quot;: 0.0, &quot;unit&quot;: &quot;m&quot;},
-    &quot;baseline_readback&quot;: {&quot;value&quot;: 0.0, &quot;unit&quot;: &quot;mole fraction&quot;},
-    &quot;passed&quot;: true
+  "baseline_calibration": {
+    "target_metric": "y2",
+    "target_value": 0.0,
+    "calibrated_handle": {"name": "packed_height", "value": 0.0, "unit": "m"},
+    "baseline_readback": {"value": 0.0, "unit": "mole fraction"},
+    "passed": true
   },
-  &quot;modified_case&quot;: {
-    &quot;perturbation&quot;: &quot;calibrated_handle * 1.10&quot;,
-    &quot;modified_handle&quot;: {&quot;name&quot;: &quot;packed_height&quot;, &quot;value&quot;: 0.0, &quot;unit&quot;: &quot;m&quot;},
-    &quot;output_readback&quot;: {&quot;name&quot;: &quot;y2&quot;, &quot;value&quot;: 0.0, &quot;unit&quot;: &quot;mole fraction&quot;},
-    &quot;passed&quot;: true
+  "modified_case": {
+    "perturbation": "calibrated_handle * 1.10",
+    "modified_handle": {"name": "packed_height", "value": 0.0, "unit": "m"},
+    "output_readback": {"name": "y2", "value": 0.0, "unit": "mole fraction"},
+    "passed": true
   },
-  &quot;same_handle_replay&quot;: {
-    &quot;baseline_handle_name&quot;: &quot;packed_height&quot;,
-    &quot;modified_handle_name&quot;: &quot;packed_height&quot;,
-    &quot;passed&quot;: true
+  "same_handle_replay": {
+    "baseline_handle_name": "packed_height",
+    "modified_handle_name": "packed_height",
+    "passed": true
   }
 }
 ```
@@ -7970,7 +7963,7 @@ description: Verifies vapor/liquid outlet identity from native Aspen ports and s
 
 ## Authoritative role contract
 
-Stream IDs are arbitrary: a name beginning with V does not prove vapor and a name beginning with L does not prove liquid. Record facts as `block -&gt; native outlet port -&gt; connected stream -&gt; same-run phase/vapor_fraction -&gt; requested quantity`. Native topology and trusted phase output are authoritative; name_mapping, local VAPOR/LIQUID constants, list order, a successful connection helper, and PER_ERROR=0 alone are not role proof.
+Stream IDs are arbitrary: a name beginning with V does not prove vapor and a name beginning with L does not prove liquid. Record facts as `block -> native outlet port -> connected stream -> same-run phase/vapor_fraction -> requested quantity`. Native topology and trusted phase output are authoritative; name_mapping, local VAPOR/LIQUID constants, list order, a successful connection helper, and PER_ERROR=0 alone are not role proof.
 
 1. Read live ports before connecting. For Flash2, use `connect_flash2_vapor_liquid_ports(...)`: the feed belongs to `F(IN)`, vapor to `V(OUT)`, liquid to `L(OUT)`. Do not use ordered generic outlet wiring. Re-read actual connected streams after the helper; arguments describe intent, not verified landing.
 2. When inheriting a BKP, reconcile its native FLOWSHEET connectivity with recorded ports and its stored stream RESULTS. Do not decode native connection positions by stream list order or generalize an observed BKP position code to another block family/version. Require native phase results or the matching REP block outlet declarations to resolve phase ownership.
@@ -7988,7 +7981,7 @@ If actual native ports and same-run phase results already match the intended phy
 
 ## Stable non-task example
 
-If native ports show `V(OUT) -&gt; S1` and `L(OUT) -&gt; S2`, and a trusted REP declares S1 vapor with dimensionless vapor_fraction=1 and S2 liquid with vapor_fraction=0, vapor quantities belong to S1 and liquid quantities to S2 regardless of their names or ordering. Reverse phase evidence is a conflict to investigate, not permission to guess a role from the prefix. This phase identity example supplies no task composition or operating target.
+If native ports show `V(OUT) -> S1` and `L(OUT) -> S2`, and a trusted REP declares S1 vapor with dimensionless vapor_fraction=1 and S2 liquid with vapor_fraction=0, vapor quantities belong to S1 and liquid quantities to S2 regardless of their names or ordering. Reverse phase evidence is a conflict to investigate, not permission to guess a role from the prefix. This phase identity example supplies no task composition or operating target.
 
 ```
 
@@ -8002,7 +7995,7 @@ description: Selects between Aspen Design Spec, Optimization, Sensitivity, and A
 
 # Analysis Method Selection
 
-Use the smallest native analysis method that matches the task&#x27;s decision
+Use the smallest native analysis method that matches the task's decision
 semantics. Do not choose Sensitivity just because it is easy to configure, and do
 not force Optimization when the objective cannot be represented by the available
 native helper surface.
@@ -8113,7 +8106,7 @@ the transaction and output surface for the selected method.
 
 ## Evidence Contract
 
-Persist under `analysis_objects.&lt;family&gt;`:
+Persist under `analysis_objects.<family>`:
 
 - object name and helper used;
 - readbacks for manipulated and sampled/objective/constraint sides;
@@ -8156,10 +8149,10 @@ Rules:
 - Do **not** pass `edge_plan=`, `topology=`, or other invented keyword aliases.
 - Edge tuples `(stream, source, destination)` are case-insensitively unique: write each physical edge once, never silently deduplicate, and keep connection calls in one-to-one correspondence with the plan.
 - **PRE-SUBMIT MATERIAL EDGE CHECKLIST (mechanical, before outputting Python):** inspect the complete static `MATERIAL_EDGES`/`edges` list and count rows by case-insensitive stream ID.
-- Every physical material stream must have exactly one edge row, including feeds/products whose `source` or `destination` is `None`; a recycle is still one `source -&gt; destination` edge.
+- Every physical material stream must have exactly one edge row, including feeds/products whose `source` or `destination` is `None`; a recycle is still one `source -> destination` edge.
 - Never duplicate a connection merely to show it in multiple process groups. Do not use a `set` or `dict` to silently deduplicate; if any stream count exceeds one, rewrite the list.
 - Verify one-to-one correspondence in both directions: each connection call has exactly one edge row, and each edge row has exactly one connection call.
-- Each edge item uses `{&quot;stream&quot;: &quot;&lt;stream_id&gt;&quot;, &quot;source&quot;: &lt;block_id | None&gt;, &quot;destination&quot;: &lt;block_id | None&gt;}`.
+- Each edge item uses `{"stream": "<stream_id>", "source": <block_id | None>, "destination": <block_id | None>}`.
 - Feeds have `source=None`; products have `destination=None`.
 - Aspen stream IDs must match `^[A-Za-z]{1,2}[0-9]{0,2}$` (examples: `F1`, `D1`, `S3`). Long semantic names such as `NAP`/`KERO`/`HNAP` are invalid; map them with `allocate_aspen_short_stream_names(...)` and `rewrite_material_edge_plan_streams(...)` before validation.
 - Optional `block_names` / `stream_names` declare IDs you expect in the plan; missing declared streams raise.
@@ -8169,12 +8162,12 @@ Placeholder edge-plan shape:
 ```python
 validate_material_edge_plan(
     [
-        {&quot;stream&quot;: &quot;&lt;feed_stream&gt;&quot;, &quot;source&quot;: None, &quot;destination&quot;: &quot;&lt;first_block&gt;&quot;},
-        {&quot;stream&quot;: &quot;&lt;intermediate_stream&gt;&quot;, &quot;source&quot;: &quot;&lt;upstream_block&gt;&quot;, &quot;destination&quot;: &quot;&lt;downstream_block&gt;&quot;},
-        {&quot;stream&quot;: &quot;&lt;product_stream&gt;&quot;, &quot;source&quot;: &quot;&lt;last_block&gt;&quot;, &quot;destination&quot;: None},
+        {"stream": "<feed_stream>", "source": None, "destination": "<first_block>"},
+        {"stream": "<intermediate_stream>", "source": "<upstream_block>", "destination": "<downstream_block>"},
+        {"stream": "<product_stream>", "source": "<last_block>", "destination": None},
     ],
-    block_names=[&quot;&lt;first_block&gt;&quot;, &quot;&lt;upstream_block&gt;&quot;, &quot;&lt;downstream_block&gt;&quot;, &quot;&lt;last_block&gt;&quot;],
-    stream_names=[&quot;&lt;feed_stream&gt;&quot;, &quot;&lt;intermediate_stream&gt;&quot;, &quot;&lt;product_stream&gt;&quot;],
+    block_names=["<first_block>", "<upstream_block>", "<downstream_block>", "<last_block>"],
+    stream_names=["<feed_stream>", "<intermediate_stream>", "<product_stream>"],
 )
 ```
 
@@ -8185,7 +8178,7 @@ If the helper raises, fix the stream/block mapping before creating or connecting
 Hard signature rule:
 
 ```python
-client.invoke(&quot;configure_recycle_convergence_options&quot;, tolerance=1e-5, tear_method=&quot;WEGSTEIN&quot;, wegstein_max_iterations=100)
+client.invoke("configure_recycle_convergence_options", tolerance=1e-5, tear_method="WEGSTEIN", wegstein_max_iterations=100)
 ```
 
 Never pass `max_iterations`; it is an incorrect alias, not a supported parameter.
@@ -8219,24 +8212,24 @@ Rules:
 
 ### Block families for this case
 
-- `PROPERTY_METHODS` → map to your script&#x27;s block ID (placeholder `&lt;block_id&gt;`)
-- `HEATER` → map to your script&#x27;s block ID (placeholder `&lt;heater_block&gt;`)
-- `RSTOIC` → map to your script&#x27;s block ID (placeholder `&lt;reactor_block&gt;`)
-- `FLASH2` → map to your script&#x27;s block ID (placeholder `&lt;flash_block&gt;`)
-- `FSPLIT` → map to your script&#x27;s block ID (placeholder `&lt;split_block&gt;`)
-- `RADFRAC` → map to your script&#x27;s block ID (placeholder `&lt;column_block&gt;`)
-- `PUMP` → map to your script&#x27;s block ID (placeholder `&lt;pump_block&gt;`)
-- `COMPR` → map to your script&#x27;s block ID (placeholder `&lt;compressor_block&gt;`)
-- `PIPE` → map to your script&#x27;s block ID (placeholder `&lt;pipe_block&gt;`)
-- `VALVE` → map to your script&#x27;s block ID (placeholder `&lt;valve_block&gt;`)
+- `PROPERTY_METHODS` → map to your script's block ID (placeholder `<block_id>`)
+- `HEATER` → map to your script's block ID (placeholder `<heater_block>`)
+- `RSTOIC` → map to your script's block ID (placeholder `<reactor_block>`)
+- `FLASH2` → map to your script's block ID (placeholder `<flash_block>`)
+- `FSPLIT` → map to your script's block ID (placeholder `<split_block>`)
+- `RADFRAC` → map to your script's block ID (placeholder `<column_block>`)
+- `PUMP` → map to your script's block ID (placeholder `<pump_block>`)
+- `COMPR` → map to your script's block ID (placeholder `<compressor_block>`)
+- `PIPE` → map to your script's block ID (placeholder `<pipe_block>`)
+- `VALVE` → map to your script's block ID (placeholder `<valve_block>`)
 
-Placeholder call shape for this case&#x27;s block families:
+Placeholder call shape for this case's block families:
 
 ```python
 validate_required_native_blocks_plan(
-    {&quot;PROPERTY_METHODS&quot;: [&quot;&lt;block_id&gt;&quot;], &quot;HEATER&quot;: [&quot;&lt;heater_block&gt;&quot;], &quot;RSTOIC&quot;: [&quot;&lt;reactor_block&gt;&quot;], &quot;FLASH2&quot;: [&quot;&lt;flash_block&gt;&quot;], &quot;FSPLIT&quot;: [&quot;&lt;split_block&gt;&quot;], &quot;RADFRAC&quot;: [&quot;&lt;column_block&gt;&quot;], &quot;PUMP&quot;: [&quot;&lt;pump_block&gt;&quot;], &quot;COMPR&quot;: [&quot;&lt;compressor_block&gt;&quot;], &quot;PIPE&quot;: [&quot;&lt;pipe_block&gt;&quot;], &quot;VALVE&quot;: [&quot;&lt;valve_block&gt;&quot;]},
-    created_blocks_by_family={&quot;PROPERTY_METHODS&quot;: [&quot;&lt;block_id&gt;&quot;], &quot;HEATER&quot;: [&quot;&lt;heater_block&gt;&quot;], &quot;RSTOIC&quot;: [&quot;&lt;reactor_block&gt;&quot;], &quot;FLASH2&quot;: [&quot;&lt;flash_block&gt;&quot;], &quot;FSPLIT&quot;: [&quot;&lt;split_block&gt;&quot;], &quot;RADFRAC&quot;: [&quot;&lt;column_block&gt;&quot;], &quot;PUMP&quot;: [&quot;&lt;pump_block&gt;&quot;], &quot;COMPR&quot;: [&quot;&lt;compressor_block&gt;&quot;], &quot;PIPE&quot;: [&quot;&lt;pipe_block&gt;&quot;], &quot;VALVE&quot;: [&quot;&lt;valve_block&gt;&quot;]},
-    finalization_required_blocks=[&quot;&lt;block_id&gt;&quot;, &quot;&lt;heater_block&gt;&quot;, &quot;&lt;reactor_block&gt;&quot;, &quot;&lt;flash_block&gt;&quot;, &quot;&lt;split_block&gt;&quot;, &quot;&lt;column_block&gt;&quot;, &quot;&lt;pump_block&gt;&quot;, &quot;&lt;compressor_block&gt;&quot;, &quot;&lt;pipe_block&gt;&quot;, &quot;&lt;valve_block&gt;&quot;],
+    {"PROPERTY_METHODS": ["<block_id>"], "HEATER": ["<heater_block>"], "RSTOIC": ["<reactor_block>"], "FLASH2": ["<flash_block>"], "FSPLIT": ["<split_block>"], "RADFRAC": ["<column_block>"], "PUMP": ["<pump_block>"], "COMPR": ["<compressor_block>"], "PIPE": ["<pipe_block>"], "VALVE": ["<valve_block>"]},
+    created_blocks_by_family={"PROPERTY_METHODS": ["<block_id>"], "HEATER": ["<heater_block>"], "RSTOIC": ["<reactor_block>"], "FLASH2": ["<flash_block>"], "FSPLIT": ["<split_block>"], "RADFRAC": ["<column_block>"], "PUMP": ["<pump_block>"], "COMPR": ["<compressor_block>"], "PIPE": ["<pipe_block>"], "VALVE": ["<valve_block>"]},
+    finalization_required_blocks=["<block_id>", "<heater_block>", "<reactor_block>", "<flash_block>", "<split_block>", "<column_block>", "<pump_block>", "<compressor_block>", "<pipe_block>", "<valve_block>"],
 )
 ```
 
@@ -8252,344 +8245,344 @@ Define one `REQUIRED_BLOCKS` list that includes every block ID on the final resu
 Reason: descriptor-based initial skill selection manifest
 ```text
 {
-  &quot;selection_basis&quot;: &quot;explicit skill descriptors and exact skill names; no keyword, regex, or free-text matching&quot;,
-  &quot;input_skill_names&quot;: [
-    &quot;aspen-task-execution-order&quot;,
-    &quot;aspen-property-method-selection&quot;,
-    &quot;aspen-material-stream-composition-must-be-specified&quot;,
-    &quot;functional-role-semantics-validation&quot;,
-    &quot;aspen-generic-readbacks&quot;,
-    &quot;reactor-reaction-setup-high-level&quot;,
-    &quot;sequential-reaction-topology&quot;,
-    &quot;native-reactor-module-comparison&quot;,
-    &quot;flash-control-chain&quot;,
-    &quot;prefer-direct-component-splits&quot;,
-    &quot;shared-material-port-topology&quot;,
-    &quot;radfrac-absorber-like-configuration&quot;,
-    &quot;radfrac-standard-column-pressure-basis&quot;,
-    &quot;aspen-completion-error-hints&quot;,
-    &quot;aspen-component-radfrac-evidence-repair&quot;,
-    &quot;aspen-pump-outlet-specification&quot;,
-    &quot;compr-analysis-variable-selection&quot;,
-    &quot;aspen-custom-unit-set&quot;,
-    &quot;solvent-recycle-closure-semantics&quot;,
-    &quot;radfrac-extractive-distillation-solvent&quot;,
-    &quot;optimization-constrained-feed-and-recycle-evidence&quot;,
-    &quot;split-handoff-inheritance-boundary&quot;,
-    &quot;rep-derived-metric-consistency&quot;,
-    &quot;annotated-quantities-unit-reconciliation&quot;,
-    &quot;process-comparison-evidence-integrity&quot;,
-    &quot;baseline-calibrated-perturbation-evidence&quot;,
-    &quot;vapor-liquid-outlet-role-validation&quot;,
-    &quot;analysis-method-selection&quot;,
-    &quot;analysis-object-output-repair&quot;
+  "selection_basis": "explicit skill descriptors and exact skill names; no keyword, regex, or free-text matching",
+  "input_skill_names": [
+    "aspen-task-execution-order",
+    "aspen-property-method-selection",
+    "aspen-material-stream-composition-must-be-specified",
+    "functional-role-semantics-validation",
+    "aspen-generic-readbacks",
+    "reactor-reaction-setup-high-level",
+    "sequential-reaction-topology",
+    "native-reactor-module-comparison",
+    "flash-control-chain",
+    "prefer-direct-component-splits",
+    "shared-material-port-topology",
+    "radfrac-absorber-like-configuration",
+    "radfrac-standard-column-pressure-basis",
+    "aspen-completion-error-hints",
+    "aspen-component-radfrac-evidence-repair",
+    "aspen-pump-outlet-specification",
+    "compr-analysis-variable-selection",
+    "aspen-custom-unit-set",
+    "solvent-recycle-closure-semantics",
+    "radfrac-extractive-distillation-solvent",
+    "optimization-constrained-feed-and-recycle-evidence",
+    "split-handoff-inheritance-boundary",
+    "rep-derived-metric-consistency",
+    "annotated-quantities-unit-reconciliation",
+    "process-comparison-evidence-integrity",
+    "baseline-calibrated-perturbation-evidence",
+    "vapor-liquid-outlet-role-validation",
+    "analysis-method-selection",
+    "analysis-object-output-repair"
   ],
-  &quot;selected_skill_names&quot;: [
-    &quot;aspen-task-execution-order&quot;,
-    &quot;aspen-property-method-selection&quot;,
-    &quot;aspen-material-stream-composition-must-be-specified&quot;,
-    &quot;functional-role-semantics-validation&quot;,
-    &quot;aspen-generic-readbacks&quot;,
-    &quot;reactor-reaction-setup-high-level&quot;,
-    &quot;sequential-reaction-topology&quot;,
-    &quot;native-reactor-module-comparison&quot;,
-    &quot;flash-control-chain&quot;,
-    &quot;prefer-direct-component-splits&quot;,
-    &quot;shared-material-port-topology&quot;,
-    &quot;radfrac-absorber-like-configuration&quot;,
-    &quot;radfrac-standard-column-pressure-basis&quot;,
-    &quot;aspen-completion-error-hints&quot;,
-    &quot;aspen-component-radfrac-evidence-repair&quot;,
-    &quot;aspen-pump-outlet-specification&quot;,
-    &quot;compr-analysis-variable-selection&quot;,
-    &quot;aspen-custom-unit-set&quot;,
-    &quot;solvent-recycle-closure-semantics&quot;,
-    &quot;radfrac-extractive-distillation-solvent&quot;,
-    &quot;optimization-constrained-feed-and-recycle-evidence&quot;,
-    &quot;split-handoff-inheritance-boundary&quot;,
-    &quot;rep-derived-metric-consistency&quot;,
-    &quot;annotated-quantities-unit-reconciliation&quot;,
-    &quot;process-comparison-evidence-integrity&quot;,
-    &quot;baseline-calibrated-perturbation-evidence&quot;,
-    &quot;vapor-liquid-outlet-role-validation&quot;,
-    &quot;analysis-method-selection&quot;,
-    &quot;analysis-object-output-repair&quot;
+  "selected_skill_names": [
+    "aspen-task-execution-order",
+    "aspen-property-method-selection",
+    "aspen-material-stream-composition-must-be-specified",
+    "functional-role-semantics-validation",
+    "aspen-generic-readbacks",
+    "reactor-reaction-setup-high-level",
+    "sequential-reaction-topology",
+    "native-reactor-module-comparison",
+    "flash-control-chain",
+    "prefer-direct-component-splits",
+    "shared-material-port-topology",
+    "radfrac-absorber-like-configuration",
+    "radfrac-standard-column-pressure-basis",
+    "aspen-completion-error-hints",
+    "aspen-component-radfrac-evidence-repair",
+    "aspen-pump-outlet-specification",
+    "compr-analysis-variable-selection",
+    "aspen-custom-unit-set",
+    "solvent-recycle-closure-semantics",
+    "radfrac-extractive-distillation-solvent",
+    "optimization-constrained-feed-and-recycle-evidence",
+    "split-handoff-inheritance-boundary",
+    "rep-derived-metric-consistency",
+    "annotated-quantities-unit-reconciliation",
+    "process-comparison-evidence-integrity",
+    "baseline-calibrated-perturbation-evidence",
+    "vapor-liquid-outlet-role-validation",
+    "analysis-method-selection",
+    "analysis-object-output-repair"
   ],
-  &quot;decisions&quot;: [
+  "decisions": [
     {
-      &quot;input_skill&quot;: &quot;aspen-task-execution-order&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-task-execution-order&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "aspen-task-execution-order",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-task-execution-order",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-property-method-selection&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-property-method-selection&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;aspen-property-method-selection&quot;,
-        &quot;summary&quot;: &quot;Preserve methods; verify global/SRK free-water setup.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "aspen-property-method-selection",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-property-method-selection",
+      "descriptor": {
+        "name": "aspen-property-method-selection",
+        "summary": "Preserve methods; verify global/SRK free-water setup.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-material-stream-composition-must-be-specified&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-material-stream-composition-must-be-specified&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;aspen-material-stream-composition-must-be-specified&quot;,
-        &quot;summary&quot;: &quot;Stream basis/state setup and independent-feed enthalpy preservation.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "aspen-material-stream-composition-must-be-specified",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-material-stream-composition-must-be-specified",
+      "descriptor": {
+        "name": "aspen-material-stream-composition-must-be-specified",
+        "summary": "Stream basis/state setup and independent-feed enthalpy preservation.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;functional-role-semantics-validation&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;functional-role-semantics-validation&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "functional-role-semantics-validation",
+      "decision": "load_for_init",
+      "selected_skill": "functional-role-semantics-validation",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-generic-readbacks&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-generic-readbacks&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;aspen-generic-readbacks&quot;,
-        &quot;summary&quot;: &quot;Generic Aspen/REP readbacks for streams, blocks, profiles, duties, and final evidence values.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "aspen-generic-readbacks",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-generic-readbacks",
+      "descriptor": {
+        "name": "aspen-generic-readbacks",
+        "summary": "Generic Aspen/REP readbacks for streams, blocks, profiles, duties, and final evidence values.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;reactor-reaction-setup-high-level&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;reactor-reaction-setup-high-level&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "reactor-reaction-setup-high-level",
+      "decision": "load_for_init",
+      "selected_skill": "reactor-reaction-setup-high-level",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;sequential-reaction-topology&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;sequential-reaction-topology&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "sequential-reaction-topology",
+      "decision": "load_for_init",
+      "selected_skill": "sequential-reaction-topology",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;native-reactor-module-comparison&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;native-reactor-module-comparison&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "native-reactor-module-comparison",
+      "decision": "load_for_init",
+      "selected_skill": "native-reactor-module-comparison",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;flash-control-chain&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;flash-control-chain&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "flash-control-chain",
+      "decision": "load_for_init",
+      "selected_skill": "flash-control-chain",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;prefer-direct-component-splits&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;prefer-direct-component-splits&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "prefer-direct-component-splits",
+      "decision": "load_for_init",
+      "selected_skill": "prefer-direct-component-splits",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;shared-material-port-topology&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;shared-material-port-topology&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "shared-material-port-topology",
+      "decision": "load_for_init",
+      "selected_skill": "shared-material-port-topology",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;radfrac-absorber-like-configuration&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;radfrac-absorber-like-configuration&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "radfrac-absorber-like-configuration",
+      "decision": "load_for_init",
+      "selected_skill": "radfrac-absorber-like-configuration",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;radfrac-standard-column-pressure-basis&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;radfrac-standard-column-pressure-basis&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;radfrac-standard-column-pressure-basis&quot;,
-        &quot;summary&quot;: &quot;RadFrac pressure anchor and pressure-drop basis for standard distillation columns.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [
-          &quot;RADFRAC&quot;
+      "input_skill": "radfrac-standard-column-pressure-basis",
+      "decision": "load_for_init",
+      "selected_skill": "radfrac-standard-column-pressure-basis",
+      "descriptor": {
+        "name": "radfrac-standard-column-pressure-basis",
+        "summary": "RadFrac pressure anchor and pressure-drop basis for standard distillation columns.",
+        "stage": "init+repair",
+        "required_families": [
+          "RADFRAC"
         ],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-completion-error-hints&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-completion-error-hints&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;aspen-completion-error-hints&quot;,
-        &quot;summary&quot;: &quot;Completion/PER_ERROR repairs; SRK uses configure_srk_free_water_steamnbs.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "aspen-completion-error-hints",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-completion-error-hints",
+      "descriptor": {
+        "name": "aspen-completion-error-hints",
+        "summary": "Completion/PER_ERROR repairs; SRK uses configure_srk_free_water_steamnbs.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-component-radfrac-evidence-repair&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-component-radfrac-evidence-repair&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "aspen-component-radfrac-evidence-repair",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-component-radfrac-evidence-repair",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-pump-outlet-specification&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-pump-outlet-specification&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "aspen-pump-outlet-specification",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-pump-outlet-specification",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;compr-analysis-variable-selection&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;compr-analysis-variable-selection&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;compr-analysis-variable-selection&quot;,
-        &quot;summary&quot;: &quot;Compressor selected-row pressure/power identity, units, and replay evidence.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "compr-analysis-variable-selection",
+      "decision": "load_for_init",
+      "selected_skill": "compr-analysis-variable-selection",
+      "descriptor": {
+        "name": "compr-analysis-variable-selection",
+        "summary": "Compressor selected-row pressure/power identity, units, and replay evidence.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;aspen-custom-unit-set&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;aspen-custom-unit-set&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "aspen-custom-unit-set",
+      "decision": "load_for_init",
+      "selected_skill": "aspen-custom-unit-set",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;solvent-recycle-closure-semantics&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;solvent-recycle-closure-semantics&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "solvent-recycle-closure-semantics",
+      "decision": "load_for_init",
+      "selected_skill": "solvent-recycle-closure-semantics",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;radfrac-extractive-distillation-solvent&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;radfrac-extractive-distillation-solvent&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "radfrac-extractive-distillation-solvent",
+      "decision": "load_for_init",
+      "selected_skill": "radfrac-extractive-distillation-solvent",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;optimization-constrained-feed-and-recycle-evidence&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;optimization-constrained-feed-and-recycle-evidence&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "optimization-constrained-feed-and-recycle-evidence",
+      "decision": "load_for_init",
+      "selected_skill": "optimization-constrained-feed-and-recycle-evidence",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;split-handoff-inheritance-boundary&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;split-handoff-inheritance-boundary&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "split-handoff-inheritance-boundary",
+      "decision": "load_for_init",
+      "selected_skill": "split-handoff-inheritance-boundary",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;rep-derived-metric-consistency&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;rep-derived-metric-consistency&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;rep-derived-metric-consistency&quot;,
-        &quot;summary&quot;: &quot;Derived metric consistency from trusted REP/readback raw values with explicit units and formulas.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "rep-derived-metric-consistency",
+      "decision": "load_for_init",
+      "selected_skill": "rep-derived-metric-consistency",
+      "descriptor": {
+        "name": "rep-derived-metric-consistency",
+        "summary": "Derived metric consistency from trusted REP/readback raw values with explicit units and formulas.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;annotated-quantities-unit-reconciliation&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;annotated-quantities-unit-reconciliation&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;annotated-quantities-unit-reconciliation&quot;,
-        &quot;summary&quot;: &quot;Actual readback units, registry conversions, and RYield percent/fraction yield basis.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "annotated-quantities-unit-reconciliation",
+      "decision": "load_for_init",
+      "selected_skill": "annotated-quantities-unit-reconciliation",
+      "descriptor": {
+        "name": "annotated-quantities-unit-reconciliation",
+        "summary": "Actual readback units, registry conversions, and RYield percent/fraction yield basis.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;process-comparison-evidence-integrity&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;process-comparison-evidence-integrity&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;process-comparison-evidence-integrity&quot;,
-        &quot;summary&quot;: &quot;Distinct branch specs, superseded-spec removal, and same-basis recovery comparisons.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "process-comparison-evidence-integrity",
+      "decision": "load_for_init",
+      "selected_skill": "process-comparison-evidence-integrity",
+      "descriptor": {
+        "name": "process-comparison-evidence-integrity",
+        "summary": "Distinct branch specs, superseded-spec removal, and same-basis recovery comparisons.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;baseline-calibrated-perturbation-evidence&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;baseline-calibrated-perturbation-evidence&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;baseline-calibrated-perturbation-evidence&quot;,
-        &quot;summary&quot;: &quot;Same-basis physical perturbations and explicitly permitted equilibrium surrogate boundaries.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "baseline-calibrated-perturbation-evidence",
+      "decision": "load_for_init",
+      "selected_skill": "baseline-calibrated-perturbation-evidence",
+      "descriptor": {
+        "name": "baseline-calibrated-perturbation-evidence",
+        "summary": "Same-basis physical perturbations and explicitly permitted equilibrium surrogate boundaries.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;vapor-liquid-outlet-role-validation&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;vapor-liquid-outlet-role-validation&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;vapor-liquid-outlet-role-validation&quot;,
-        &quot;summary&quot;: &quot;Native outlet ports plus same-run phase evidence; stream IDs never prove vapor/liquid roles.&quot;,
-        &quot;stage&quot;: &quot;init+repair&quot;,
-        &quot;required_families&quot;: [],
-        &quot;compatible_focus_ids&quot;: [],
-        &quot;compatible_mini_focuses&quot;: [],
-        &quot;init_replacement&quot;: &quot;&quot;,
-        &quot;init_load&quot;: true
+      "input_skill": "vapor-liquid-outlet-role-validation",
+      "decision": "load_for_init",
+      "selected_skill": "vapor-liquid-outlet-role-validation",
+      "descriptor": {
+        "name": "vapor-liquid-outlet-role-validation",
+        "summary": "Native outlet ports plus same-run phase evidence; stream IDs never prove vapor/liquid roles.",
+        "stage": "init+repair",
+        "required_families": [],
+        "compatible_focus_ids": [],
+        "compatible_mini_focuses": [],
+        "init_replacement": "",
+        "init_load": true
       }
     },
     {
-      &quot;input_skill&quot;: &quot;analysis-method-selection&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;analysis-method-selection&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "analysis-method-selection",
+      "decision": "load_for_init",
+      "selected_skill": "analysis-method-selection",
+      "descriptor": {}
     },
     {
-      &quot;input_skill&quot;: &quot;analysis-object-output-repair&quot;,
-      &quot;decision&quot;: &quot;load_for_init&quot;,
-      &quot;selected_skill&quot;: &quot;analysis-object-output-repair&quot;,
-      &quot;descriptor&quot;: {}
+      "input_skill": "analysis-object-output-repair",
+      "decision": "load_for_init",
+      "selected_skill": "analysis-object-output-repair",
+      "descriptor": {}
     }
   ]
 }
@@ -8599,184 +8592,184 @@ Reason: descriptor-based initial skill selection manifest
 Reason: descriptor-based helper catalog selection manifest
 ```text
 {
-  &quot;selection_basis&quot;: &quot;helper catalog descriptors plus exact task-profile families, surface docs, and skill names only; no keyword, regex, path-prefix, or free-text matching&quot;,
-  &quot;profile_families&quot;: [
-    &quot;COMPR&quot;,
-    &quot;FLASH2&quot;,
-    &quot;FSPLIT&quot;,
-    &quot;HEATER&quot;,
-    &quot;PIPE&quot;,
-    &quot;PROPERTY_METHODS&quot;,
-    &quot;PUMP&quot;,
-    &quot;RADFRAC&quot;,
-    &quot;RSTOIC&quot;,
-    &quot;VALVE&quot;
+  "selection_basis": "helper catalog descriptors plus exact task-profile families, surface docs, and skill names only; no keyword, regex, path-prefix, or free-text matching",
+  "profile_families": [
+    "COMPR",
+    "FLASH2",
+    "FSPLIT",
+    "HEATER",
+    "PIPE",
+    "PROPERTY_METHODS",
+    "PUMP",
+    "RADFRAC",
+    "RSTOIC",
+    "VALVE"
   ],
-  &quot;profile_surface_docs&quot;: [
-    &quot;docs/hardcoded_script_plan/block_type_inject/compr.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/flash2.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/fsplit.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/heater.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/pipe.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/property_methods.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/pump.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/radfrac.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/rstoic.md&quot;,
-    &quot;docs/hardcoded_script_plan/block_type_inject/valve.md&quot;
+  "profile_surface_docs": [
+    "docs/hardcoded_script_plan/block_type_inject/compr.md",
+    "docs/hardcoded_script_plan/block_type_inject/flash2.md",
+    "docs/hardcoded_script_plan/block_type_inject/fsplit.md",
+    "docs/hardcoded_script_plan/block_type_inject/heater.md",
+    "docs/hardcoded_script_plan/block_type_inject/pipe.md",
+    "docs/hardcoded_script_plan/block_type_inject/property_methods.md",
+    "docs/hardcoded_script_plan/block_type_inject/pump.md",
+    "docs/hardcoded_script_plan/block_type_inject/radfrac.md",
+    "docs/hardcoded_script_plan/block_type_inject/rstoic.md",
+    "docs/hardcoded_script_plan/block_type_inject/valve.md"
   ],
-  &quot;profile_skill_names&quot;: [
-    &quot;aspen-completion-error-hints&quot;,
-    &quot;aspen-component-radfrac-evidence-repair&quot;,
-    &quot;aspen-custom-unit-set&quot;,
-    &quot;aspen-generic-readbacks&quot;,
-    &quot;aspen-material-stream-composition-must-be-specified&quot;,
-    &quot;aspen-property-method-selection&quot;,
-    &quot;aspen-pump-outlet-specification&quot;,
-    &quot;aspen-task-execution-order&quot;,
-    &quot;compr-analysis-variable-selection&quot;,
-    &quot;flash-control-chain&quot;,
-    &quot;functional-role-semantics-validation&quot;,
-    &quot;native-reactor-module-comparison&quot;,
-    &quot;optimization-constrained-feed-and-recycle-evidence&quot;,
-    &quot;prefer-direct-component-splits&quot;,
-    &quot;radfrac-absorber-like-configuration&quot;,
-    &quot;radfrac-extractive-distillation-solvent&quot;,
-    &quot;radfrac-standard-column-pressure-basis&quot;,
-    &quot;reactor-reaction-setup-high-level&quot;,
-    &quot;rep-derived-metric-consistency&quot;,
-    &quot;sequential-reaction-topology&quot;,
-    &quot;shared-material-port-topology&quot;,
-    &quot;solvent-recycle-closure-semantics&quot;,
-    &quot;split-handoff-inheritance-boundary&quot;
+  "profile_skill_names": [
+    "aspen-completion-error-hints",
+    "aspen-component-radfrac-evidence-repair",
+    "aspen-custom-unit-set",
+    "aspen-generic-readbacks",
+    "aspen-material-stream-composition-must-be-specified",
+    "aspen-property-method-selection",
+    "aspen-pump-outlet-specification",
+    "aspen-task-execution-order",
+    "compr-analysis-variable-selection",
+    "flash-control-chain",
+    "functional-role-semantics-validation",
+    "native-reactor-module-comparison",
+    "optimization-constrained-feed-and-recycle-evidence",
+    "prefer-direct-component-splits",
+    "radfrac-absorber-like-configuration",
+    "radfrac-extractive-distillation-solvent",
+    "radfrac-standard-column-pressure-basis",
+    "reactor-reaction-setup-high-level",
+    "rep-derived-metric-consistency",
+    "sequential-reaction-topology",
+    "shared-material-port-topology",
+    "solvent-recycle-closure-semantics",
+    "split-handoff-inheritance-boundary"
   ],
-  &quot;selected_helper_catalog_paths&quot;: [
-    &quot;docs/hardcoded_script_plan/safe_aspen_calls_core_helpers.md&quot;,
-    &quot;docs/hardcoded_script_plan/safe_aspen_calls_analysis_helpers.md&quot;,
-    &quot;docs/hardcoded_script_plan/safe_aspen_calls_radfrac_helpers.md&quot;,
-    &quot;docs/hardcoded_script_plan/safe_aspen_calls_heat_cascade_helpers.md&quot;
+  "selected_helper_catalog_paths": [
+    "docs/hardcoded_script_plan/safe_aspen_calls_core_helpers.md",
+    "docs/hardcoded_script_plan/safe_aspen_calls_analysis_helpers.md",
+    "docs/hardcoded_script_plan/safe_aspen_calls_radfrac_helpers.md",
+    "docs/hardcoded_script_plan/safe_aspen_calls_heat_cascade_helpers.md"
   ],
-  &quot;decisions&quot;: [
+  "decisions": [
     {
-      &quot;helper_catalog&quot;: &quot;core&quot;,
-      &quot;decision&quot;: &quot;load&quot;,
-      &quot;reason&quot;: &quot;always_load&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;core&quot;,
-        &quot;path&quot;: &quot;docs/hardcoded_script_plan/safe_aspen_calls_core_helpers.md&quot;,
-        &quot;summary&quot;: &quot;Always-loaded session, component/property, stream state, run/export, and finalization helpers.&quot;,
-        &quot;stage&quot;: &quot;init&quot;,
-        &quot;required_families_any&quot;: [],
-        &quot;required_surface_docs_any&quot;: [],
-        &quot;required_skill_names_any&quot;: [],
-        &quot;always_load&quot;: true
+      "helper_catalog": "core",
+      "decision": "load",
+      "reason": "always_load",
+      "descriptor": {
+        "name": "core",
+        "path": "docs/hardcoded_script_plan/safe_aspen_calls_core_helpers.md",
+        "summary": "Always-loaded session, component/property, stream state, run/export, and finalization helpers.",
+        "stage": "init",
+        "required_families_any": [],
+        "required_surface_docs_any": [],
+        "required_skill_names_any": [],
+        "always_load": true
       }
     },
     {
-      &quot;helper_catalog&quot;: &quot;analysis&quot;,
-      &quot;decision&quot;: &quot;load&quot;,
-      &quot;reason&quot;: &quot;matched_exact_skill_names:[&#x27;optimization-constrained-feed-and-recycle-evidence&#x27;]&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;analysis&quot;,
-        &quot;path&quot;: &quot;docs/hardcoded_script_plan/safe_aspen_calls_analysis_helpers.md&quot;,
-        &quot;summary&quot;: &quot;Native Design Spec, Sensitivity, and Optimization helper contracts.&quot;,
-        &quot;stage&quot;: &quot;init&quot;,
-        &quot;required_families_any&quot;: [
-          &quot;CONSTRAINT&quot;,
-          &quot;DESIGN_SPEC&quot;,
-          &quot;OPTIMIZATION&quot;,
-          &quot;SENSITIVITY&quot;
+      "helper_catalog": "analysis",
+      "decision": "load",
+      "reason": "matched_exact_skill_names:['optimization-constrained-feed-and-recycle-evidence']",
+      "descriptor": {
+        "name": "analysis",
+        "path": "docs/hardcoded_script_plan/safe_aspen_calls_analysis_helpers.md",
+        "summary": "Native Design Spec, Sensitivity, and Optimization helper contracts.",
+        "stage": "init",
+        "required_families_any": [
+          "CONSTRAINT",
+          "DESIGN_SPEC",
+          "OPTIMIZATION",
+          "SENSITIVITY"
         ],
-        &quot;required_surface_docs_any&quot;: [
-          &quot;docs/hardcoded_script_plan/block_type_inject/constraint.md&quot;,
-          &quot;docs/hardcoded_script_plan/block_type_inject/design_spec.md&quot;,
-          &quot;docs/hardcoded_script_plan/block_type_inject/optimization.md&quot;,
-          &quot;docs/hardcoded_script_plan/block_type_inject/sensitivity.md&quot;
+        "required_surface_docs_any": [
+          "docs/hardcoded_script_plan/block_type_inject/constraint.md",
+          "docs/hardcoded_script_plan/block_type_inject/design_spec.md",
+          "docs/hardcoded_script_plan/block_type_inject/optimization.md",
+          "docs/hardcoded_script_plan/block_type_inject/sensitivity.md"
         ],
-        &quot;required_skill_names_any&quot;: [
-          &quot;analysis-method-selection&quot;,
-          &quot;analysis-object-output-repair&quot;,
-          &quot;analysis-object-transaction-finalization&quot;,
-          &quot;analysis-tools-single-pass-finalization&quot;,
-          &quot;design-spec-manipulated-surface-selection&quot;,
-          &quot;optimization-constrained-feed-and-recycle-evidence&quot;,
-          &quot;optimization-manipulated-variable-selection&quot;,
-          &quot;optimization-result-authenticity&quot;,
-          &quot;sensitivity-uom-and-variable-setup&quot;,
-          &quot;sensitivity-vary-patterns&quot;
+        "required_skill_names_any": [
+          "analysis-method-selection",
+          "analysis-object-output-repair",
+          "analysis-object-transaction-finalization",
+          "analysis-tools-single-pass-finalization",
+          "design-spec-manipulated-surface-selection",
+          "optimization-constrained-feed-and-recycle-evidence",
+          "optimization-manipulated-variable-selection",
+          "optimization-result-authenticity",
+          "sensitivity-uom-and-variable-setup",
+          "sensitivity-vary-patterns"
         ],
-        &quot;always_load&quot;: false
+        "always_load": false
       }
     },
     {
-      &quot;helper_catalog&quot;: &quot;radfrac&quot;,
-      &quot;decision&quot;: &quot;load&quot;,
-      &quot;reason&quot;: &quot;matched_explicit_profile_families:[&#x27;RADFRAC&#x27;]&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;radfrac&quot;,
-        &quot;path&quot;: &quot;docs/hardcoded_script_plan/safe_aspen_calls_radfrac_helpers.md&quot;,
-        &quot;summary&quot;: &quot;RadFrac setup, feed convention, profile, and product/readback helper contracts.&quot;,
-        &quot;stage&quot;: &quot;init&quot;,
-        &quot;required_families_any&quot;: [
-          &quot;RADFRAC&quot;
+      "helper_catalog": "radfrac",
+      "decision": "load",
+      "reason": "matched_explicit_profile_families:['RADFRAC']",
+      "descriptor": {
+        "name": "radfrac",
+        "path": "docs/hardcoded_script_plan/safe_aspen_calls_radfrac_helpers.md",
+        "summary": "RadFrac setup, feed convention, profile, and product/readback helper contracts.",
+        "stage": "init",
+        "required_families_any": [
+          "RADFRAC"
         ],
-        &quot;required_surface_docs_any&quot;: [
-          &quot;docs/hardcoded_script_plan/block_type_inject/radfrac.md&quot;
+        "required_surface_docs_any": [
+          "docs/hardcoded_script_plan/block_type_inject/radfrac.md"
         ],
-        &quot;required_skill_names_any&quot;: [
-          &quot;radfrac-absorber-like-configuration&quot;,
-          &quot;radfrac-convergence-repair&quot;,
-          &quot;radfrac-extractive-distillation-solvent&quot;,
-          &quot;radfrac-no-condenser-reboiled-bottoms&quot;,
-          &quot;radfrac-standard-column-pressure-basis&quot;,
-          &quot;solvent-recycle-closure-semantics&quot;
+        "required_skill_names_any": [
+          "radfrac-absorber-like-configuration",
+          "radfrac-convergence-repair",
+          "radfrac-extractive-distillation-solvent",
+          "radfrac-no-condenser-reboiled-bottoms",
+          "radfrac-standard-column-pressure-basis",
+          "solvent-recycle-closure-semantics"
         ],
-        &quot;always_load&quot;: false
+        "always_load": false
       }
     },
     {
-      &quot;helper_catalog&quot;: &quot;heat_cascade&quot;,
-      &quot;decision&quot;: &quot;load&quot;,
-      &quot;reason&quot;: &quot;matched_explicit_profile_families:[&#x27;FLASH2&#x27;]&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;heat_cascade&quot;,
-        &quot;path&quot;: &quot;docs/hardcoded_script_plan/safe_aspen_calls_heat_cascade_helpers.md&quot;,
-        &quot;summary&quot;: &quot;Heat stream, HeatX, MHeatX, Flash2 evaporator, and multi-effect heat-cascade helpers.&quot;,
-        &quot;stage&quot;: &quot;init&quot;,
-        &quot;required_families_any&quot;: [
-          &quot;FLASH2&quot;,
-          &quot;HEATX&quot;,
-          &quot;HEAT_STREAM&quot;,
-          &quot;MHEATX&quot;
+      "helper_catalog": "heat_cascade",
+      "decision": "load",
+      "reason": "matched_explicit_profile_families:['FLASH2']",
+      "descriptor": {
+        "name": "heat_cascade",
+        "path": "docs/hardcoded_script_plan/safe_aspen_calls_heat_cascade_helpers.md",
+        "summary": "Heat stream, HeatX, MHeatX, Flash2 evaporator, and multi-effect heat-cascade helpers.",
+        "stage": "init",
+        "required_families_any": [
+          "FLASH2",
+          "HEATX",
+          "HEAT_STREAM",
+          "MHEATX"
         ],
-        &quot;required_surface_docs_any&quot;: [
-          &quot;docs/hardcoded_script_plan/block_type_inject/flash2.md&quot;,
-          &quot;docs/hardcoded_script_plan/block_type_inject/heat_stream.md&quot;,
-          &quot;docs/hardcoded_script_plan/block_type_inject/heatx.md&quot;,
-          &quot;docs/hardcoded_script_plan/block_type_inject/mheatx.md&quot;
+        "required_surface_docs_any": [
+          "docs/hardcoded_script_plan/block_type_inject/flash2.md",
+          "docs/hardcoded_script_plan/block_type_inject/heat_stream.md",
+          "docs/hardcoded_script_plan/block_type_inject/heatx.md",
+          "docs/hardcoded_script_plan/block_type_inject/mheatx.md"
         ],
-        &quot;required_skill_names_any&quot;: [
-          &quot;flash-control-chain&quot;,
-          &quot;heatx-shortcut-target-and-area&quot;,
-          &quot;multi-effect-evaporation-heatx&quot;,
-          &quot;multi-effect-topology-init&quot;,
-          &quot;phase-change-heat-cascade-integrity&quot;
+        "required_skill_names_any": [
+          "flash-control-chain",
+          "heatx-shortcut-target-and-area",
+          "multi-effect-evaporation-heatx",
+          "multi-effect-topology-init",
+          "phase-change-heat-cascade-integrity"
         ],
-        &quot;always_load&quot;: false
+        "always_load": false
       }
     },
     {
-      &quot;helper_catalog&quot;: &quot;probe&quot;,
-      &quot;decision&quot;: &quot;skip&quot;,
-      &quot;reason&quot;: &quot;no explicit descriptor condition matched for init&quot;,
-      &quot;descriptor&quot;: {
-        &quot;name&quot;: &quot;probe&quot;,
-        &quot;path&quot;: &quot;docs/hardcoded_script_plan/safe_aspen_calls_probe_helpers.md&quot;,
-        &quot;summary&quot;: &quot;Standard procedural probe matrix and selected-row replay helper contracts.&quot;,
-        &quot;stage&quot;: &quot;repair&quot;,
-        &quot;required_families_any&quot;: [],
-        &quot;required_surface_docs_any&quot;: [],
-        &quot;required_skill_names_any&quot;: [],
-        &quot;always_load&quot;: false
+      "helper_catalog": "probe",
+      "decision": "skip",
+      "reason": "no explicit descriptor condition matched for init",
+      "descriptor": {
+        "name": "probe",
+        "path": "docs/hardcoded_script_plan/safe_aspen_calls_probe_helpers.md",
+        "summary": "Standard procedural probe matrix and selected-row replay helper contracts.",
+        "stage": "repair",
+        "required_families_any": [],
+        "required_surface_docs_any": [],
+        "required_skill_names_any": [],
+        "always_load": false
       }
     }
   ]
@@ -8790,317 +8783,317 @@ Reason: planner-selected static block port catalog
 
 ```json
 {
-  &quot;purpose&quot;: &quot;Static block-port hints selected by planner block types. Live list_block_ports remains authoritative.&quot;,
-  &quot;usage_rules&quot;: [
-    &quot;Use this table to choose likely material ports before wiring; always confirm with list_block_ports on the live block.&quot;,
-    &quot;Use safe.extract_block_ports(...) for list_block_ports payloads. If it returns empty, log/inspect the raw payload before concluding that the block has no ports; some wrappers return ports as lists or under nested result/payload keys.&quot;,
-    &quot;In live list_block_ports results, real port names are usually the keys of result[&#x27;ports&#x27;]; never parse the human message such as &#x27;Found 11 port(s)&#x27; as a port name.&quot;,
-    &quot;F(IN) and P(OUT) may be shared material collection ports for Mixer/FSplit-like blocks.&quot;,
-    &quot;Q/W/HS/CS/HIN/HOUT/CIN/COUT/PS and similar tokens are heat/work/special ports, not ordinary material streams.&quot;,
-    &quot;Prefer connect_shared_material_port_block for shared-inlet mixers and configure_fsplit_shared_outlets for shared-outlet splits.&quot;,
-    &quot;For DSTWU and RadFrac, connect feed/product material ports before pressure, reflux, basis, or product specs; an unconnected column can cascade into misleading available=[] errors.&quot;,
-    &quot;For RadFrac ordinary two-product columns, prefer connect_radfrac_feed_distillate_bottoms instead of generic one-in/one-out helpers.&quot;,
-    &quot;For PetroFrac, prefer connect_petrofrac_material_stream role mappings; split manual topology streams from configure_petrofrac_* bundle-owned streams. PetroFrac WD(OUT) is an overhead free-water material outlet and PS(OUT) is a pumparound pseudo-material outlet.&quot;,
-    &quot;For HeatX, preserve hot/cold role semantics; do not sort H/C ports alphabetically.&quot;,
-    &quot;For MHeatX, prefer configure_mheatx_multi_stream for one-hot/N-cold routing; it owns shared HF/HP/CF/CP connections, set_out pairings, and branch specs.&quot;
+  "purpose": "Static block-port hints selected by planner block types. Live list_block_ports remains authoritative.",
+  "usage_rules": [
+    "Use this table to choose likely material ports before wiring; always confirm with list_block_ports on the live block.",
+    "Use safe.extract_block_ports(...) for list_block_ports payloads. If it returns empty, log/inspect the raw payload before concluding that the block has no ports; some wrappers return ports as lists or under nested result/payload keys.",
+    "In live list_block_ports results, real port names are usually the keys of result['ports']; never parse the human message such as 'Found 11 port(s)' as a port name.",
+    "F(IN) and P(OUT) may be shared material collection ports for Mixer/FSplit-like blocks.",
+    "Q/W/HS/CS/HIN/HOUT/CIN/COUT/PS and similar tokens are heat/work/special ports, not ordinary material streams.",
+    "Prefer connect_shared_material_port_block for shared-inlet mixers and configure_fsplit_shared_outlets for shared-outlet splits.",
+    "For DSTWU and RadFrac, connect feed/product material ports before pressure, reflux, basis, or product specs; an unconnected column can cascade into misleading available=[] errors.",
+    "For RadFrac ordinary two-product columns, prefer connect_radfrac_feed_distillate_bottoms instead of generic one-in/one-out helpers.",
+    "For PetroFrac, prefer connect_petrofrac_material_stream role mappings; split manual topology streams from configure_petrofrac_* bundle-owned streams. PetroFrac WD(OUT) is an overhead free-water material outlet and PS(OUT) is a pumparound pseudo-material outlet.",
+    "For HeatX, preserve hot/cold role semantics; do not sort H/C ports alphabetically.",
+    "For MHeatX, prefer configure_mheatx_multi_stream for one-hot/N-cold routing; it owns shared HF/HP/CF/CP connections, set_out pairings, and branch specs."
   ],
-  &quot;block_ports&quot;: {
-    &quot;Pump&quot;: {
-      &quot;family&quot;: &quot;PUMP&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;P(OUT)&quot;,
-        &quot;WD(OUT)&quot;,
-        &quot;WS(IN)&quot;,
-        &quot;WS(OUT)&quot;
+  "block_ports": {
+    "Pump": {
+      "family": "PUMP",
+      "ports": [
+        "F(IN)",
+        "P(OUT)",
+        "WD(OUT)",
+        "WS(IN)",
+        "WS(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;WD(OUT)&quot;,
-          &quot;WS(IN)&quot;,
-          &quot;WS(OUT)&quot;
+        "heat_work_or_special": [
+          "WD(OUT)",
+          "WS(IN)",
+          "WS(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Material F(IN)/P(OUT); work W ports are not material streams.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;product&quot;: &quot;P(OUT)&quot;
+      "special_note": "Material F(IN)/P(OUT); work W ports are not material streams.",
+      "connection_guidance": {
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "product": "P(OUT)"
         },
-        &quot;special_ports&quot;: {
-          &quot;WS/WD&quot;: &quot;work streams&quot;
+        "special_ports": {
+          "WS/WD": "work streams"
         }
       }
     },
-    &quot;Heater&quot;: {
-      &quot;family&quot;: &quot;HEATER&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;HS(IN)&quot;,
-        &quot;HS(OUT)&quot;,
-        &quot;P(OUT)&quot;,
-        &quot;WD(OUT)&quot;
+    "Heater": {
+      "family": "HEATER",
+      "ports": [
+        "F(IN)",
+        "HS(IN)",
+        "HS(OUT)",
+        "P(OUT)",
+        "WD(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;HS(IN)&quot;,
-          &quot;HS(OUT)&quot;,
-          &quot;WD(OUT)&quot;
+        "heat_work_or_special": [
+          "HS(IN)",
+          "HS(OUT)",
+          "WD(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Material F(IN)/P(OUT); heat Q ports are not material streams.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;product&quot;: &quot;P(OUT)&quot;
+      "special_note": "Material F(IN)/P(OUT); heat Q ports are not material streams.",
+      "connection_guidance": {
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "product": "P(OUT)"
         },
-        &quot;special_ports&quot;: {
-          &quot;HS/WD&quot;: &quot;heat/work streams&quot;
+        "special_ports": {
+          "HS/WD": "heat/work streams"
         }
       }
     },
-    &quot;RStoic&quot;: {
-      &quot;family&quot;: &quot;RSTOIC&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;HS(IN)&quot;,
-        &quot;HS(OUT)&quot;,
-        &quot;P(OUT)&quot;
+    "RStoic": {
+      "family": "RSTOIC",
+      "ports": [
+        "F(IN)",
+        "HS(IN)",
+        "HS(OUT)",
+        "P(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;HS(IN)&quot;,
-          &quot;HS(OUT)&quot;
+        "heat_work_or_special": [
+          "HS(IN)",
+          "HS(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Material F(IN)/P(OUT); HS ports are heat streams. Connect feed/product first, then set reaction stoichiometry and operating flash spec.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;product&quot;: &quot;P(OUT)&quot;
+      "special_note": "Material F(IN)/P(OUT); HS ports are heat streams. Connect feed/product first, then set reaction stoichiometry and operating flash spec.",
+      "connection_guidance": {
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "product": "P(OUT)"
         }
       }
     },
-    &quot;FSplit&quot;: {
-      &quot;family&quot;: &quot;FSPLIT&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;HS(IN)&quot;,
-        &quot;HS(OUT)&quot;,
-        &quot;P(OUT)&quot;,
-        &quot;PS(IN)&quot;,
-        &quot;PS(OUT)&quot;,
-        &quot;WS(IN)&quot;,
-        &quot;WS(OUT)&quot;
+    "FSplit": {
+      "family": "FSPLIT",
+      "ports": [
+        "F(IN)",
+        "HS(IN)",
+        "HS(OUT)",
+        "P(OUT)",
+        "PS(IN)",
+        "PS(OUT)",
+        "WS(IN)",
+        "WS(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;HS(IN)&quot;,
-          &quot;HS(OUT)&quot;,
-          &quot;PS(IN)&quot;,
-          &quot;PS(OUT)&quot;,
-          &quot;WS(IN)&quot;,
-          &quot;WS(OUT)&quot;
+        "heat_work_or_special": [
+          "HS(IN)",
+          "HS(OUT)",
+          "PS(IN)",
+          "PS(OUT)",
+          "WS(IN)",
+          "WS(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Multiple product streams usually share one P(OUT) material collection port; prefer connect_shared_material_port_block or configure_fsplit_shared_outlets.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;preferred_helper&quot;: &quot;configure_fsplit_shared_outlets&quot;,
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;products&quot;: &quot;P(OUT)&quot;
+      "special_note": "Multiple product streams usually share one P(OUT) material collection port; prefer connect_shared_material_port_block or configure_fsplit_shared_outlets.",
+      "connection_guidance": {
+        "preferred_helper": "configure_fsplit_shared_outlets",
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "products": "P(OUT)"
         }
       }
     },
-    &quot;Flash2&quot;: {
-      &quot;family&quot;: &quot;FLASH2&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;HS(IN)&quot;,
-        &quot;HS(OUT)&quot;,
-        &quot;L(OUT)&quot;,
-        &quot;V(OUT)&quot;,
-        &quot;WD(OUT)&quot;
+    "Flash2": {
+      "family": "FLASH2",
+      "ports": [
+        "F(IN)",
+        "HS(IN)",
+        "HS(OUT)",
+        "L(OUT)",
+        "V(OUT)",
+        "WD(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;L(OUT)&quot;,
-          &quot;V(OUT)&quot;
+        "material_outlets": [
+          "L(OUT)",
+          "V(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;HS(IN)&quot;,
-          &quot;HS(OUT)&quot;,
-          &quot;WD(OUT)&quot;
+        "heat_work_or_special": [
+          "HS(IN)",
+          "HS(OUT)",
+          "WD(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Feed F(IN); vapor V(OUT); liquid L(OUT). Do not use one-in/one-out helpers for phase-split products.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;preferred_helper&quot;: &quot;connect_flash2_vapor_liquid_ports&quot;,
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;vapor&quot;: &quot;V(OUT)&quot;,
-          &quot;liquid&quot;: &quot;L(OUT)&quot;
+      "special_note": "Feed F(IN); vapor V(OUT); liquid L(OUT). Do not use one-in/one-out helpers for phase-split products.",
+      "connection_guidance": {
+        "preferred_helper": "connect_flash2_vapor_liquid_ports",
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "vapor": "V(OUT)",
+          "liquid": "L(OUT)"
         }
       }
     },
-    &quot;RadFrac&quot;: {
-      &quot;family&quot;: &quot;RADFRAC&quot;,
-      &quot;ports&quot;: [
-        &quot;B(OUT)&quot;,
-        &quot;CHS(OUT)&quot;,
-        &quot;F(IN)&quot;,
-        &quot;HS(IN)&quot;,
-        &quot;HS(OUT)&quot;,
-        &quot;LD(OUT)&quot;,
-        &quot;PS(OUT)&quot;,
-        &quot;RHS(OUT)&quot;,
-        &quot;SP(OUT)&quot;,
-        &quot;VD(OUT)&quot;,
-        &quot;WD(OUT)&quot;
+    "RadFrac": {
+      "family": "RADFRAC",
+      "ports": [
+        "B(OUT)",
+        "CHS(OUT)",
+        "F(IN)",
+        "HS(IN)",
+        "HS(OUT)",
+        "LD(OUT)",
+        "PS(OUT)",
+        "RHS(OUT)",
+        "SP(OUT)",
+        "VD(OUT)",
+        "WD(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;B(OUT)&quot;,
-          &quot;LD(OUT)&quot;,
-          &quot;SP(OUT)&quot;,
-          &quot;VD(OUT)&quot;
+        "material_outlets": [
+          "B(OUT)",
+          "LD(OUT)",
+          "SP(OUT)",
+          "VD(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;CHS(OUT)&quot;,
-          &quot;HS(IN)&quot;,
-          &quot;HS(OUT)&quot;,
-          &quot;PS(OUT)&quot;,
-          &quot;RHS(OUT)&quot;,
-          &quot;WD(OUT)&quot;
+        "heat_work_or_special": [
+          "CHS(OUT)",
+          "HS(IN)",
+          "HS(OUT)",
+          "PS(OUT)",
+          "RHS(OUT)",
+          "WD(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Rigorous column feed is F(IN); liquid distillate is usually LD(OUT), vapor distillate/overhead may use VD(OUT) or V(OUT), and bottoms is B(OUT). CHS/CWS/HS/WS ports are condenser/reboiler heat/work ports, not material streams. Prefer connect_radfrac_feed_distillate_bottoms for ordinary feed/distillate/bottoms wiring and connect topology before column specs.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;preferred_helper&quot;: &quot;connect_radfrac_feed_distillate_bottoms&quot;,
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;liquid_distillate&quot;: &quot;LD(OUT)&quot;,
-          &quot;vapor_overhead&quot;: &quot;VD(OUT)&quot;,
-          &quot;bottoms&quot;: &quot;B(OUT)&quot;
+      "special_note": "Rigorous column feed is F(IN); liquid distillate is usually LD(OUT), vapor distillate/overhead may use VD(OUT) or V(OUT), and bottoms is B(OUT). CHS/CWS/HS/WS ports are condenser/reboiler heat/work ports, not material streams. Prefer connect_radfrac_feed_distillate_bottoms for ordinary feed/distillate/bottoms wiring and connect topology before column specs.",
+      "connection_guidance": {
+        "preferred_helper": "connect_radfrac_feed_distillate_bottoms",
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "liquid_distillate": "LD(OUT)",
+          "vapor_overhead": "VD(OUT)",
+          "bottoms": "B(OUT)"
         },
-        &quot;spec_order&quot;: [
-          &quot;create RadFrac block and material streams&quot;,
-          &quot;connect feed/distillate/bottoms material ports before pressure and column-spec helpers&quot;,
-          &quot;choose LD(OUT) for liquid distillate columns and VD(OUT)/V(OUT) only for vapor overhead service&quot;,
-          &quot;configure condenser/reboiler/stages/feed stage/pressure/specifications&quot;,
-          &quot;run and verify live port readback plus completion before trusting results&quot;
+        "spec_order": [
+          "create RadFrac block and material streams",
+          "connect feed/distillate/bottoms material ports before pressure and column-spec helpers",
+          "choose LD(OUT) for liquid distillate columns and VD(OUT)/V(OUT) only for vapor overhead service",
+          "configure condenser/reboiler/stages/feed stage/pressure/specifications",
+          "run and verify live port readback plus completion before trusting results"
         ]
       }
     },
-    &quot;Pipe&quot;: {
-      &quot;family&quot;: &quot;PIPE&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;P(OUT)&quot;
+    "Pipe": {
+      "family": "PIPE",
+      "ports": [
+        "F(IN)",
+        "P(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [],
-        &quot;other&quot;: []
+        "heat_work_or_special": [],
+        "other": []
       },
-      &quot;special_note&quot;: null
+      "special_note": null
     },
-    &quot;Compr&quot;: {
-      &quot;family&quot;: &quot;COMPR&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;P(OUT)&quot;,
-        &quot;WD(OUT)&quot;,
-        &quot;WS(IN)&quot;,
-        &quot;WS(OUT)&quot;
+    "Compr": {
+      "family": "COMPR",
+      "ports": [
+        "F(IN)",
+        "P(OUT)",
+        "WD(OUT)",
+        "WS(IN)",
+        "WS(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [
-          &quot;WD(OUT)&quot;,
-          &quot;WS(IN)&quot;,
-          &quot;WS(OUT)&quot;
+        "heat_work_or_special": [
+          "WD(OUT)",
+          "WS(IN)",
+          "WS(OUT)"
         ],
-        &quot;other&quot;: []
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Material F(IN)/P(OUT); work ports such as W(IN)/W(OUT) are not material streams.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;product&quot;: &quot;P(OUT)&quot;
+      "special_note": "Material F(IN)/P(OUT); work ports such as W(IN)/W(OUT) are not material streams.",
+      "connection_guidance": {
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "product": "P(OUT)"
         },
-        &quot;special_ports&quot;: {
-          &quot;WS/WD&quot;: &quot;work streams&quot;
+        "special_ports": {
+          "WS/WD": "work streams"
         }
       }
     },
-    &quot;Valve&quot;: {
-      &quot;family&quot;: &quot;VALVE&quot;,
-      &quot;ports&quot;: [
-        &quot;F(IN)&quot;,
-        &quot;P(OUT)&quot;
+    "Valve": {
+      "family": "VALVE",
+      "ports": [
+        "F(IN)",
+        "P(OUT)"
       ],
-      &quot;port_roles&quot;: {
-        &quot;material_inlets&quot;: [
-          &quot;F(IN)&quot;
+      "port_roles": {
+        "material_inlets": [
+          "F(IN)"
         ],
-        &quot;material_outlets&quot;: [
-          &quot;P(OUT)&quot;
+        "material_outlets": [
+          "P(OUT)"
         ],
-        &quot;heat_work_or_special&quot;: [],
-        &quot;other&quot;: []
+        "heat_work_or_special": [],
+        "other": []
       },
-      &quot;special_note&quot;: &quot;Material F(IN)/P(OUT); valve pressure specs are block inputs, not extra material connections.&quot;,
-      &quot;connection_guidance&quot;: {
-        &quot;ordinary_topology&quot;: {
-          &quot;feed&quot;: &quot;F(IN)&quot;,
-          &quot;product&quot;: &quot;P(OUT)&quot;
+      "special_note": "Material F(IN)/P(OUT); valve pressure specs are block inputs, not extra material connections.",
+      "connection_guidance": {
+        "ordinary_topology": {
+          "feed": "F(IN)",
+          "product": "P(OUT)"
         }
       }
     }
@@ -9109,14 +9102,699 @@ Reason: planner-selected static block port catalog
 ```
 
 ```
-</code></pre>
 
-</details>
+````
 
-## Raw model output
+## Model output
 
-<details open><summary>Show output</summary>
+### `python_source`
 
-<pre><code>{&quot;python_source&quot;: &quot;\&quot;\&quot;\&quot;Slim own-agent Aspen script for chinese_5_1.\n\nBuilds the cyclohexane production flowsheet from the task figure using short\nAspen-safe IDs, with a name mapping back to the visible Chinese exercise labels.\nThe slim runtime owns session setup, CLI, final run/export, REP readback, and\nsummary finalization.\n\&quot;\&quot;\&quot;\n\nfrom __future__ import annotations\n\nimport script_agent_exp.safe_aspen_calls as safe\nfrom script_agent_exp.slim_task_runtime import (\n    SlimTaskOutcome,\n    SlimTaskSpec,\n    block_rep_targets,\n    run_slim_task,\n    stream_rep_targets,\n)\n\nSCRIPT_STEM = \&quot;chinese_5_1_own_agent\&quot;\nCASE_ID = \&quot;chinese_5_1\&quot;\n\n# Aspen-safe short IDs. The task/figure labels are preserved in NAME_MAPPING.\nBLOCKS = {\n    \&quot;FEEDPUMP\&quot;: \&quot;FP\&quot;,\n    \&quot;FEED-MIX\&quot;: \&quot;FM\&quot;,\n    \&quot;REACT\&quot;: \&quot;R1\&quot;,\n    \&quot;HP-SEP\&quot;: \&quot;FL\&quot;,\n    \&quot;VFLOW\&quot;: \&quot;VF\&quot;,\n    \&quot;VALVE\&quot;: \&quot;VA\&quot;,\n    \&quot;COMP\&quot;: \&quot;CP\&quot;,\n    \&quot;LFLOW\&quot;: \&quot;LF\&quot;,\n    \&quot;PUMP\&quot;: \&quot;RP\&quot;,\n    \&quot;PIPE\&quot;: \&quot;PI\&quot;,\n    \&quot;COLUMN\&quot;: \&quot;CO\&quot;,\n}\n\nSTREAMS = {\n    \&quot;BZIN\&quot;: \&quot;B1\&quot;,\n    \&quot;BZIN2\&quot;: \&quot;B2\&quot;,\n    \&quot;H2IN\&quot;: \&quot;H1\&quot;,\n    \&quot;H2RCY2\&quot;: \&quot;H4\&quot;,\n    \&quot;RXIN\&quot;: \&quot;R2\&quot;,\n    \&quot;RXOUT\&quot;: \&quot;R3\&quot;,\n    \&quot;VAP\&quot;: \&quot;V1\&quot;,\n    \&quot;H2RCY\&quot;: \&quot;H3\&quot;,\n    \&quot;PURGE\&quot;: \&quot;G1\&quot;,\n    \&quot;PURGE2\&quot;: \&quot;G2\&quot;,\n    \&quot;LIQ\&quot;: \&quot;L1\&quot;,\n    \&quot;COLFD\&quot;: \&quot;C1\&quot;,\n    \&quot;CHRCY\&quot;: \&quot;C2\&quot;,\n    \&quot;CHRCY2\&quot;: \&quot;C3\&quot;,\n    \&quot;CHRCY3\&quot;: \&quot;C4\&quot;,\n    \&quot;LTENDS\&quot;: \&quot;T1\&quot;,\n    \&quot;PRODUCT\&quot;: \&quot;P5\&quot;,\n}\n\nCOMPONENTS = {\n    \&quot;hydrogen\&quot;: \&quot;H2\&quot;,\n    \&quot;nitrogen\&quot;: \&quot;N2\&quot;,\n    \&quot;methane\&quot;: \&quot;METHANE\&quot;,\n    \&quot;benzene\&quot;: \&quot;BENZENE\&quot;,\n    \&quot;cyclohexane\&quot;: \&quot;CYCLOHEX\&quot;,\n}\n\nREQUIRED_STREAMS = tuple(STREAMS.values())\nREQUIRED_BLOCKS = (\n    \&quot;FP\&quot;,\n    \&quot;FM\&quot;,\n    \&quot;R1\&quot;,\n    \&quot;FL\&quot;,\n    \&quot;VF\&quot;,\n    \&quot;VA\&quot;,\n    \&quot;CP\&quot;,\n    \&quot;LF\&quot;,\n    \&quot;RP\&quot;,\n    \&quot;PI\&quot;,\n    \&quot;CO\&quot;,\n)\n\nMATERIAL_EDGES = [\n    {\&quot;stream\&quot;: \&quot;B1\&quot;, \&quot;source\&quot;: None, \&quot;destination\&quot;: \&quot;FP\&quot;},\n    {\&quot;stream\&quot;: \&quot;B2\&quot;, \&quot;source\&quot;: \&quot;FP\&quot;, \&quot;destination\&quot;: \&quot;FM\&quot;},\n    {\&quot;stream\&quot;: \&quot;H1\&quot;, \&quot;source\&quot;: None, \&quot;destination\&quot;: \&quot;FM\&quot;},\n    {\&quot;stream\&quot;: \&quot;H4\&quot;, \&quot;source\&quot;: \&quot;CP\&quot;, \&quot;destination\&quot;: \&quot;FM\&quot;},\n    {\&quot;stream\&quot;: \&quot;C4\&quot;, \&quot;source\&quot;: \&quot;PI\&quot;, \&quot;destination\&quot;: \&quot;FM\&quot;},\n    {\&quot;stream\&quot;: \&quot;R2\&quot;, \&quot;source\&quot;: \&quot;FM\&quot;, \&quot;destination\&quot;: \&quot;R1\&quot;},\n    {\&quot;stream\&quot;: \&quot;R3\&quot;, \&quot;source\&quot;: \&quot;R1\&quot;, \&quot;destination\&quot;: \&quot;FL\&quot;},\n    {\&quot;stream\&quot;: \&quot;V1\&quot;, \&quot;source\&quot;: \&quot;FL\&quot;, \&quot;destination\&quot;: \&quot;VF\&quot;},\n    {\&quot;stream\&quot;: \&quot;H3\&quot;, \&quot;source\&quot;: \&quot;VF\&quot;, \&quot;destination\&quot;: \&quot;CP\&quot;},\n    {\&quot;stream\&quot;: \&quot;G1\&quot;, \&quot;source\&quot;: \&quot;VF\&quot;, \&quot;destination\&quot;: \&quot;VA\&quot;},\n    {\&quot;stream\&quot;: \&quot;G2\&quot;, \&quot;source\&quot;: \&quot;VA\&quot;, \&quot;destination\&quot;: None},\n    {\&quot;stream\&quot;: \&quot;L1\&quot;, \&quot;source\&quot;: \&quot;FL\&quot;, \&quot;destination\&quot;: \&quot;LF\&quot;},\n    {\&quot;stream\&quot;: \&quot;C1\&quot;, \&quot;source\&quot;: \&quot;LF\&quot;, \&quot;destination\&quot;: \&quot;CO\&quot;},\n    {\&quot;stream\&quot;: \&quot;C2\&quot;, \&quot;source\&quot;: \&quot;LF\&quot;, \&quot;destination\&quot;: \&quot;RP\&quot;},\n    {\&quot;stream\&quot;: \&quot;C3\&quot;, \&quot;source\&quot;: \&quot;RP\&quot;, \&quot;destination\&quot;: \&quot;PI\&quot;},\n    {\&quot;stream\&quot;: \&quot;C4\&quot;, \&quot;source\&quot;: \&quot;PI\&quot;, \&quot;destination\&quot;: \&quot;FM\&quot;},\n    {\&quot;stream\&quot;: \&quot;T1\&quot;, \&quot;source\&quot;: \&quot;CO\&quot;, \&quot;destination\&quot;: None},\n    {\&quot;stream\&quot;: \&quot;P5\&quot;, \&quot;source\&quot;: \&quot;CO\&quot;, \&quot;destination\&quot;: None},\n]\n\n# Pump-curve table belongs to FEEDPUMP/FP only. The unlabelled head values are\n# interpreted as metres of liquid head, matching the Chinese table heading [NON-ENGLISH REDACTED].\nFEEDPUMP_CURVE_POINTS = [\n    {\&quot;flow\&quot;: 20.0, \&quot;head\&quot;: 40.0},\n    {\&quot;flow\&quot;: 10.0, \&quot;head\&quot;: 250.0},\n    {\&quot;flow\&quot;: 5.0, \&quot;head\&quot;: 300.0},\n    {\&quot;flow\&quot;: 3.0, \&quot;head\&quot;: 400.0},\n]\n\nNAME_MAPPING = {\n    \&quot;blocks\&quot;: BLOCKS,\n    \&quot;streams\&quot;: STREAMS,\n    \&quot;components\&quot;: {\n        \&quot;H2\&quot;: \&quot;H2\&quot;,\n        \&quot;N2\&quot;: \&quot;N2\&quot;,\n        \&quot;CH4\&quot;: \&quot;METHANE\&quot;,\n        \&quot;C6H6\&quot;: \&quot;BENZENE\&quot;,\n        \&quot;C6H12\&quot;: \&quot;CYCLOHEX\&quot;,\n    },\n}\n\nREP_READBACK_TARGETS = (\n    *stream_rep_targets(\n        (\&quot;P5\&quot;, \&quot;T1\&quot;, \&quot;C1\&quot;, \&quot;V1\&quot;, \&quot;L1\&quot;, \&quot;G2\&quot;, \&quot;H4\&quot;, \&quot;C4\&quot;),\n        components=(\&quot;H2\&quot;, \&quot;N2\&quot;, \&quot;METHANE\&quot;, \&quot;BENZENE\&quot;, \&quot;CYCLOHEX\&quot;),\n        quantities=(\&quot;temperature\&quot;, \&quot;pressure\&quot;, \&quot;vapor_fraction\&quot;, \&quot;total_flow\&quot;, \&quot;component_flow\&quot;),\n    ),\n    *block_rep_targets(\n        {\n            \&quot;CO\&quot;: (\&quot;reflux_ratio\&quot;, \&quot;distillate_flow\&quot;),\n            \&quot;FM\&quot;: (\&quot;block_heat_duty\&quot;,),\n            \&quot;R1\&quot;: (\&quot;block_heat_duty\&quot;,),\n        }\n    ),\n    {\n        \&quot;request_id\&quot;: \&quot;product_cyclohexane_mole_fraction\&quot;,\n        \&quot;kind\&quot;: \&quot;stream\&quot;,\n        \&quot;object_name\&quot;: \&quot;P5\&quot;,\n        \&quot;quantity\&quot;: \&quot;mole_fraction\&quot;,\n        \&quot;component\&quot;: \&quot;CYCLOHEX\&quot;,\n        \&quot;notes\&quot;: \&quot;Primary task result: raw full-material-stream mole fraction of cyclohexane in PRODUCT/P5.\&quot;,\n    },\n    {\n        \&quot;request_id\&quot;: \&quot;reactor_benzene_conversion\&quot;,\n        \&quot;kind\&quot;: \&quot;derived\&quot;,\n        \&quot;object_name\&quot;: \&quot;R1\&quot;,\n        \&quot;quantity\&quot;: \&quot;conversion\&quot;,\n        \&quot;reactant_component\&quot;: \&quot;BENZENE\&quot;,\n        \&quot;inlet_stream\&quot;: \&quot;R2\&quot;,\n        \&quot;outlet_stream\&quot;: \&quot;R3\&quot;,\n        \&quot;notes\&quot;: \&quot;Benzene conversion across REACT/R1 from final Aspen REP stream tables.\&quot;,\n    },\n)\n\nTASK_SPEC = SlimTaskSpec(\n    script_stem=SCRIPT_STEM,\n    required_streams=REQUIRED_STREAMS,\n    required_blocks=REQUIRED_BLOCKS,\n    case_id=CASE_ID,\n    name_mapping=NAME_MAPPING,\n    rep_readback_targets=REP_READBACK_TARGETS,\n    phase=\&quot;analysis\&quot;,\n    inset=\&quot;SI\&quot;,\n    summary_seed={\n        \&quot;task\&quot;: \&quot;Cyclohexane production by benzene hydrogenation; report PRODUCT cyclohexane mole fraction.\&quot;,\n        \&quot;property_method\&quot;: \&quot;RK-SOAVE represented by Aspen SRK/RK-Soave option set with SRK free-water advisory repaired.\&quot;,\n        \&quot;pump_curve_assignment\&quot;: {\n            \&quot;curve_owner\&quot;: \&quot;FEEDPUMP/FP\&quot;,\n            \&quot;not_owner\&quot;: \&quot;PUMP/RP\&quot;,\n            \&quot;flow_unit\&quot;: \&quot;m3/hr\&quot;,\n            \&quot;head_unit_assumption\&quot;: \&quot;m\&quot;,\n            \&quot;points\&quot;: FEEDPUMP_CURVE_POINTS,\n        },\n    },\n)\n\n\ndef _validate_static_plans() -&gt; None:\n    \&quot;\&quot;\&quot;Validate topology and required native-block declarations before Aspen mutation.\&quot;\&quot;\&quot;\n    safe.validate_material_edge_plan(\n        MATERIAL_EDGES,\n        block_names=list(REQUIRED_BLOCKS),\n        stream_names=list(REQUIRED_STREAMS),\n    )\n    safe.validate_required_native_blocks_plan(\n        {\n            \&quot;HEATER\&quot;: [\&quot;FM\&quot;],\n            \&quot;RSTOIC\&quot;: [\&quot;R1\&quot;],\n            \&quot;FLASH2\&quot;: [\&quot;FL\&quot;],\n            \&quot;FSPLIT\&quot;: [\&quot;VF\&quot;, \&quot;LF\&quot;],\n            \&quot;RADFRAC\&quot;: [\&quot;CO\&quot;],\n            \&quot;PUMP\&quot;: [\&quot;FP\&quot;, \&quot;RP\&quot;],\n            \&quot;COMPR\&quot;: [\&quot;CP\&quot;],\n            \&quot;PIPE\&quot;: [\&quot;PI\&quot;],\n            \&quot;VALVE\&quot;: [\&quot;VA\&quot;],\n        },\n        created_blocks_by_family={\n            \&quot;HEATER\&quot;: [\&quot;FM\&quot;],\n            \&quot;RSTOIC\&quot;: [\&quot;R1\&quot;],\n            \&quot;FLASH2\&quot;: [\&quot;FL\&quot;],\n            \&quot;FSPLIT\&quot;: [\&quot;VF\&quot;, \&quot;LF\&quot;],\n            \&quot;RADFRAC\&quot;: [\&quot;CO\&quot;],\n            \&quot;PUMP\&quot;: [\&quot;FP\&quot;, \&quot;RP\&quot;],\n            \&quot;COMPR\&quot;: [\&quot;CP\&quot;],\n            \&quot;PIPE\&quot;: [\&quot;PI\&quot;],\n            \&quot;VALVE\&quot;: [\&quot;VA\&quot;],\n        },\n        finalization_required_blocks=list(REQUIRED_BLOCKS),\n    )\n\n\ndef _setup_components_and_property(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Land the real components and RK-SOAVE/SRK thermodynamic method.\&quot;\&quot;\&quot;\n    client = runtime.client\n    runtime.stage(\n        \&quot;add_components_by_cas\&quot;,\n        lambda: client.invoke(\n            \&quot;add_components_by_cas\&quot;,\n            components=[\n                {\&quot;component_id\&quot;: \&quot;H2\&quot;, \&quot;cas\&quot;: \&quot;1333-74-0\&quot;},\n                {\&quot;component_id\&quot;: \&quot;N2\&quot;, \&quot;cas\&quot;: \&quot;7727-37-9\&quot;},\n                {\&quot;component_id\&quot;: \&quot;METHANE\&quot;, \&quot;cas\&quot;: \&quot;74-82-8\&quot;},\n                {\&quot;component_id\&quot;: \&quot;BENZENE\&quot;, \&quot;cas\&quot;: \&quot;71-43-2\&quot;},\n                {\&quot;component_id\&quot;: \&quot;CYCLOHEX\&quot;, \&quot;cas\&quot;: \&quot;110-82-7\&quot;},\n            ],\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;list_component_ids_after_cas\&quot;,\n        lambda: client.invoke(\&quot;list_component_ids\&quot;),\n        required=False,\n    )\n    runtime.stage(\n        \&quot;ensure_rk_soave_srk_property_method\&quot;,\n        lambda: client.invoke(\&quot;ensure_property_method\&quot;, method=\&quot;SRK\&quot;),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;configure_srk_free_water_steamnbs\&quot;,\n        lambda: client.invoke(\&quot;configure_srk_free_water_steamnbs\&quot;),\n        required=True,\n    )\n\n\ndef _create_streams_and_blocks(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Create every figure-visible material stream and unit-operation block.\&quot;\&quot;\&quot;\n    client = runtime.client\n    for stream_name in REQUIRED_STREAMS:\n        runtime.stage(\n            f\&quot;create_stream_{stream_name}\&quot;,\n            lambda stream_name=stream_name: client.invoke(\n                \&quot;create_material_stream\&quot;,\n                stream_name=stream_name,\n            ),\n            required=True,\n        )\n\n    runtime.stage(\&quot;create_feedpump_FP\&quot;, lambda: client.invoke(\&quot;create_pump\&quot;, block_name=\&quot;FP\&quot;), required=True)\n    runtime.stage(\&quot;create_feedmix_heater_FM\&quot;, lambda: client.invoke(\&quot;create_heater\&quot;, block_name=\&quot;FM\&quot;), required=True)\n    runtime.stage(\&quot;create_reactor_R1\&quot;, lambda: client.invoke(\&quot;create_rstoic\&quot;, block_name=\&quot;R1\&quot;), required=True)\n    runtime.stage(\&quot;create_flash_FL\&quot;, lambda: client.invoke(\&quot;create_flash2\&quot;, block_name=\&quot;FL\&quot;), required=True)\n    runtime.stage(\&quot;create_vapor_split_VF\&quot;, lambda: client.invoke(\&quot;create_fsplit\&quot;, block_name=\&quot;VF\&quot;), required=True)\n    runtime.stage(\&quot;create_valve_VA\&quot;, lambda: client.invoke(\&quot;create_valve\&quot;, block_name=\&quot;VA\&quot;), required=True)\n    runtime.stage(\&quot;create_compressor_CP\&quot;, lambda: client.invoke(\&quot;create_compr\&quot;, block_name=\&quot;CP\&quot;), required=True)\n    runtime.stage(\&quot;create_liquid_split_LF\&quot;, lambda: client.invoke(\&quot;create_fsplit\&quot;, block_name=\&quot;LF\&quot;), required=True)\n    runtime.stage(\&quot;create_recycle_pump_RP\&quot;, lambda: client.invoke(\&quot;create_pump\&quot;, block_name=\&quot;RP\&quot;), required=True)\n    runtime.stage(\&quot;create_pipe_PI\&quot;, lambda: client.invoke(\&quot;create_pipe\&quot;, block_name=\&quot;PI\&quot;), required=True)\n    runtime.stage(\&quot;create_radfrac_CO\&quot;, lambda: client.invoke(\&quot;create_radfrac\&quot;, block_name=\&quot;CO\&quot;), required=True)\n\n\ndef _connect_topology(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Connect the complete figure topology before writing block specifications.\&quot;\&quot;\&quot;\n    client = runtime.client\n\n    for block_name in REQUIRED_BLOCKS:\n        runtime.stage(\n            f\&quot;ports_before_{block_name}\&quot;,\n            lambda block_name=block_name: client.invoke(\&quot;list_block_ports\&quot;, block_name=block_name),\n            required=False,\n        )\n\n    runtime.stage(\n        \&quot;connect_FEEDPUMP\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_inlet_outlet\&quot;,\n            block_name=\&quot;FP\&quot;,\n            inlet_stream=\&quot;B1\&quot;,\n            outlet_stream=\&quot;B2\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_FEED_MIX_shared_feeds\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_ports_by_order\&quot;,\n            block_name=\&quot;FM\&quot;,\n            inlet_streams=[\&quot;B2\&quot;, \&quot;H1\&quot;, \&quot;H4\&quot;, \&quot;C4\&quot;],\n            outlet_streams=[\&quot;R2\&quot;],\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_REACT\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_inlet_outlet\&quot;,\n            block_name=\&quot;R1\&quot;,\n            inlet_stream=\&quot;R2\&quot;,\n            outlet_stream=\&quot;R3\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_HP_SEP_flash_phase_ports\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_flash2_vapor_liquid_ports\&quot;,\n            block_name=\&quot;FL\&quot;,\n            feed_stream=\&quot;R3\&quot;,\n            vapor_stream=\&quot;V1\&quot;,\n            liquid_stream=\&quot;L1\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_VFLOW_split\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_fsplit_shared_outlets\&quot;,\n            block_name=\&quot;VF\&quot;,\n            inlet_stream=\&quot;V1\&quot;,\n            outlet_streams=[\&quot;H3\&quot;, \&quot;G1\&quot;],\n            split_fractions={\&quot;H3\&quot;: 0.92},\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_COMP\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_inlet_outlet\&quot;,\n            block_name=\&quot;CP\&quot;,\n            inlet_stream=\&quot;H3\&quot;,\n            outlet_stream=\&quot;H4\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_VALVE\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_inlet_outlet\&quot;,\n            block_name=\&quot;VA\&quot;,\n            inlet_stream=\&quot;G1\&quot;,\n            outlet_stream=\&quot;G2\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_LFLOW_split\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_fsplit_shared_outlets\&quot;,\n            block_name=\&quot;LF\&quot;,\n            inlet_stream=\&quot;L1\&quot;,\n            outlet_streams=[\&quot;C1\&quot;, \&quot;C2\&quot;],\n            split_fractions={\&quot;C2\&quot;: 0.30},\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_recycle_PUMP\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_inlet_outlet\&quot;,\n            block_name=\&quot;RP\&quot;,\n            inlet_stream=\&quot;C2\&quot;,\n            outlet_stream=\&quot;C3\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_PIPE\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_material_inlet_outlet\&quot;,\n            block_name=\&quot;PI\&quot;,\n            inlet_stream=\&quot;C3\&quot;,\n            outlet_stream=\&quot;C4\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_COLUMN_feed\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_stream\&quot;,\n            block_name=\&quot;CO\&quot;,\n            stream_name=\&quot;C1\&quot;,\n            port_name=\&quot;F(IN)\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_COLUMN_vapor_light_ends\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_stream\&quot;,\n            block_name=\&quot;CO\&quot;,\n            stream_name=\&quot;T1\&quot;,\n            port_name=\&quot;VD(OUT)\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;connect_COLUMN_bottom_product\&quot;,\n        lambda: client.invoke(\n            \&quot;connect_stream\&quot;,\n            block_name=\&quot;CO\&quot;,\n            stream_name=\&quot;P5\&quot;,\n            port_name=\&quot;B(OUT)\&quot;,\n        ),\n        required=True,\n    )\n\n    for block_name in REQUIRED_BLOCKS:\n        runtime.stage(\n            f\&quot;ports_after_{block_name}\&quot;,\n            lambda block_name=block_name: client.invoke(\&quot;list_block_ports\&quot;, block_name=block_name),\n            required=False,\n        )\n\n\ndef _set_feed_streams(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Set the two fresh feeds exactly from the problem statement.\&quot;\&quot;\&quot;\n    client = runtime.client\n    runtime.stage(\&quot;H1_mixed_spec\&quot;, lambda: client.invoke(\&quot;set_mixed_spec_mixed\&quot;, stream_name=\&quot;H1\&quot;, value=\&quot;TP\&quot;), required=True)\n    runtime.stage(\&quot;H1_basis\&quot;, lambda: client.invoke(\&quot;set_basis_mixed\&quot;, stream_name=\&quot;H1\&quot;, value=\&quot;MOLE-FLOW\&quot;), required=True)\n    runtime.stage(\&quot;H1_temperature\&quot;, lambda: client.invoke(\&quot;set_temp_mixed\&quot;, stream_name=\&quot;H1\&quot;, value=50.0, unit=\&quot;C\&quot;), required=True)\n    runtime.stage(\&quot;H1_pressure\&quot;, lambda: client.invoke(\&quot;set_pres_mixed\&quot;, stream_name=\&quot;H1\&quot;, value=2.5, unit=\&quot;MPa\&quot;), required=True)\n    runtime.stage(\&quot;H1_H2_flow\&quot;, lambda: client.invoke(\&quot;set_flow_mixed\&quot;, stream_name=\&quot;H1\&quot;, component_name=\&quot;H2\&quot;, value=321.75, unit=\&quot;kmol/hr\&quot;), required=True)\n    runtime.stage(\&quot;H1_N2_flow\&quot;, lambda: client.invoke(\&quot;set_flow_mixed\&quot;, stream_name=\&quot;H1\&quot;, component_name=\&quot;N2\&quot;, value=1.65, unit=\&quot;kmol/hr\&quot;), required=True)\n    runtime.stage(\&quot;H1_CH4_flow\&quot;, lambda: client.invoke(\&quot;set_flow_mixed\&quot;, stream_name=\&quot;H1\&quot;, component_name=\&quot;METHANE\&quot;, value=6.6, unit=\&quot;kmol/hr\&quot;), required=True)\n\n    runtime.stage(\&quot;B1_mixed_spec\&quot;, lambda: client.invoke(\&quot;set_mixed_spec_mixed\&quot;, stream_name=\&quot;B1\&quot;, value=\&quot;TP\&quot;), required=True)\n    runtime.stage(\&quot;B1_basis\&quot;, lambda: client.invoke(\&quot;set_basis_mixed\&quot;, stream_name=\&quot;B1\&quot;, value=\&quot;MOLE-FLOW\&quot;), required=True)\n    runtime.stage(\&quot;B1_temperature\&quot;, lambda: client.invoke(\&quot;set_temp_mixed\&quot;, stream_name=\&quot;B1\&quot;, value=40.0, unit=\&quot;C\&quot;), required=True)\n    runtime.stage(\&quot;B1_pressure\&quot;, lambda: client.invoke(\&quot;set_pres_mixed\&quot;, stream_name=\&quot;B1\&quot;, value=0.1, unit=\&quot;MPa\&quot;), required=True)\n    runtime.stage(\&quot;B1_benzene_flow\&quot;, lambda: client.invoke(\&quot;set_flow_mixed\&quot;, stream_name=\&quot;B1\&quot;, component_name=\&quot;BENZENE\&quot;, value=100.0, unit=\&quot;kmol/hr\&quot;), required=True)\n\n\ndef _set_pressure_changing_units(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Configure FEEDPUMP curve, recycle pump, compressor, pipe, and valve.\&quot;\&quot;\&quot;\n    client = runtime.client\n\n    runtime.stage(\&quot;FP_outlet_curve_mode\&quot;, lambda: client.invoke(\&quot;set_pump_outlet_spec\&quot;, block_name=\&quot;FP\&quot;, value=\&quot;USE-CURVE\&quot;), required=True)\n    runtime.stage(\&quot;FP_curve_type\&quot;, lambda: client.invoke(\&quot;set_opt_ctype\&quot;, block_name=\&quot;FP\&quot;, value=\&quot;SINGLE-OPER\&quot;), required=True)\n    runtime.stage(\&quot;FP_curve_format\&quot;, lambda: client.invoke(\&quot;set_opt_cformat\&quot;, block_name=\&quot;FP\&quot;, value=\&quot;TABLE\&quot;), required=True)\n    runtime.stage(\&quot;FP_curve_dep_var\&quot;, lambda: client.invoke(\&quot;set_dep_var\&quot;, block_name=\&quot;FP\&quot;, value=\&quot;HEAD\&quot;), required=True)\n    runtime.stage(\&quot;FP_curve_indep_var\&quot;, lambda: client.invoke(\&quot;set_indep_var\&quot;, block_name=\&quot;FP\&quot;, value=\&quot;VOL-FLOW\&quot;), required=True)\n    runtime.stage(\n        \&quot;FP_curve_table\&quot;,\n        lambda: client.invoke(\n            \&quot;set_pump_curve_table\&quot;,\n            block_name=\&quot;FP\&quot;,\n            curve_idx=1,\n            flow_unit=\&quot;m3/hr\&quot;,\n            head_unit=\&quot;m\&quot;,\n            curve_points=FEEDPUMP_CURVE_POINTS,\n        ),\n        required=True,\n    )\n    runtime.stage(\&quot;FP_pump_efficiency\&quot;, lambda: client.invoke(\&quot;set_eff\&quot;, block_name=\&quot;FP\&quot;, value=0.6), required=True)\n    runtime.stage(\&quot;FP_driver_efficiency\&quot;, lambda: client.invoke(\&quot;set_deff\&quot;, block_name=\&quot;FP\&quot;, value=0.9), required=True)\n\n    runtime.stage(\&quot;RP_outlet_pressure_mode\&quot;, lambda: client.invoke(\&quot;set_pump_outlet_spec\&quot;, block_name=\&quot;RP\&quot;, value=\&quot;PRES\&quot;), required=True)\n    runtime.stage(\&quot;RP_outlet_pressure\&quot;, lambda: client.invoke(\&quot;set_pump_outlet_pressure\&quot;, block_name=\&quot;RP\&quot;, value=2.6, unit=\&quot;MPa\&quot;), required=True)\n\n    runtime.stage(\n        \&quot;CP_isentropic_pressure_rise\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_compr_pressure_rise\&quot;,\n            block_name=\&quot;CP\&quot;,\n            delta_pressure=0.4,\n            pressure_unit=\&quot;MPa\&quot;,\n            compressor_type=\&quot;ISENTROPIC\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;PI_schedule_sizing\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_pipe_schedule_sizing\&quot;,\n            block_name=\&quot;PI\&quot;,\n            material=\&quot;CARBON-STEEL\&quot;,\n            schedule=40,\n            nominal_diam=\&quot;1-IN\&quot;,\n            length=25.0,\n            length_unit=\&quot;meter\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;VA_outlet_pressure_and_vendor\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_valve_outlet_pressure_design\&quot;,\n            block_name=\&quot;VA\&quot;,\n            outlet_pressure=2.0,\n            pressure_unit=\&quot;MPa\&quot;,\n            vendor_preset_id=\&quot;neles_globe_v810_equal_pct_1p5in\&quot;,\n        ),\n        required=True,\n    )\n\n\ndef _set_reactor_separator_column(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Configure heater, reactor chemistry, flash separator, splitters, and RadFrac.\&quot;\&quot;\&quot;\n    client = runtime.client\n\n    runtime.stage(\&quot;FM_flash_spec\&quot;, lambda: client.invoke(\&quot;set_heater_flash_spec\&quot;, block_name=\&quot;FM\&quot;, value=\&quot;TP\&quot;), required=True)\n    runtime.stage(\&quot;FM_temperature\&quot;, lambda: client.invoke(\&quot;set_heater_temperature\&quot;, block_name=\&quot;FM\&quot;, value=150.0, unit=\&quot;C\&quot;), required=True)\n    runtime.stage(\&quot;FM_pressure\&quot;, lambda: client.invoke(\&quot;set_heater_pressure\&quot;, block_name=\&quot;FM\&quot;, value=2.3, unit=\&quot;MPa\&quot;), required=True)\n\n    runtime.stage(\n        \&quot;R1_stoichiometry\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_rstoic_stoichiometry\&quot;,\n            block_name=\&quot;R1\&quot;,\n            reaction_number=1,\n            reactants={\&quot;BENZENE\&quot;: 1.0, \&quot;H2\&quot;: 3.0},\n            products={\&quot;CYCLOHEX\&quot;: 1.0},\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;R1_fractional_conversion\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_rstoic_fractional_conversions\&quot;,\n            block_name=\&quot;R1\&quot;,\n            conversions=[{\&quot;reaction_number\&quot;: 1, \&quot;component_id\&quot;: \&quot;BENZENE\&quot;, \&quot;conversion\&quot;: 0.998}],\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;R1_calculated_heat_reference\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_rstoic_calculated_heat_reference\&quot;,\n            block_name=\&quot;R1\&quot;,\n            rows=[{\&quot;reaction_number\&quot;: 1, \&quot;reference_component_id\&quot;: \&quot;BENZENE\&quot;, \&quot;reference_phase\&quot;: \&quot;V\&quot;}],\n            reference_temperature=298.15,\n            reference_temperature_unit=\&quot;K\&quot;,\n            reference_pressure=1.0,\n            reference_pressure_unit=\&quot;atm\&quot;,\n        ),\n        required=True,\n    )\n    runtime.stage(\n        \&quot;R1_flash_conditions\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_rstoic_flash\&quot;,\n            block_name=\&quot;R1\&quot;,\n            spec_opt=\&quot;TP\&quot;,\n            temperature=200.0,\n            temperature_unit=\&quot;C\&quot;,\n            pressure=-0.1,\n            pressure_unit=\&quot;MPa\&quot;,\n        ),\n        required=True,\n    )\n\n    runtime.stage(\&quot;FL_flash_spec\&quot;, lambda: client.invoke(\&quot;set_flash2_flash_spec\&quot;, block_name=\&quot;FL\&quot;, value=\&quot;TP\&quot;), required=True)\n    runtime.stage(\&quot;FL_temperature\&quot;, lambda: client.invoke(\&quot;set_flash2_temperature\&quot;, block_name=\&quot;FL\&quot;, value=50.0, unit=\&quot;C\&quot;), required=True)\n    runtime.stage(\&quot;FL_pressure_drop\&quot;, lambda: client.invoke(\&quot;set_flash2_pressure\&quot;, block_name=\&quot;FL\&quot;, value=-0.05, unit=\&quot;MPa\&quot;), required=True)\n\n    runtime.stage(\&quot;CO_condenser_partial_vapor\&quot;, lambda: client.invoke(\&quot;set_radfrac_condenser_type\&quot;, block_name=\&quot;CO\&quot;, value=\&quot;PARTIAL-V\&quot;), required=True)\n    runtime.stage(\&quot;CO_reboiler_kettle\&quot;, lambda: client.invoke(\&quot;set_radfrac_reboiler_type\&quot;, block_name=\&quot;CO\&quot;, value=\&quot;KETTLE\&quot;), required=True)\n    runtime.stage(\&quot;CO_stage_count\&quot;, lambda: client.invoke(\&quot;set_radfrac_stage_count\&quot;, block_name=\&quot;CO\&quot;, value=12), required=True)\n    runtime.stage(\&quot;CO_feed_stage\&quot;, lambda: client.invoke(\&quot;set_radfrac_feed_stage\&quot;, block_name=\&quot;CO\&quot;, stream_name=\&quot;C1\&quot;, value=8), required=True)\n    runtime.stage(\&quot;CO_feed_convention\&quot;, lambda: client.invoke(\&quot;configure_radfrac_feed_convention\&quot;, block_name=\&quot;CO\&quot;, stream_name=\&quot;C1\&quot;, convention=\&quot;ON-STAGE-LIQ\&quot;), required=True)\n    runtime.stage(\&quot;CO_top_pressure\&quot;, lambda: client.invoke(\&quot;set_radfrac_top_pressure\&quot;, block_name=\&quot;CO\&quot;, value=1.5, unit=\&quot;MPa\&quot;), required=True)\n    runtime.stage(\&quot;CO_reflux_ratio\&quot;, lambda: client.invoke(\&quot;set_radfrac_reflux_ratio\&quot;, block_name=\&quot;CO\&quot;, value=1.2), required=True)\n    runtime.stage(\&quot;CO_distillate_rate\&quot;, lambda: client.invoke(\&quot;set_radfrac_distillate_rate\&quot;, block_name=\&quot;CO\&quot;, value=99.0, unit=\&quot;kmol/hr\&quot;), required=True)\n\n    runtime.stage(\n        \&quot;recycle_convergence_options\&quot;,\n        lambda: client.invoke(\n            \&quot;configure_recycle_convergence_options\&quot;,\n            tolerance=1e-5,\n            tear_method=\&quot;WEGSTEIN\&quot;,\n            wegstein_max_iterations=100,\n        ),\n        required=True,\n    )\n\n\ndef _record_completion_probes(runtime) -&gt; None:\n    \&quot;\&quot;\&quot;Record concise completion diagnostics without treating probes as fatal.\&quot;\&quot;\&quot;\n    client = runtime.client\n    runtime.stage(\n        \&quot;model_state_probe_before_final_runtime_run\&quot;,\n        lambda: client.invoke(\n            \&quot;probe_model_state\&quot;,\n            stream_names=list(REQUIRED_STREAMS),\n            block_names=list(REQUIRED_BLOCKS),\n            include_flowsheet=True,\n            include_ui_next=False,\n        ),\n        required=False,\n    )\n    for stream_name in (\&quot;H1\&quot;, \&quot;B1\&quot;):\n        runtime.stage(\n            f\&quot;stream_completion_{stream_name}\&quot;,\n            lambda stream_name=stream_name: client.invoke(\&quot;check_stream_completion\&quot;, stream_name=stream_name),\n            required=False,\n        )\n    for block_name in REQUIRED_BLOCKS:\n        runtime.stage(\n            f\&quot;block_completion_{block_name}\&quot;,\n            lambda block_name=block_name: client.invoke(\&quot;check_block_completion\&quot;, block_name=block_name),\n            required=False,\n        )\n\n\ndef configure(runtime) -&gt; SlimTaskOutcome:\n    \&quot;\&quot;\&quot;Slim runtime entry point: configure the model and return semantic handoff fields.\&quot;\&quot;\&quot;\n    client = runtime.client\n    _ = client\n    _validate_static_plans()\n    runtime.attach_artifact(\n        \&quot;static_topology_contract\&quot;,\n        {\n            \&quot;material_edges\&quot;: MATERIAL_EDGES,\n            \&quot;name_mapping\&quot;: NAME_MAPPING,\n            \&quot;required_streams\&quot;: REQUIRED_STREAMS,\n            \&quot;required_blocks\&quot;: REQUIRED_BLOCKS,\n        },\n    )\n\n    _setup_components_and_property(runtime)\n    _create_streams_and_blocks(runtime)\n    _connect_topology(runtime)\n    _set_feed_streams(runtime)\n    _set_pressure_changing_units(runtime)\n    _set_reactor_separator_column(runtime)\n    _record_completion_probes(runtime)\n\n    return SlimTaskOutcome(\n        fields={\n            \&quot;model_basis\&quot;: {\n                \&quot;objective\&quot;: \&quot;Report CYCLOHEX mole fraction in PRODUCT/P5 from final Aspen REP evidence.\&quot;,\n                \&quot;property_method\&quot;: \&quot;RK-SOAVE task method implemented as Aspen SRK option set.\&quot;,\n                \&quot;feed_basis\&quot;: {\n                    \&quot;H1\&quot;: \&quot;H2IN: 330 kmol/hr at 50 C and 2.5 MPa; H2/N2/CH4 = 0.975/0.005/0.02.\&quot;,\n                    \&quot;B1\&quot;: \&quot;BZIN: 100 kmol/hr pure benzene at 40 C and 0.1 MPa.\&quot;,\n                },\n                \&quot;reaction\&quot;: \&quot;BENZENE + 3 H2 -&gt; CYCLOHEX with 0.998 benzene conversion in R1.\&quot;,\n            },\n            \&quot;pump_curve_unit_interpretation\&quot;: {\n                \&quot;assigned_block\&quot;: \&quot;FP\&quot;,\n                \&quot;assigned_visible_block\&quot;: \&quot;FEEDPUMP\&quot;,\n                \&quot;flow_unit\&quot;: \&quot;m3/hr\&quot;,\n                \&quot;head_unit\&quot;: \&quot;m\&quot;,\n                \&quot;curve_points\&quot;: FEEDPUMP_CURVE_POINTS,\n                \&quot;recycle_pump_RP_curve_assigned\&quot;: False,\n            },\n        },\n        analysis_handoff={\n            \&quot;native_analysis_required\&quot;: False,\n            \&quot;final_result_source\&quot;: \&quot;Slim runtime final engine/export plus REP readback target product_cyclohexane_mole_fraction.\&quot;,\n            \&quot;phase_role_evidence_needed\&quot;: [\&quot;FL outlet V1/L1 phase readbacks\&quot;, \&quot;CO vapor light ends T1 and bottoms product P5 readbacks\&quot;],\n        },\n        analysis_objects={},\n        validation_contract={\n            \&quot;phase\&quot;: \&quot;final_evidence_fact_collection\&quot;,\n            \&quot;validator_decision_pending\&quot;: True,\n            \&quot;no_script_judgment_policy\&quot;: True,\n            \&quot;primary_measurement\&quot;: {\n                \&quot;request_id\&quot;: \&quot;product_cyclohexane_mole_fraction\&quot;,\n                \&quot;stream\&quot;: \&quot;P5\&quot;,\n                \&quot;visible_stream\&quot;: \&quot;PRODUCT\&quot;,\n                \&quot;component\&quot;: \&quot;CYCLOHEX\&quot;,\n                \&quot;basis\&quot;: \&quot;raw full-material-stream mole fraction from final Aspen REP\&quot;,\n            },\n            \&quot;topology_evidence_index\&quot;: {\n                \&quot;required_blocks\&quot;: REQUIRED_BLOCKS,\n                \&quot;required_streams\&quot;: REQUIRED_STREAMS,\n                \&quot;material_edges_artifact\&quot;: \&quot;static_topology_contract\&quot;,\n            },\n        },\n    )\n\n\nif __name__ == \&quot;__main__\&quot;:\n    raise SystemExit(run_slim_task(spec=TASK_SPEC, configure=configure))\n&quot;}</code></pre>
+````python
+"""Slim own-agent Aspen script for chinese_5_1.
 
-</details>
+Builds the cyclohexane production flowsheet from the task figure using short
+Aspen-safe IDs, with a name mapping back to the visible Chinese exercise labels.
+The slim runtime owns session setup, CLI, final run/export, REP readback, and
+summary finalization.
+"""
+
+from __future__ import annotations
+
+import script_agent_exp.safe_aspen_calls as safe
+from script_agent_exp.slim_task_runtime import (
+    SlimTaskOutcome,
+    SlimTaskSpec,
+    block_rep_targets,
+    run_slim_task,
+    stream_rep_targets,
+)
+
+SCRIPT_STEM = "chinese_5_1_own_agent"
+CASE_ID = "chinese_5_1"
+
+# Aspen-safe short IDs. The task/figure labels are preserved in NAME_MAPPING.
+BLOCKS = {
+    "FEEDPUMP": "FP",
+    "FEED-MIX": "FM",
+    "REACT": "R1",
+    "HP-SEP": "FL",
+    "VFLOW": "VF",
+    "VALVE": "VA",
+    "COMP": "CP",
+    "LFLOW": "LF",
+    "PUMP": "RP",
+    "PIPE": "PI",
+    "COLUMN": "CO",
+}
+
+STREAMS = {
+    "BZIN": "B1",
+    "BZIN2": "B2",
+    "H2IN": "H1",
+    "H2RCY2": "H4",
+    "RXIN": "R2",
+    "RXOUT": "R3",
+    "VAP": "V1",
+    "H2RCY": "H3",
+    "PURGE": "G1",
+    "PURGE2": "G2",
+    "LIQ": "L1",
+    "COLFD": "C1",
+    "CHRCY": "C2",
+    "CHRCY2": "C3",
+    "CHRCY3": "C4",
+    "LTENDS": "T1",
+    "PRODUCT": "P5",
+}
+
+COMPONENTS = {
+    "hydrogen": "H2",
+    "nitrogen": "N2",
+    "methane": "METHANE",
+    "benzene": "BENZENE",
+    "cyclohexane": "CYCLOHEX",
+}
+
+REQUIRED_STREAMS = tuple(STREAMS.values())
+REQUIRED_BLOCKS = (
+    "FP",
+    "FM",
+    "R1",
+    "FL",
+    "VF",
+    "VA",
+    "CP",
+    "LF",
+    "RP",
+    "PI",
+    "CO",
+)
+
+MATERIAL_EDGES = [
+    {"stream": "B1", "source": None, "destination": "FP"},
+    {"stream": "B2", "source": "FP", "destination": "FM"},
+    {"stream": "H1", "source": None, "destination": "FM"},
+    {"stream": "H4", "source": "CP", "destination": "FM"},
+    {"stream": "C4", "source": "PI", "destination": "FM"},
+    {"stream": "R2", "source": "FM", "destination": "R1"},
+    {"stream": "R3", "source": "R1", "destination": "FL"},
+    {"stream": "V1", "source": "FL", "destination": "VF"},
+    {"stream": "H3", "source": "VF", "destination": "CP"},
+    {"stream": "G1", "source": "VF", "destination": "VA"},
+    {"stream": "G2", "source": "VA", "destination": None},
+    {"stream": "L1", "source": "FL", "destination": "LF"},
+    {"stream": "C1", "source": "LF", "destination": "CO"},
+    {"stream": "C2", "source": "LF", "destination": "RP"},
+    {"stream": "C3", "source": "RP", "destination": "PI"},
+    {"stream": "C4", "source": "PI", "destination": "FM"},
+    {"stream": "T1", "source": "CO", "destination": None},
+    {"stream": "P5", "source": "CO", "destination": None},
+]
+
+# Pump-curve table belongs to FEEDPUMP/FP only. The unlabelled head values are
+# interpreted as metres of liquid head, matching the Chinese table heading [NON-ENGLISH REDACTED].
+FEEDPUMP_CURVE_POINTS = [
+    {"flow": 20.0, "head": 40.0},
+    {"flow": 10.0, "head": 250.0},
+    {"flow": 5.0, "head": 300.0},
+    {"flow": 3.0, "head": 400.0},
+]
+
+NAME_MAPPING = {
+    "blocks": BLOCKS,
+    "streams": STREAMS,
+    "components": {
+        "H2": "H2",
+        "N2": "N2",
+        "CH4": "METHANE",
+        "C6H6": "BENZENE",
+        "C6H12": "CYCLOHEX",
+    },
+}
+
+REP_READBACK_TARGETS = (
+    *stream_rep_targets(
+        ("P5", "T1", "C1", "V1", "L1", "G2", "H4", "C4"),
+        components=("H2", "N2", "METHANE", "BENZENE", "CYCLOHEX"),
+        quantities=("temperature", "pressure", "vapor_fraction", "total_flow", "component_flow"),
+    ),
+    *block_rep_targets(
+        {
+            "CO": ("reflux_ratio", "distillate_flow"),
+            "FM": ("block_heat_duty",),
+            "R1": ("block_heat_duty",),
+        }
+    ),
+    {
+        "request_id": "product_cyclohexane_mole_fraction",
+        "kind": "stream",
+        "object_name": "P5",
+        "quantity": "mole_fraction",
+        "component": "CYCLOHEX",
+        "notes": "Primary task result: raw full-material-stream mole fraction of cyclohexane in PRODUCT/P5.",
+    },
+    {
+        "request_id": "reactor_benzene_conversion",
+        "kind": "derived",
+        "object_name": "R1",
+        "quantity": "conversion",
+        "reactant_component": "BENZENE",
+        "inlet_stream": "R2",
+        "outlet_stream": "R3",
+        "notes": "Benzene conversion across REACT/R1 from final Aspen REP stream tables.",
+    },
+)
+
+TASK_SPEC = SlimTaskSpec(
+    script_stem=SCRIPT_STEM,
+    required_streams=REQUIRED_STREAMS,
+    required_blocks=REQUIRED_BLOCKS,
+    case_id=CASE_ID,
+    name_mapping=NAME_MAPPING,
+    rep_readback_targets=REP_READBACK_TARGETS,
+    phase="analysis",
+    inset="SI",
+    summary_seed={
+        "task": "Cyclohexane production by benzene hydrogenation; report PRODUCT cyclohexane mole fraction.",
+        "property_method": "RK-SOAVE represented by Aspen SRK/RK-Soave option set with SRK free-water advisory repaired.",
+        "pump_curve_assignment": {
+            "curve_owner": "FEEDPUMP/FP",
+            "not_owner": "PUMP/RP",
+            "flow_unit": "m3/hr",
+            "head_unit_assumption": "m",
+            "points": FEEDPUMP_CURVE_POINTS,
+        },
+    },
+)
+
+
+def _validate_static_plans() -> None:
+    """Validate topology and required native-block declarations before Aspen mutation."""
+    safe.validate_material_edge_plan(
+        MATERIAL_EDGES,
+        block_names=list(REQUIRED_BLOCKS),
+        stream_names=list(REQUIRED_STREAMS),
+    )
+    safe.validate_required_native_blocks_plan(
+        {
+            "HEATER": ["FM"],
+            "RSTOIC": ["R1"],
+            "FLASH2": ["FL"],
+            "FSPLIT": ["VF", "LF"],
+            "RADFRAC": ["CO"],
+            "PUMP": ["FP", "RP"],
+            "COMPR": ["CP"],
+            "PIPE": ["PI"],
+            "VALVE": ["VA"],
+        },
+        created_blocks_by_family={
+            "HEATER": ["FM"],
+            "RSTOIC": ["R1"],
+            "FLASH2": ["FL"],
+            "FSPLIT": ["VF", "LF"],
+            "RADFRAC": ["CO"],
+            "PUMP": ["FP", "RP"],
+            "COMPR": ["CP"],
+            "PIPE": ["PI"],
+            "VALVE": ["VA"],
+        },
+        finalization_required_blocks=list(REQUIRED_BLOCKS),
+    )
+
+
+def _setup_components_and_property(runtime) -> None:
+    """Land the real components and RK-SOAVE/SRK thermodynamic method."""
+    client = runtime.client
+    runtime.stage(
+        "add_components_by_cas",
+        lambda: client.invoke(
+            "add_components_by_cas",
+            components=[
+                {"component_id": "H2", "cas": "1333-74-0"},
+                {"component_id": "N2", "cas": "7727-37-9"},
+                {"component_id": "METHANE", "cas": "74-82-8"},
+                {"component_id": "BENZENE", "cas": "71-43-2"},
+                {"component_id": "CYCLOHEX", "cas": "110-82-7"},
+            ],
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "list_component_ids_after_cas",
+        lambda: client.invoke("list_component_ids"),
+        required=False,
+    )
+    runtime.stage(
+        "ensure_rk_soave_srk_property_method",
+        lambda: client.invoke("ensure_property_method", method="SRK"),
+        required=True,
+    )
+    runtime.stage(
+        "configure_srk_free_water_steamnbs",
+        lambda: client.invoke("configure_srk_free_water_steamnbs"),
+        required=True,
+    )
+
+
+def _create_streams_and_blocks(runtime) -> None:
+    """Create every figure-visible material stream and unit-operation block."""
+    client = runtime.client
+    for stream_name in REQUIRED_STREAMS:
+        runtime.stage(
+            f"create_stream_{stream_name}",
+            lambda stream_name=stream_name: client.invoke(
+                "create_material_stream",
+                stream_name=stream_name,
+            ),
+            required=True,
+        )
+
+    runtime.stage("create_feedpump_FP", lambda: client.invoke("create_pump", block_name="FP"), required=True)
+    runtime.stage("create_feedmix_heater_FM", lambda: client.invoke("create_heater", block_name="FM"), required=True)
+    runtime.stage("create_reactor_R1", lambda: client.invoke("create_rstoic", block_name="R1"), required=True)
+    runtime.stage("create_flash_FL", lambda: client.invoke("create_flash2", block_name="FL"), required=True)
+    runtime.stage("create_vapor_split_VF", lambda: client.invoke("create_fsplit", block_name="VF"), required=True)
+    runtime.stage("create_valve_VA", lambda: client.invoke("create_valve", block_name="VA"), required=True)
+    runtime.stage("create_compressor_CP", lambda: client.invoke("create_compr", block_name="CP"), required=True)
+    runtime.stage("create_liquid_split_LF", lambda: client.invoke("create_fsplit", block_name="LF"), required=True)
+    runtime.stage("create_recycle_pump_RP", lambda: client.invoke("create_pump", block_name="RP"), required=True)
+    runtime.stage("create_pipe_PI", lambda: client.invoke("create_pipe", block_name="PI"), required=True)
+    runtime.stage("create_radfrac_CO", lambda: client.invoke("create_radfrac", block_name="CO"), required=True)
+
+
+def _connect_topology(runtime) -> None:
+    """Connect the complete figure topology before writing block specifications."""
+    client = runtime.client
+
+    for block_name in REQUIRED_BLOCKS:
+        runtime.stage(
+            f"ports_before_{block_name}",
+            lambda block_name=block_name: client.invoke("list_block_ports", block_name=block_name),
+            required=False,
+        )
+
+    runtime.stage(
+        "connect_FEEDPUMP",
+        lambda: client.invoke(
+            "connect_material_inlet_outlet",
+            block_name="FP",
+            inlet_stream="B1",
+            outlet_stream="B2",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_FEED_MIX_shared_feeds",
+        lambda: client.invoke(
+            "connect_material_ports_by_order",
+            block_name="FM",
+            inlet_streams=["B2", "H1", "H4", "C4"],
+            outlet_streams=["R2"],
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_REACT",
+        lambda: client.invoke(
+            "connect_material_inlet_outlet",
+            block_name="R1",
+            inlet_stream="R2",
+            outlet_stream="R3",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_HP_SEP_flash_phase_ports",
+        lambda: client.invoke(
+            "connect_flash2_vapor_liquid_ports",
+            block_name="FL",
+            feed_stream="R3",
+            vapor_stream="V1",
+            liquid_stream="L1",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_VFLOW_split",
+        lambda: client.invoke(
+            "configure_fsplit_shared_outlets",
+            block_name="VF",
+            inlet_stream="V1",
+            outlet_streams=["H3", "G1"],
+            split_fractions={"H3": 0.92},
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_COMP",
+        lambda: client.invoke(
+            "connect_material_inlet_outlet",
+            block_name="CP",
+            inlet_stream="H3",
+            outlet_stream="H4",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_VALVE",
+        lambda: client.invoke(
+            "connect_material_inlet_outlet",
+            block_name="VA",
+            inlet_stream="G1",
+            outlet_stream="G2",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_LFLOW_split",
+        lambda: client.invoke(
+            "configure_fsplit_shared_outlets",
+            block_name="LF",
+            inlet_stream="L1",
+            outlet_streams=["C1", "C2"],
+            split_fractions={"C2": 0.30},
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_recycle_PUMP",
+        lambda: client.invoke(
+            "connect_material_inlet_outlet",
+            block_name="RP",
+            inlet_stream="C2",
+            outlet_stream="C3",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_PIPE",
+        lambda: client.invoke(
+            "connect_material_inlet_outlet",
+            block_name="PI",
+            inlet_stream="C3",
+            outlet_stream="C4",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_COLUMN_feed",
+        lambda: client.invoke(
+            "connect_stream",
+            block_name="CO",
+            stream_name="C1",
+            port_name="F(IN)",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_COLUMN_vapor_light_ends",
+        lambda: client.invoke(
+            "connect_stream",
+            block_name="CO",
+            stream_name="T1",
+            port_name="VD(OUT)",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "connect_COLUMN_bottom_product",
+        lambda: client.invoke(
+            "connect_stream",
+            block_name="CO",
+            stream_name="P5",
+            port_name="B(OUT)",
+        ),
+        required=True,
+    )
+
+    for block_name in REQUIRED_BLOCKS:
+        runtime.stage(
+            f"ports_after_{block_name}",
+            lambda block_name=block_name: client.invoke("list_block_ports", block_name=block_name),
+            required=False,
+        )
+
+
+def _set_feed_streams(runtime) -> None:
+    """Set the two fresh feeds exactly from the problem statement."""
+    client = runtime.client
+    runtime.stage("H1_mixed_spec", lambda: client.invoke("set_mixed_spec_mixed", stream_name="H1", value="TP"), required=True)
+    runtime.stage("H1_basis", lambda: client.invoke("set_basis_mixed", stream_name="H1", value="MOLE-FLOW"), required=True)
+    runtime.stage("H1_temperature", lambda: client.invoke("set_temp_mixed", stream_name="H1", value=50.0, unit="C"), required=True)
+    runtime.stage("H1_pressure", lambda: client.invoke("set_pres_mixed", stream_name="H1", value=2.5, unit="MPa"), required=True)
+    runtime.stage("H1_H2_flow", lambda: client.invoke("set_flow_mixed", stream_name="H1", component_name="H2", value=321.75, unit="kmol/hr"), required=True)
+    runtime.stage("H1_N2_flow", lambda: client.invoke("set_flow_mixed", stream_name="H1", component_name="N2", value=1.65, unit="kmol/hr"), required=True)
+    runtime.stage("H1_CH4_flow", lambda: client.invoke("set_flow_mixed", stream_name="H1", component_name="METHANE", value=6.6, unit="kmol/hr"), required=True)
+
+    runtime.stage("B1_mixed_spec", lambda: client.invoke("set_mixed_spec_mixed", stream_name="B1", value="TP"), required=True)
+    runtime.stage("B1_basis", lambda: client.invoke("set_basis_mixed", stream_name="B1", value="MOLE-FLOW"), required=True)
+    runtime.stage("B1_temperature", lambda: client.invoke("set_temp_mixed", stream_name="B1", value=40.0, unit="C"), required=True)
+    runtime.stage("B1_pressure", lambda: client.invoke("set_pres_mixed", stream_name="B1", value=0.1, unit="MPa"), required=True)
+    runtime.stage("B1_benzene_flow", lambda: client.invoke("set_flow_mixed", stream_name="B1", component_name="BENZENE", value=100.0, unit="kmol/hr"), required=True)
+
+
+def _set_pressure_changing_units(runtime) -> None:
+    """Configure FEEDPUMP curve, recycle pump, compressor, pipe, and valve."""
+    client = runtime.client
+
+    runtime.stage("FP_outlet_curve_mode", lambda: client.invoke("set_pump_outlet_spec", block_name="FP", value="USE-CURVE"), required=True)
+    runtime.stage("FP_curve_type", lambda: client.invoke("set_opt_ctype", block_name="FP", value="SINGLE-OPER"), required=True)
+    runtime.stage("FP_curve_format", lambda: client.invoke("set_opt_cformat", block_name="FP", value="TABLE"), required=True)
+    runtime.stage("FP_curve_dep_var", lambda: client.invoke("set_dep_var", block_name="FP", value="HEAD"), required=True)
+    runtime.stage("FP_curve_indep_var", lambda: client.invoke("set_indep_var", block_name="FP", value="VOL-FLOW"), required=True)
+    runtime.stage(
+        "FP_curve_table",
+        lambda: client.invoke(
+            "set_pump_curve_table",
+            block_name="FP",
+            curve_idx=1,
+            flow_unit="m3/hr",
+            head_unit="m",
+            curve_points=FEEDPUMP_CURVE_POINTS,
+        ),
+        required=True,
+    )
+    runtime.stage("FP_pump_efficiency", lambda: client.invoke("set_eff", block_name="FP", value=0.6), required=True)
+    runtime.stage("FP_driver_efficiency", lambda: client.invoke("set_deff", block_name="FP", value=0.9), required=True)
+
+    runtime.stage("RP_outlet_pressure_mode", lambda: client.invoke("set_pump_outlet_spec", block_name="RP", value="PRES"), required=True)
+    runtime.stage("RP_outlet_pressure", lambda: client.invoke("set_pump_outlet_pressure", block_name="RP", value=2.6, unit="MPa"), required=True)
+
+    runtime.stage(
+        "CP_isentropic_pressure_rise",
+        lambda: client.invoke(
+            "configure_compr_pressure_rise",
+            block_name="CP",
+            delta_pressure=0.4,
+            pressure_unit="MPa",
+            compressor_type="ISENTROPIC",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "PI_schedule_sizing",
+        lambda: client.invoke(
+            "configure_pipe_schedule_sizing",
+            block_name="PI",
+            material="CARBON-STEEL",
+            schedule=40,
+            nominal_diam="1-IN",
+            length=25.0,
+            length_unit="meter",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "VA_outlet_pressure_and_vendor",
+        lambda: client.invoke(
+            "configure_valve_outlet_pressure_design",
+            block_name="VA",
+            outlet_pressure=2.0,
+            pressure_unit="MPa",
+            vendor_preset_id="neles_globe_v810_equal_pct_1p5in",
+        ),
+        required=True,
+    )
+
+
+def _set_reactor_separator_column(runtime) -> None:
+    """Configure heater, reactor chemistry, flash separator, splitters, and RadFrac."""
+    client = runtime.client
+
+    runtime.stage("FM_flash_spec", lambda: client.invoke("set_heater_flash_spec", block_name="FM", value="TP"), required=True)
+    runtime.stage("FM_temperature", lambda: client.invoke("set_heater_temperature", block_name="FM", value=150.0, unit="C"), required=True)
+    runtime.stage("FM_pressure", lambda: client.invoke("set_heater_pressure", block_name="FM", value=2.3, unit="MPa"), required=True)
+
+    runtime.stage(
+        "R1_stoichiometry",
+        lambda: client.invoke(
+            "configure_rstoic_stoichiometry",
+            block_name="R1",
+            reaction_number=1,
+            reactants={"BENZENE": 1.0, "H2": 3.0},
+            products={"CYCLOHEX": 1.0},
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "R1_fractional_conversion",
+        lambda: client.invoke(
+            "configure_rstoic_fractional_conversions",
+            block_name="R1",
+            conversions=[{"reaction_number": 1, "component_id": "BENZENE", "conversion": 0.998}],
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "R1_calculated_heat_reference",
+        lambda: client.invoke(
+            "configure_rstoic_calculated_heat_reference",
+            block_name="R1",
+            rows=[{"reaction_number": 1, "reference_component_id": "BENZENE", "reference_phase": "V"}],
+            reference_temperature=298.15,
+            reference_temperature_unit="K",
+            reference_pressure=1.0,
+            reference_pressure_unit="atm",
+        ),
+        required=True,
+    )
+    runtime.stage(
+        "R1_flash_conditions",
+        lambda: client.invoke(
+            "configure_rstoic_flash",
+            block_name="R1",
+            spec_opt="TP",
+            temperature=200.0,
+            temperature_unit="C",
+            pressure=-0.1,
+            pressure_unit="MPa",
+        ),
+        required=True,
+    )
+
+    runtime.stage("FL_flash_spec", lambda: client.invoke("set_flash2_flash_spec", block_name="FL", value="TP"), required=True)
+    runtime.stage("FL_temperature", lambda: client.invoke("set_flash2_temperature", block_name="FL", value=50.0, unit="C"), required=True)
+    runtime.stage("FL_pressure_drop", lambda: client.invoke("set_flash2_pressure", block_name="FL", value=-0.05, unit="MPa"), required=True)
+
+    runtime.stage("CO_condenser_partial_vapor", lambda: client.invoke("set_radfrac_condenser_type", block_name="CO", value="PARTIAL-V"), required=True)
+    runtime.stage("CO_reboiler_kettle", lambda: client.invoke("set_radfrac_reboiler_type", block_name="CO", value="KETTLE"), required=True)
+    runtime.stage("CO_stage_count", lambda: client.invoke("set_radfrac_stage_count", block_name="CO", value=12), required=True)
+    runtime.stage("CO_feed_stage", lambda: client.invoke("set_radfrac_feed_stage", block_name="CO", stream_name="C1", value=8), required=True)
+    runtime.stage("CO_feed_convention", lambda: client.invoke("configure_radfrac_feed_convention", block_name="CO", stream_name="C1", convention="ON-STAGE-LIQ"), required=True)
+    runtime.stage("CO_top_pressure", lambda: client.invoke("set_radfrac_top_pressure", block_name="CO", value=1.5, unit="MPa"), required=True)
+    runtime.stage("CO_reflux_ratio", lambda: client.invoke("set_radfrac_reflux_ratio", block_name="CO", value=1.2), required=True)
+    runtime.stage("CO_distillate_rate", lambda: client.invoke("set_radfrac_distillate_rate", block_name="CO", value=99.0, unit="kmol/hr"), required=True)
+
+    runtime.stage(
+        "recycle_convergence_options",
+        lambda: client.invoke(
+            "configure_recycle_convergence_options",
+            tolerance=1e-5,
+            tear_method="WEGSTEIN",
+            wegstein_max_iterations=100,
+        ),
+        required=True,
+    )
+
+
+def _record_completion_probes(runtime) -> None:
+    """Record concise completion diagnostics without treating probes as fatal."""
+    client = runtime.client
+    runtime.stage(
+        "model_state_probe_before_final_runtime_run",
+        lambda: client.invoke(
+            "probe_model_state",
+            stream_names=list(REQUIRED_STREAMS),
+            block_names=list(REQUIRED_BLOCKS),
+            include_flowsheet=True,
+            include_ui_next=False,
+        ),
+        required=False,
+    )
+    for stream_name in ("H1", "B1"):
+        runtime.stage(
+            f"stream_completion_{stream_name}",
+            lambda stream_name=stream_name: client.invoke("check_stream_completion", stream_name=stream_name),
+            required=False,
+        )
+    for block_name in REQUIRED_BLOCKS:
+        runtime.stage(
+            f"block_completion_{block_name}",
+            lambda block_name=block_name: client.invoke("check_block_completion", block_name=block_name),
+            required=False,
+        )
+
+
+def configure(runtime) -> SlimTaskOutcome:
+    """Slim runtime entry point: configure the model and return semantic handoff fields."""
+    client = runtime.client
+    _ = client
+    _validate_static_plans()
+    runtime.attach_artifact(
+        "static_topology_contract",
+        {
+            "material_edges": MATERIAL_EDGES,
+            "name_mapping": NAME_MAPPING,
+            "required_streams": REQUIRED_STREAMS,
+            "required_blocks": REQUIRED_BLOCKS,
+        },
+    )
+
+    _setup_components_and_property(runtime)
+    _create_streams_and_blocks(runtime)
+    _connect_topology(runtime)
+    _set_feed_streams(runtime)
+    _set_pressure_changing_units(runtime)
+    _set_reactor_separator_column(runtime)
+    _record_completion_probes(runtime)
+
+    return SlimTaskOutcome(
+        fields={
+            "model_basis": {
+                "objective": "Report CYCLOHEX mole fraction in PRODUCT/P5 from final Aspen REP evidence.",
+                "property_method": "RK-SOAVE task method implemented as Aspen SRK option set.",
+                "feed_basis": {
+                    "H1": "H2IN: 330 kmol/hr at 50 C and 2.5 MPa; H2/N2/CH4 = 0.975/0.005/0.02.",
+                    "B1": "BZIN: 100 kmol/hr pure benzene at 40 C and 0.1 MPa.",
+                },
+                "reaction": "BENZENE + 3 H2 -> CYCLOHEX with 0.998 benzene conversion in R1.",
+            },
+            "pump_curve_unit_interpretation": {
+                "assigned_block": "FP",
+                "assigned_visible_block": "FEEDPUMP",
+                "flow_unit": "m3/hr",
+                "head_unit": "m",
+                "curve_points": FEEDPUMP_CURVE_POINTS,
+                "recycle_pump_RP_curve_assigned": False,
+            },
+        },
+        analysis_handoff={
+            "native_analysis_required": False,
+            "final_result_source": "Slim runtime final engine/export plus REP readback target product_cyclohexane_mole_fraction.",
+            "phase_role_evidence_needed": ["FL outlet V1/L1 phase readbacks", "CO vapor light ends T1 and bottoms product P5 readbacks"],
+        },
+        analysis_objects={},
+        validation_contract={
+            "phase": "final_evidence_fact_collection",
+            "validator_decision_pending": True,
+            "no_script_judgment_policy": True,
+            "primary_measurement": {
+                "request_id": "product_cyclohexane_mole_fraction",
+                "stream": "P5",
+                "visible_stream": "PRODUCT",
+                "component": "CYCLOHEX",
+                "basis": "raw full-material-stream mole fraction from final Aspen REP",
+            },
+            "topology_evidence_index": {
+                "required_blocks": REQUIRED_BLOCKS,
+                "required_streams": REQUIRED_STREAMS,
+                "material_edges_artifact": "static_topology_contract",
+            },
+        },
+    )
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_slim_task(spec=TASK_SPEC, configure=configure))
+
+````
