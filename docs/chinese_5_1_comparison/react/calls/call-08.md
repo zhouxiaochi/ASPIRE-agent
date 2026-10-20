@@ -1,13 +1,13 @@
-# ReAct call 10 of 10
+# ReAct call 8 of 10
 
-[← Call 9](call-09.md) · [ReAct index](README.md) · [Raw JSONL](../react_main_control_calls.raw.jsonl)
+[← Call 7](call-07.md) · [ReAct index](../README.md) · [Call 9 →](call-09.md) · [Raw JSONL](../../raw/react_main_control_calls.raw.jsonl)
 
-`select_action` · `gpt-5.5` · **132,727 input** + **736 output** = **133,463 tokens** · **$0.685715**
+`select_action` · `gpt-5.5` · **131,962 input** + **564 output** = **132,526 tokens** · **$0.676730**
 
 Input provenance: `deterministically_reconstructed_from_persisted_task_context_memory_and_observations`
-Recorded at: `2026-10-18T21:01:25.175`
+Recorded at: `2026-10-18T21:01:02.306`
 
-Recorded prompt: 516,762 characters · Reconstructed prompt before translation: 518,751 characters
+Recorded prompt: 513,695 characters · Reconstructed prompt before translation: 515,684 characters
 
 ## Input
 
@@ -48,7 +48,7 @@ Causal-ablation plan treatment:
 
 ````
 
-### Message 2 — `user` (548,332 translated characters)
+### Message 2 — `user` (545,615 translated characters)
 
 ````text
 CASE_ID: chinese_5_1_radfrac
@@ -8721,10 +8721,10 @@ RUN_MEMORY_SUMMARY:
     "do_not_use_rejected_surrogates": []
   },
   "current_model_state": {
-    "state_version": 75,
+    "state_version": 73,
     "domain_versions": {
       "properties": 2,
-      "flowsheet": 75,
+      "flowsheet": 73,
       "stream:H2RCY2": 5,
       "stream:BZIN": 5,
       "stream:PRODUCT": 3,
@@ -8742,7 +8742,7 @@ RUN_MEMORY_SUMMARY:
       "stream:CHRCY3": 5,
       "stream:LTENDS": 3,
       "stream:H2RCY": 5,
-      "block:FEEDPUMP": 12,
+      "block:FEEDPUMP": 11,
       "block:FEED-MIX": 6,
       "block:REACT": 6,
       "block:HP-SEP": 4,
@@ -8750,7 +8750,7 @@ RUN_MEMORY_SUMMARY:
       "block:COMP": 4,
       "block:VALVE": 4,
       "block:LFLOW": 3,
-      "block:PUMP": 6,
+      "block:PUMP": 5,
       "block:PIPE": 4,
       "block:COLUMN": 13
     },
@@ -8838,248 +8838,7 @@ RUN_MEMORY_SUMMARY:
     ],
     "engine_run": null,
     "artifacts": {},
-    "readbacks": [
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "",
-            "HAP_OPTIONLIST": "PRES\nDELP\nPRATIO\nPOWER\nUSE-CURVE",
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 3,
-            "Name": "OPT_SPEC",
-            "Value": "USE-CURVE"
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CTYPE"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CTYPE",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CTYPE",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CTYPE"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "",
-            "HAP_OPTIONLIST": "SINGLE-OPER\nSINGLE-REFE\nMULTIP",
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 3,
-            "Name": "OPT_CTYPE",
-            "Value": "SINGLE-OPER"
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CFORMAT"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CFORMAT",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CFORMAT",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\OPT_CFORMAT"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "",
-            "HAP_OPTIONLIST": "TABLE\nPOLY\nUSER-CURVES",
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 3,
-            "Name": "OPT_CFORMAT",
-            "Value": "TABLE"
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\DEP_VAR"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\DEP_VAR",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\DEP_VAR",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\DEP_VAR"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "Type of performance curve(s). Specify the curve data in Curve Data sheet.",
-            "HAP_OPTIONLIST": "HEAD\nHEAD-COEF\nPOWER\nPRES\nPRAT\nDELP",
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 3,
-            "Name": "DEP_VAR",
-            "Value": "HEAD"
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\INDEP_VAR"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\INDEP_VAR",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\INDEP_VAR",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\INDEP_VAR"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "Type of flow variable used for performance curve(s).",
-            "HAP_OPTIONLIST": "VOL-FLOW\nMASS-FLOW",
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 3,
-            "Name": "INDEP_VAR",
-            "Value": "VOL-FLOW"
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\EFF"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\EFF",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\EFF",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\EFF"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "Efficiency. Pump: fluid HP/brake HP. Turbine: brake HP/fluid HP. Use Help for information on default value.",
-            "HAP_VALUEDEFAULT": 1e+35,
-            "HAP_UPPERLIMIT": 1.0,
-            "HAP_LOWERLIMIT": 1e-15,
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 2,
-            "Name": "EFF",
-            "Value": 0.6
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\DEFF"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\DEFF",
-          "normalized_path": "Data\\Blocks\\FEEDPUMP\\Input\\DEFF",
-          "attempted_paths": [
-            "Data\\Blocks\\FEEDPUMP\\Input\\DEFF"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "Driver efficiency. Pump: brake HP/electrical HP. Turbine: electrical HP/ brake HP. Default=1.",
-            "HAP_VALUEDEFAULT": 1.0,
-            "HAP_UPPERLIMIT": 1.0,
-            "HAP_LOWERLIMIT": 1e-15,
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 2,
-            "Name": "DEFF",
-            "Value": 0.9
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\PUMP\\Input\\OPT_SPEC"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\PUMP\\Input\\OPT_SPEC",
-          "normalized_path": "Data\\Blocks\\PUMP\\Input\\OPT_SPEC",
-          "attempted_paths": [
-            "Data\\Blocks\\PUMP\\Input\\OPT_SPEC"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "",
-            "HAP_OPTIONLIST": "PRES\nDELP\nPRATIO\nPOWER\nUSE-CURVE",
-            "HAP_UNITROW": 0,
-            "HAP_UNITCOL": 0,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 3,
-            "Name": "OPT_SPEC",
-            "Value": "PRES"
-          }
-        }
-      },
-      {
-        "operation": "node_props",
-        "parameters": {
-          "path": "Data\\Blocks\\PUMP\\Input\\PRES"
-        },
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\PUMP\\Input\\PRES",
-          "normalized_path": "Data\\Blocks\\PUMP\\Input\\PRES",
-          "attempted_paths": [
-            "Data\\Blocks\\PUMP\\Input\\PRES"
-          ],
-          "exists": true,
-          "has_elements": false,
-          "props": {
-            "HAP_PROMPT": "Outlet pressure.",
-            "HAP_VALUEDEFAULT": 1e+35,
-            "HAP_UPPERLIMIT": 10000000000.0,
-            "HAP_LOWERLIMIT": 1e-15,
-            "HAP_UNITROW": 20,
-            "HAP_UNITCOL": 20,
-            "HAP_HASCHILDREN": 0,
-            "ValueType": 2,
-            "Name": "PRES",
-            "Value": 2.6
-          }
-        }
-      }
-    ]
+    "readbacks": []
   },
   "operation_ledger": {
     "677ff79d23598058": {
@@ -9373,6 +9132,299 @@ RUN_MEMORY_SUMMARY:
           "leaves": [
             "MAXOL",
             "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "FEED-MIX",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\FEED-MIX\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "FEED-MIX",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\FEED-MIX\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\FEED-MIX\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "a6c7e44d982c03d4": {
+      "operation": "create_rstoic",
+      "parameters": {
+        "block_name": "REACT"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:REACT"
+      ],
+      "dependency_versions": {
+        "block:REACT": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "REACT",
+        "block_type": "RSTOIC",
+        "composite": "REACT!RSTOIC",
+        "message": "Block REACT (RSTOIC) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "REACT",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\REACT\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "REACT",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\REACT\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\REACT\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "a2421e5bf09b3395": {
+      "operation": "create_flash2",
+      "parameters": {
+        "block_name": "HP-SEP"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:HP-SEP"
+      ],
+      "dependency_versions": {
+        "block:HP-SEP": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "HP-SEP",
+        "block_type": "FLASH2",
+        "composite": "HP-SEP!FLASH2",
+        "message": "Block HP-SEP (FLASH2) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "HP-SEP",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\HP-SEP\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "HP-SEP",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\HP-SEP\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\HP-SEP\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "9d6acd9818f63c1d": {
+      "operation": "create_fsplit",
+      "parameters": {
+        "block_name": "VFLOW"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:VFLOW"
+      ],
+      "dependency_versions": {
+        "block:VFLOW": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "VFLOW",
+        "block_type": "FSPLIT",
+        "composite": "VFLOW!FSPLIT",
+        "message": "Block VFLOW (FSPLIT) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "VFLOW",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\VFLOW\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\VFLOW\\Input\\MAXOL"
+              ]
+            },
+            {
+              "block": "VFLOW",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\VFLOW\\Input\\MAXIT",
+              "attempted_paths": [
+                "Data\\Blocks\\VFLOW\\Input\\MAXIT"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "315f45151cc00f4e": {
+      "operation": "create_compr",
+      "parameters": {
+        "block_name": "COMP"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:COMP"
+      ],
+      "dependency_versions": {
+        "block:COMP": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "COMP",
+        "block_type": "COMPR",
+        "composite": "COMP!COMPR",
+        "message": "Block COMP (COMPR) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "COMP",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\COMP\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "COMP",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\COMP\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\COMP\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "608a52d659fb4d06": {
+      "operation": "create_valve",
+      "parameters": {
+        "block_name": "VALVE"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:VALVE"
+      ],
+      "dependency_versions": {
+        "block:VALVE": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "VALVE",
+        "block_type": "VALVE",
+        "composite": "VALVE!VALVE",
+        "message": "Block VALVE (VALVE) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "VALVE",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\VALVE\\Input\\MAXIT",
+              "before": 50,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "VALVE",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\VALVE\\Input\\MAXOL",
+              "attempted_paths": [
 
 ...[context truncated for ReAct baseline prompt]...
 
@@ -9581,20 +9633,20 @@ Aspen ReAct tool surface (registry-driven facade):
 DYNAMIC_OPERATION_EXPOSURE:
 This step exposes schema/details for 173 operations. The facade retains 4979 executable profile capabilities, but undisclosed names are intentionally omitted from the action prompt to avoid repeated catalog-token overhead. Use the exposed operations; the selector refreshes the visible surface periodically and after tool or validation errors. Function-like names appearing only in prose, examples, annotations, or implementation notes are not callable tools.
 
-STEP: 10 (budget-limited; no step cap)
+STEP: 8 (budget-limited; no step cap)
 OBSERVATION_CONTEXT:
 PROMPT_REDUCER: enabled; full uncompressed trajectory remains in react_mcp_trajectory.jsonl.
 OLDER_OBSERVATION_DIGEST:
 {
-  "observation_count": 7,
+  "observation_count": 5,
   "event_counts": {
-    "plan_result": 3,
-    "tool_result": 2,
+    "plan_result": 2,
     "preflight": 1,
-    "session_started": 1
+    "session_started": 1,
+    "tool_result": 1
   },
   "operation_counts_top": {
-    "probe_model_state": 2
+    "probe_model_state": 1
   },
   "successful_operations_tail": [
     {
@@ -9636,32 +9688,6 @@ OLDER_OBSERVATION_DIGEST:
         "include_flowsheet": true,
         "include_ui_next": true
       }
-    },
-    {
-      "index": 5,
-      "operation": "probe_model_state",
-      "parameters": {
-        "stream_names": [
-          "BZIN",
-          "H2IN",
-          "PRODUCT"
-        ],
-        "block_names": [
-          "FEEDPUMP",
-          "FEED-MIX",
-          "REACT",
-          "HP-SEP",
-          "VFLOW",
-          "COMP",
-          "VALVE",
-          "LFLOW",
-          "PUMP",
-          "PIPE",
-          "COLUMN"
-        ],
-        "include_flowsheet": true,
-        "include_ui_next": false
-      }
     }
   ],
   "failures_tail": [],
@@ -9671,6 +9697,47 @@ OLDER_OBSERVATION_DIGEST:
 
 RECENT_OBSERVATIONS_COMPACT:
 [
+  {
+    "event": "tool_result",
+    "operation": "probe_model_state",
+    "parameters": {
+      "stream_names": [
+        "BZIN",
+        "H2IN",
+        "PRODUCT"
+      ],
+      "block_names": [
+        "FEEDPUMP",
+        "FEED-MIX",
+        "REACT",
+        "HP-SEP",
+        "VFLOW",
+        "COMP",
+        "VALVE",
+        "LFLOW",
+        "PUMP",
+        "PIPE",
+        "COLUMN"
+      ],
+      "include_flowsheet": true,
+      "include_ui_next": false
+    },
+    "facade": true,
+    "translated_operations": [
+      {
+        "operation": "probe_model_state",
+        "success": true,
+        "error": null
+      }
+    ],
+    "response_status": null,
+    "result": {}
+  },
+  {
+    "truncated": true,
+    "chars": 8167,
+    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 16, \"actions_executed\": 16, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"read_global_property_method\", \"parameters\": {}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"ui_check_next_completion_status\", \"parameters\": {\"close_window\": true, \"status_timeout_s\": 8.0}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"per_error\": null}}, {\"truncated\": true, \"chars\": 556, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_flowsheet_completion\\\", \\\"parameters\\\": {}, \\\"facade\\\": true, \\\"translated_operations\\\": [], \\\"response_status\\\": \\\"success\\\", \\\"result\\\": {\\\"success\\\": true, \\\"node_path_used\\\": \\\"Data\\\\\\\\Flowsheet\\\\\\\\Section\\\\\\\\GLOBAL\\\", \\\"input_state\\\": \\\"complete\\\", \\\"input_complete\\\": true, \\\"status_flags\\\": {\\\"results_success\\\": false, \\\"no_results\\\": true, \\\"results_warnings\\\": false, \\\"input_incomplete\\\": false, \\\"input_co\\n...[truncated]\"}, {\"truncated\": true, \"chars\": 602, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_block_completion\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"FEEDPUMP\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [], \\\"response_status\\\": \\\"success\\\", \\\"result\\\": {\\\"success\\\": true, \\\"block_name\\\": \\\"FEEDPUMP\\\", \\\"node_path_used\\\": \\\"Data\\\\\\\\Blocks\\\\\\\\FEEDPUMP\\\", \\\"input_state\\\": \\\"complete\\\", \\\"input_complete\\\": true, \\\"status_flags\\\": {\\\"results_success\\\": false, \\\"no_results\\\": true, \\\"results_warnings\\\": false, \\n...[truncated]\"}, {\"truncated\": true, \"chars\": 602, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_block_completion\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"FEED-MIX\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [], \\\"response_status\\\": \\\"success\\\", \\\"result\\\": {\\\"success\\\": true, \\\"block_name\\\": \\\"FEED-MIX\\\", \\\"node_path_used\\\": \\\"Data\\\\\\\\Blocks\\\\\\\\FEED-MIX\\\", \\\"input_state\\\": \\\"complete\\\", \\\"input_complete\\\": true, \\\"status_flags\\\": {\\\"results_success\\\": false, \\\"no_results\\\": true, \\\"results_warnings\\\": false, \\n...[truncated]\"}, {\"truncated\": true, \"chars\": 593, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_block_completion\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"REACT\\\"}, \\\"facade\\\": true, \\\n...[truncated]"
+  },
   {
     "event": "tool_result",
     "operation": "export_final_evidence",
@@ -9834,102 +9901,6 @@ RECENT_OBSERVATIONS_COMPACT:
         }
       }
     ]
-  },
-  {
-    "event": "plan_result",
-    "actions_requested": 6,
-    "actions_executed": 6,
-    "stopped_on_error": false,
-    "first_error_index": null,
-    "pending_action_count": 0,
-    "action_outcomes": [
-      {
-        "event": "tool_result",
-        "operation": "read_stream_output",
-        "parameters": {
-          "stream_name": "PRODUCT",
-          "variable": "mole_fraction",
-          "component_name": "CYCLOHEX"
-        },
-        "facade": true,
-        "translated_operations": [],
-        "response_status": "success",
-        "result": {
-          "success": true,
-          "stream_name": "PRODUCT",
-          "value": 0.999122737,
-          "unit": null,
-          "path": "\\Data\\Streams\\PRODUCT\\Output\\MOLEFRAC\\MIXED\\CYCLOHEX"
-        }
-      },
-      {
-        "event": "tool_result",
-        "operation": "read_stream_output",
-        "parameters": {
-          "stream_name": "PRODUCT",
-          "variable": "total_flow"
-        },
-        "facade": true,
-        "translated_operations": [],
-        "response_status": "success",
-        "result": {
-          "success": true,
-          "stream_name": "PRODUCT",
-          "value": 2.45448313,
-          "unit": null,
-          "path": "\\Data\\Streams\\PRODUCT\\Output\\TOT_FLOW"
-        }
-      },
-      {
-        "truncated": true,
-        "chars": 840,
-        "preview": "{\"event\": \"tool_result\", \"operation\": \"read_stream_outputs\", \"parameters\": {\"stream_name\": \"PRODUCT\", \"components\": [\"H2\", \"N2\", \"CH4\", \"BENZENE\", \"CYCLOHEX\"], \"basis\": \"mole_fraction\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"read_stream_output\", \"success\": true, \"error\": null}, {\"operation\": \"read_stream_output\", \"success\": true, \"error\": null}, {\"operation\": \"read_stream_output\", \"success\": true, \n...[truncated]"
-      },
-      {
-        "event": "tool_result",
-        "operation": "read_global_property_method",
-        "parameters": {},
-        "facade": true,
-        "translated_operations": [],
-        "response_status": "success",
-        "result": {
-          "success": true
-        }
-      },
-      {
-        "event": "tool_result",
-        "operation": "node_info",
-        "parameters": {
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC"
-        },
-        "facade": true,
-        "translated_operations": [],
-        "response_status": "success",
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC"
-        }
-      },
-      {
-        "event": "tool_result",
-        "operation": "node_info",
-        "parameters": {
-          "path": "Data\\Blocks\\PUMP\\Input\\OPT_SPEC"
-        },
-        "facade": true,
-        "translated_operations": [],
-        "response_status": "success",
-        "result": {
-          "success": true,
-          "path": "Data\\Blocks\\PUMP\\Input\\OPT_SPEC"
-        }
-      }
-    ]
-  },
-  {
-    "truncated": true,
-    "chars": 5602,
-    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 17, \"actions_executed\": 17, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\OPT_SPEC\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\OPT_SPEC\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\OPT_CTYPE\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\OPT_CTYPE\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\OPT_CFORMAT\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\OPT_CFORMAT\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\DEP_VAR\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\DEP_VAR\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\INDEP_VAR\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\INDEP_VAR\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\EFF\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\EFF\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\DEFF\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\FEEDPUMP\\\\Input\\\\DEFF\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\": {\"path\": \"Data\\\\Blocks\\\\PUMP\\\\Input\\\\OPT_SPEC\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"path\": \"Data\\\\Blocks\\\\PUMP\\\\Input\\\\OPT_SPEC\"}}, {\"event\": \"tool_result\", \"operation\": \"node_props\", \"parameters\n...[truncated]"
   }
 ]
 
@@ -9940,93 +9911,57 @@ Choose the next JSON action.
 
 ````json
 {
-  "thought": "Converged Aspen evidence and PRODUCT CYCLOHEX mole fraction readback are available; finalize with documented evidence and limitations.",
-  "action": "finalize",
-  "final_summary": {
-    "case_id": "chinese_5_1_radfrac",
-    "ok": true,
-    "evidence": {
-      "aspen_run": {
-        "per_error": 0,
-        "converged": true,
-        "rep_path": "<REPOSITORY_ROOT>\\data\\file\\chinese_5_1_radfrac_20261018_210043_react_mc.rep",
-        "apw_path": "<REPOSITORY_ROOT>\\data\\file\\chinese_5_1_radfrac_20261018_210044_react_mc.apw",
-        "rep_problem_status": {
-          "converged": true
+  "thought": "Need exact PRODUCT cyclohexane mole fraction from converged run plus concise supporting readbacks before finalizing.",
+  "action": "mcp_plan",
+  "operation": "readbacks_for_final_result",
+  "parameters": {
+    "actions": [
+      {
+        "operation": "read_stream_output",
+        "parameters": {
+          "stream_name": "PRODUCT",
+          "variable": "mole_fraction",
+          "component_name": "CYCLOHEX"
         }
       },
-      "product_readback": {
-        "stream": "PRODUCT",
-        "component": "CYCLOHEX",
-        "variable": "mole_fraction",
-        "value": 0.999122737,
-        "path": "\\Data\\Streams\\PRODUCT\\Output\\MOLEFRAC\\MIXED\\CYCLOHEX"
-      },
-      "product_identity": {
-        "column_ports": {
-          "F(IN)": [
-            "COLFD"
-          ],
-          "VD(OUT)": [
-            "LTENDS"
-          ],
-          "B(OUT)": [
-            "PRODUCT"
-          ]
-        },
-        "meaning": "PRODUCT is the COLUMN bottoms outlet; LTENDS is vapor distillate/light ends."
-      },
-      "topology_evidence": {
-        "FEEDPUMP_ports": {
-          "F(IN)": [
-            "BZIN"
-          ],
-          "P(OUT)": [
-            "BZIN2"
-          ]
-        },
-        "PUMP_ports": {
-          "F(IN)": [
-            "CHRCY"
-          ],
-          "P(OUT)": [
-            "CHRCY2"
-          ]
+      {
+        "operation": "read_stream_output",
+        "parameters": {
+          "stream_name": "PRODUCT",
+          "variable": "total_flow"
         }
       },
-      "pump_spec_readbacks": {
-        "FEEDPUMP": {
-          "OPT_SPEC": "USE-CURVE",
-          "OPT_CTYPE": "SINGLE-OPER",
-          "OPT_CFORMAT": "TABLE",
-          "DEP_VAR": "HEAD",
-          "INDEP_VAR": "VOL-FLOW",
-          "EFF": 0.6,
-          "DEFF": 0.9,
-          "curve_assignment_note": "Pump curve is assigned to FEEDPUMP branch BZIN -> FEEDPUMP -> BZIN2; flow unit m3/hr and head interpreted as meters for Aspen curve entry."
-        },
-        "PUMP": {
-          "OPT_SPEC": "PRES",
-          "PRES": 2.6,
-          "branch": "CHRCY -> PUMP -> CHRCY2"
+      {
+        "operation": "read_stream_outputs",
+        "parameters": {
+          "stream_name": "PRODUCT",
+          "components": [
+            "H2",
+            "N2",
+            "CH4",
+            "BENZENE",
+            "CYCLOHEX"
+          ],
+          "basis": "mole_fraction"
+        }
+      },
+      {
+        "operation": "read_global_property_method",
+        "parameters": {}
+      },
+      {
+        "operation": "node_info",
+        "parameters": {
+          "path": "Data\\Blocks\\FEEDPUMP\\Input\\OPT_SPEC"
+        }
+      },
+      {
+        "operation": "node_info",
+        "parameters": {
+          "path": "Data\\Blocks\\PUMP\\Input\\OPT_SPEC"
         }
       }
-    },
-    "results": {
-      "product_cyclohexane_mole_fraction": 0.999122737,
-      "product_total_flow_readback": 2.45448313,
-      "product_component": "CYCLOHEX/cyclohexane",
-      "basis": "raw full material-stream mole fraction in PRODUCT including H2, N2, CH4, BENZENE, and CYCLOHEX where present",
-      "property_method_requested": "RK-SOAVE"
-    },
-    "self_validation": {
-      "primary_target_satisfied": true,
-      "result_from_solved_aspen_flowsheet": true,
-      "per_error_zero": true,
-      "product_stream_is_column_product": true,
-      "pressure_unit_and_pump_curve_caveat": "FEEDPUMP mode/curve-axis/efficiency readbacks and branch readbacks were obtained; detailed curve table cell values were probed during setup but only summarized here from available evidence.",
-      "not_claimed": "No manual hand-calculation result is used; no unobserved tolerance-level match for every individual stream pressure is claimed."
-    }
+    ]
   }
 }
 ````

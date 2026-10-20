@@ -1,13 +1,13 @@
-# ReAct call 5 of 10
+# ReAct call 2 of 10
 
-[← Call 4](call-04.md) · [ReAct index](README.md) · [Call 6 →](call-06.md) · [Raw JSONL](../react_main_control_calls.raw.jsonl)
+[← Call 1](call-01.md) · [ReAct index](../README.md) · [Call 3 →](call-03.md) · [Raw JSONL](../../raw/react_main_control_calls.raw.jsonl)
 
-`select_action` · `gpt-5.5` · **131,591 input** + **517 output** = **132,108 tokens** · **$0.673465**
+`select_action` · `gpt-5.5` · **130,421 input** + **5,208 output** = **135,629 tokens** · **$0.808345**
 
 Input provenance: `deterministically_reconstructed_from_persisted_task_context_memory_and_observations`
-Recorded at: `2026-10-18T21:00:20.696`
+Recorded at: `2026-10-18T20:59:10.439`
 
-Recorded prompt: 511,715 characters · Reconstructed prompt before translation: 513,704 characters
+Recorded prompt: 506,538 characters · Reconstructed prompt before translation: 508,369 characters
 
 ## Input
 
@@ -48,7 +48,7 @@ Causal-ablation plan treatment:
 
 ````
 
-### Message 2 — `user` (543,655 translated characters)
+### Message 2 — `user` (539,252 translated characters)
 
 ````text
 CASE_ID: chinese_5_1_radfrac
@@ -8721,38 +8721,38 @@ RUN_MEMORY_SUMMARY:
     "do_not_use_rejected_surrogates": []
   },
   "current_model_state": {
-    "state_version": 71,
+    "state_version": 25,
     "domain_versions": {
       "properties": 2,
-      "flowsheet": 71,
-      "stream:H2RCY2": 5,
-      "stream:BZIN": 5,
-      "stream:PRODUCT": 3,
-      "stream:CHRCY2": 5,
-      "stream:VAP": 5,
-      "stream:PURGE": 5,
-      "stream:PURGE2": 3,
-      "stream:RXOUT": 5,
-      "stream:COLFD": 7,
-      "stream:RXIN": 5,
-      "stream:BZIN2": 5,
-      "stream:H2IN": 5,
-      "stream:LIQ": 5,
-      "stream:CHRCY": 5,
-      "stream:CHRCY3": 5,
-      "stream:LTENDS": 3,
-      "stream:H2RCY": 5,
-      "block:FEEDPUMP": 11,
-      "block:FEED-MIX": 6,
-      "block:REACT": 6,
-      "block:HP-SEP": 4,
-      "block:VFLOW": 3,
-      "block:COMP": 4,
-      "block:VALVE": 4,
-      "block:LFLOW": 3,
-      "block:PUMP": 5,
-      "block:PIPE": 4,
-      "block:COLUMN": 13
+      "flowsheet": 25,
+      "stream:H2RCY2": 3,
+      "stream:BZIN": 2,
+      "stream:PRODUCT": 2,
+      "stream:CHRCY2": 3,
+      "stream:VAP": 3,
+      "stream:PURGE": 3,
+      "stream:PURGE2": 2,
+      "stream:RXOUT": 3,
+      "stream:COLFD": 3,
+      "stream:RXIN": 3,
+      "stream:BZIN2": 3,
+      "stream:H2IN": 2,
+      "stream:LIQ": 3,
+      "stream:CHRCY": 3,
+      "stream:CHRCY3": 3,
+      "stream:LTENDS": 2,
+      "stream:H2RCY": 3,
+      "block:FEEDPUMP": 2,
+      "block:FEED-MIX": 2,
+      "block:REACT": 2,
+      "block:HP-SEP": 2,
+      "block:VFLOW": 2,
+      "block:COMP": 2,
+      "block:VALVE": 2,
+      "block:LFLOW": 2,
+      "block:PUMP": 2,
+      "block:PIPE": 2,
+      "block:COLUMN": 2
     },
     "components": [
       "H2",
@@ -8794,48 +8794,8 @@ RUN_MEMORY_SUMMARY:
       "LTENDS",
       "PRODUCT"
     ],
-    "connections": [
-      {
-        "block_name": "COLUMN",
-        "stream_name": "COLFD",
-        "port_name": "F(IN)",
-        "source_operation": "connect_stream"
-      },
-      {
-        "block_name": "COLUMN",
-        "stream_name": "LTENDS",
-        "port_name": "VD(OUT)",
-        "source_operation": "connect_stream"
-      },
-      {
-        "block_name": "COLUMN",
-        "stream_name": "PRODUCT",
-        "port_name": "B(OUT)",
-        "source_operation": "connect_stream"
-      }
-    ],
-    "specs": [
-      {
-        "stream_name": "H2IN",
-        "temperature": 50.0,
-        "pressure": 2.5,
-        "vapor_fraction": null,
-        "mixed_spec": "TP",
-        "temperature_unit": "C",
-        "pressure_unit": "MPa",
-        "source_operation": "set_material_stream_conditions"
-      },
-      {
-        "stream_name": "BZIN",
-        "temperature": 40.0,
-        "pressure": 0.1,
-        "vapor_fraction": null,
-        "mixed_spec": "TP",
-        "temperature_unit": "C",
-        "pressure_unit": "MPa",
-        "source_operation": "set_material_stream_conditions"
-      }
-    ],
+    "connections": [],
+    "specs": [],
     "engine_run": null,
     "artifacts": {},
     "readbacks": []
@@ -9425,6 +9385,49 @@ RUN_MEMORY_SUMMARY:
               "leaf": "MAXOL",
               "path": "Data\\Blocks\\VALVE\\Input\\MAXOL",
               "attempted_paths": [
+                "Data\\Blocks\\VALVE\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "46b80b341908af9d": {
+      "operation": "create_fsplit",
+      "parameters": {
+        "block_name": "LFLOW"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:LFLOW"
+      ],
+      "dependency_versions": {
+        "block:LFLOW": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "LFLOW",
+        "block_type": "FSPLIT",
+        "composite": "LFLOW!FSPLIT",
+        "message": "Block LFLOW (FSPLIT) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
 
 ...[context truncated for ReAct baseline prompt]...
 
@@ -9633,114 +9636,30 @@ Aspen ReAct tool surface (registry-driven facade):
 DYNAMIC_OPERATION_EXPOSURE:
 This step exposes schema/details for 173 operations. The facade retains 4979 executable profile capabilities, but undisclosed names are intentionally omitted from the action prompt to avoid repeated catalog-token overhead. Use the exposed operations; the selector refreshes the visible surface periodically and after tool or validation errors. Function-like names appearing only in prose, examples, annotations, or implementation notes are not callable tools.
 
-STEP: 5 (budget-limited; no step cap)
+STEP: 2 (budget-limited; no step cap)
 OBSERVATION_CONTEXT:
 PROMPT_REDUCER: enabled; full uncompressed trajectory remains in react_mcp_trajectory.jsonl.
 OLDER_OBSERVATION_DIGEST:
 {
-  "observation_count": 2,
-  "event_counts": {
-    "preflight": 1,
-    "session_started": 1
-  },
-  "operation_counts_top": {},
-  "successful_operations_tail": [],
-  "failures_tail": [],
-  "artifacts_tail": [],
-  "validator_feedback_tail": []
+  "observation_count": 0
 }
 
 RECENT_OBSERVATIONS_COMPACT:
 [
   {
+    "event": "preflight",
+    "health": {
+      "status": "healthy"
+    },
+    "task_hash": "<REDACTED_TASK_ID>"
+  },
+  {
+    "event": "session_started"
+  },
+  {
     "truncated": true,
     "chars": 9822,
     "preview": "{\"event\": \"plan_result\", \"actions_requested\": 25, \"actions_executed\": 25, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"add_components_by_cas\", \"parameters\": {\"components\": [{\"component_id\": \"H2\", \"cas\": \"1333-74-0\"}, {\"component_id\": \"N2\", \"cas\": \"7727-37-9\"}, {\"component_id\": \"CH4\", \"cas\": \"74-82-8\"}, {\"component_id\": \"BENZENE\", \"cas\": \"71-43-2\"}, {\"component_id\": \"CYCLOHEX\", \"cas\": \"110-82-7\"}]}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Added 5 component(s) successfully\"}}, {\"truncated\": true, \"chars\": 525, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"ensure_property_method\\\", \\\"parameters\\\": {\\\"method\\\": \\\"RK-SOAVE\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"set_property_method\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"set_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"set_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"get_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"ge\\n...[truncated]\"}, {\"truncated\": true, \"chars\": 1611, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"create_material_streams\\\", \\\"parameters\\\": {\\\"stream_names\\\": [\\\"BZIN\\\", \\\"H2IN\\\", \\\"BZIN2\\\", \\\"H2RCY2\\\", \\\"RXIN\\\", \\\"RXOUT\\\", \\\"VAP\\\", \\\"H2RCY\\\", \\\"PURGE\\\", \\\"PURGE2\\\", \\\"LIQ\\\", \\\"COLFD\\\", \\\"CHRCY\\\", \\\"CHRCY2\\\", \\\"CHRCY3\\\", \\\"LTENDS\\\", \\\"PRODUCT\\\"]}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"create_material_streams\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"create_material_streams\\\", \\\"success\\\": \\n...[truncated]\"}, {\"event\": \"tool_result\", \"operation\": \"create_pump\", \"parameters\": {\"block_name\": \"FEEDPUMP\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Block FEEDPUMP (PUMP) created successfully\", \"block_name\": \"FEEDPUMP\"}}, {\"event\": \"tool_result\", \"operation\": \"create_heater\", \"parameters\": {\"block_name\": \"FEED-MIX\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Block FEED-MIX (HEATER) created successfully\", \"block_name\": \"FEED-MIX\"}}, {\"event\": \"tool_result\", \"operation\": \"create_rstoic\", \"parameters\": {\"block_name\": \"REACT\"}, \"facade\": true, \n...[truncated]"
-  },
-  {
-    "truncated": true,
-    "chars": 19494,
-    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 47, \"actions_executed\": 47, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"connect_material_inlet_outlet\", \"parameters\": {\"block_name\": \"FEEDPUMP\", \"inlet_stream\": \"BZIN\", \"outlet_stream\": \"BZIN2\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"list_block_ports\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"connect_shared_material_port_block\", \"parameters\": {\"block_name\": \"FEED-MIX\", \"inlet_streams\": [\"BZIN2\", \"H2IN\", \"H2RCY2\", \"CHRCY3\"], \"outlet_streams\": [\"RXIN\"]}, \"facade\": true, \"translated_operations\": [{\"operation\": \"connect_shared_material_port_block\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"connect_material_inlet_outlet\", \"parameters\": {\"block_name\": \"REACT\", \"inlet_stream\": \"RXIN\", \"outlet_stream\": \"RXOUT\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"list_block_ports\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"truncated\": true, \"chars\": 549, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"connect_flash2_vapor_liquid_ports\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"HP-SEP\\\", \\\"feed_stream\\\": \\\"RXOUT\\\", \\\"vapor_stream\\\": \\\"VAP\\\", \\\"liquid_stream\\\": \\\"LIQ\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"list_block_ports\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"connect_stream\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"connect_stream\\\", \\\"success\\\": true, \\\"error\\\": nu\\n...[truncated]\"}, {\"event\": \"tool_result\", \"operation\": \"configure_fsplit_shared_outlets\", \"parameters\": {\"block_name\": \"VFLOW\", \"inlet_stream\": \"VAP\", \"outlet_streams\": [\"H2RCY\", \"PURGE\"], \"split_fractions\": {\"H2RCY\": 0.92}}, \"facade\": true, \"translated_operations\": [{\"operation\": \"configure_fsplit_shared_outlets\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}\n...[truncated]"
-  },
-  {
-    "event": "tool_result",
-    "operation": "probe_model_state",
-    "parameters": {
-      "stream_names": [
-        "BZIN",
-        "H2IN",
-        "BZIN2",
-        "H2RCY2",
-        "RXIN",
-        "RXOUT",
-        "VAP",
-        "H2RCY",
-        "PURGE",
-        "PURGE2",
-        "LIQ",
-        "COLFD",
-        "CHRCY",
-        "CHRCY2",
-        "CHRCY3",
-        "LTENDS",
-        "PRODUCT"
-      ],
-      "block_names": [
-        "FEEDPUMP",
-        "FEED-MIX",
-        "REACT",
-        "HP-SEP",
-        "VFLOW",
-        "COMP",
-        "VALVE",
-        "LFLOW",
-        "PUMP",
-        "PIPE",
-        "COLUMN"
-      ],
-      "include_flowsheet": true,
-      "include_ui_next": true
-    },
-    "facade": true,
-    "translated_operations": [],
-    "response_status": null,
-    "result": {}
-  },
-  {
-    "event": "tool_result",
-    "operation": "probe_model_state",
-    "parameters": {
-      "stream_names": [
-        "BZIN",
-        "H2IN",
-        "PRODUCT"
-      ],
-      "block_names": [
-        "FEEDPUMP",
-        "FEED-MIX",
-        "REACT",
-        "HP-SEP",
-        "VFLOW",
-        "COMP",
-        "VALVE",
-        "LFLOW",
-        "PUMP",
-        "PIPE",
-        "COLUMN"
-      ],
-      "include_flowsheet": true,
-      "include_ui_next": false
-    },
-    "facade": true,
-    "translated_operations": [
-      {
-        "operation": "probe_model_state",
-        "success": true,
-        "error": null
-      }
-    ],
-    "response_status": null,
-    "result": {}
   }
 ]
 
@@ -9751,105 +9670,468 @@ Choose the next JSON action.
 
 ````json
 {
-  "thought": "Run workflow completion/readback diagnostics before attempting engine run; prior probes returned compact empty summaries, so use explicit completion tools.",
+  "thought": "Topology and core specs are created but not connected/configured; batch the figure-backed connections and task specs using typed helpers, leaving run/evidence for after completion repair.",
   "action": "mcp_plan",
-  "operation": "diagnose_completion",
   "parameters": {
     "actions": [
       {
-        "operation": "read_global_property_method",
-        "parameters": {}
-      },
-      {
-        "operation": "ui_check_next_completion_status",
+        "operation": "connect_material_inlet_outlet",
         "parameters": {
-          "close_window": true,
-          "status_timeout_s": 8.0
+          "block_name": "FEEDPUMP",
+          "inlet_stream": "BZIN",
+          "outlet_stream": "BZIN2"
         }
       },
       {
-        "operation": "check_flowsheet_completion",
-        "parameters": {}
-      },
-      {
-        "operation": "check_block_completion",
+        "operation": "connect_shared_material_port_block",
         "parameters": {
-          "block_name": "FEEDPUMP"
+          "block_name": "FEED-MIX",
+          "inlet_streams": [
+            "BZIN2",
+            "H2IN",
+            "H2RCY2",
+            "CHRCY3"
+          ],
+          "outlet_streams": [
+            "RXIN"
+          ]
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_material_inlet_outlet",
         "parameters": {
-          "block_name": "FEED-MIX"
+          "block_name": "REACT",
+          "inlet_stream": "RXIN",
+          "outlet_stream": "RXOUT"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_flash2_vapor_liquid_ports",
         "parameters": {
-          "block_name": "REACT"
+          "block_name": "HP-SEP",
+          "feed_stream": "RXOUT",
+          "vapor_stream": "VAP",
+          "liquid_stream": "LIQ"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "configure_fsplit_shared_outlets",
         "parameters": {
-          "block_name": "HP-SEP"
+          "block_name": "VFLOW",
+          "inlet_stream": "VAP",
+          "outlet_streams": [
+            "H2RCY",
+            "PURGE"
+          ],
+          "split_fractions": {
+            "H2RCY": 0.92
+          }
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_material_inlet_outlet",
         "parameters": {
-          "block_name": "VFLOW"
+          "block_name": "COMP",
+          "inlet_stream": "H2RCY",
+          "outlet_stream": "H2RCY2"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_material_inlet_outlet",
         "parameters": {
-          "block_name": "COMP"
+          "block_name": "VALVE",
+          "inlet_stream": "PURGE",
+          "outlet_stream": "PURGE2"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "configure_fsplit_shared_outlets",
         "parameters": {
-          "block_name": "VALVE"
+          "block_name": "LFLOW",
+          "inlet_stream": "LIQ",
+          "outlet_streams": [
+            "CHRCY",
+            "COLFD"
+          ],
+          "split_fractions": {
+            "CHRCY": 0.3
+          }
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_material_inlet_outlet",
         "parameters": {
-          "block_name": "LFLOW"
+          "block_name": "PUMP",
+          "inlet_stream": "CHRCY",
+          "outlet_stream": "CHRCY2"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_material_inlet_outlet",
         "parameters": {
-          "block_name": "PUMP"
+          "block_name": "PIPE",
+          "inlet_stream": "CHRCY2",
+          "outlet_stream": "CHRCY3"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_stream",
         "parameters": {
-          "block_name": "PIPE"
+          "block_name": "COLUMN",
+          "stream_name": "COLFD",
+          "port_name": "F(IN)"
         }
       },
       {
-        "operation": "check_block_completion",
+        "operation": "connect_stream",
         "parameters": {
-          "block_name": "COLUMN"
+          "block_name": "COLUMN",
+          "stream_name": "LTENDS",
+          "port_name": "VD(OUT)"
         }
       },
       {
-        "operation": "check_stream_completion",
+        "operation": "connect_stream",
         "parameters": {
-          "stream_name": "BZIN"
+          "block_name": "COLUMN",
+          "stream_name": "PRODUCT",
+          "port_name": "B(OUT)"
         }
       },
       {
-        "operation": "check_stream_completion",
+        "operation": "set_material_stream_conditions",
         "parameters": {
-          "stream_name": "H2IN"
+          "stream_name": "H2IN",
+          "mixed_spec": "TP",
+          "temperature": 50.0,
+          "temperature_unit": "C",
+          "pressure": 2.5,
+          "pressure_unit": "MPa"
+        }
+      },
+      {
+        "operation": "set_material_stream_composition",
+        "parameters": {
+          "stream_name": "H2IN",
+          "basis": "MOLE-FLOW",
+          "flows": {
+            "H2": 321.75,
+            "N2": 1.65,
+            "CH4": 6.6
+          },
+          "flow_unit": "kmol/hr"
+        }
+      },
+      {
+        "operation": "set_material_stream_conditions",
+        "parameters": {
+          "stream_name": "BZIN",
+          "mixed_spec": "TP",
+          "temperature": 40.0,
+          "temperature_unit": "C",
+          "pressure": 0.1,
+          "pressure_unit": "MPa"
+        }
+      },
+      {
+        "operation": "set_material_stream_composition",
+        "parameters": {
+          "stream_name": "BZIN",
+          "basis": "MOLE-FLOW",
+          "flows": {
+            "BENZENE": 100.0
+          },
+          "flow_unit": "kmol/hr"
+        }
+      },
+      {
+        "operation": "set_pump_outlet_spec",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": "USE-CURVE"
+        }
+      },
+      {
+        "operation": "set_opt_ctype",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": "SINGLE-OPER"
+        }
+      },
+      {
+        "operation": "set_opt_cformat",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": "TABLE"
+        }
+      },
+      {
+        "operation": "set_dep_var",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": "HEAD"
+        }
+      },
+      {
+        "operation": "set_indep_var",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": "VOL-FLOW"
+        }
+      },
+      {
+        "operation": "set_pump_curve_table",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "curve_idx": 1,
+          "flow_unit": "m3/hr",
+          "head_unit": "m",
+          "curve_points": [
+            {
+              "flow": 20.0,
+              "head": 40.0
+            },
+            {
+              "flow": 10.0,
+              "head": 250.0
+            },
+            {
+              "flow": 5.0,
+              "head": 300.0
+            },
+            {
+              "flow": 3.0,
+              "head": 400.0
+            }
+          ]
+        }
+      },
+      {
+        "operation": "set_eff",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": 0.6
+        }
+      },
+      {
+        "operation": "set_deff",
+        "parameters": {
+          "block_name": "FEEDPUMP",
+          "value": 0.9
+        }
+      },
+      {
+        "operation": "set_heater_flash_spec",
+        "parameters": {
+          "block_name": "FEED-MIX",
+          "value": "TP"
+        }
+      },
+      {
+        "operation": "set_heater_temperature",
+        "parameters": {
+          "block_name": "FEED-MIX",
+          "value": 150.0,
+          "unit": "C"
+        }
+      },
+      {
+        "operation": "set_heater_pressure",
+        "parameters": {
+          "block_name": "FEED-MIX",
+          "value": 2.3,
+          "unit": "MPa"
+        }
+      },
+      {
+        "operation": "configure_rstoic_stoichiometry",
+        "parameters": {
+          "block_name": "REACT",
+          "reaction_number": 1,
+          "reactants": {
+            "BENZENE": 1.0,
+            "H2": 3.0
+          },
+          "products": {
+            "CYCLOHEX": 1.0
+          }
+        }
+      },
+      {
+        "operation": "configure_rstoic_fractional_conversions",
+        "parameters": {
+          "block_name": "REACT",
+          "conversions": [
+            {
+              "reaction_number": 1,
+              "component_id": "BENZENE",
+              "conversion": 0.998
+            }
+          ]
+        }
+      },
+      {
+        "operation": "configure_rstoic_flash",
+        "parameters": {
+          "block_name": "REACT",
+          "spec_opt": "TP",
+          "temperature": 200.0,
+          "temperature_unit": "C",
+          "pressure": -0.1,
+          "pressure_unit": "MPa"
+        }
+      },
+      {
+        "operation": "configure_flash2_operating_specs",
+        "parameters": {
+          "block_name": "HP-SEP",
+          "spec_opt": "TP",
+          "temperature": 50.0,
+          "temperature_unit": "C",
+          "pressure": -0.05,
+          "pressure_unit": "MPa"
+        }
+      },
+      {
+        "operation": "set_pump_outlet_spec",
+        "parameters": {
+          "block_name": "PUMP",
+          "value": "PRES"
+        }
+      },
+      {
+        "operation": "set_pump_outlet_pressure",
+        "parameters": {
+          "block_name": "PUMP",
+          "value": 2.6,
+          "unit": "MPa"
+        }
+      },
+      {
+        "operation": "configure_compr_pressure_rise",
+        "parameters": {
+          "block_name": "COMP",
+          "delta_pressure": 0.4,
+          "pressure_unit": "MPa",
+          "compressor_type": "ISENTROPIC"
+        }
+      },
+      {
+        "operation": "configure_valve_outlet_pressure_design",
+        "parameters": {
+          "block_name": "VALVE",
+          "outlet_pressure": 2.0,
+          "pressure_unit": "MPa",
+          "vendor_preset_id": "neles_globe_v810_equal_pct_1p5in"
+        }
+      },
+      {
+        "operation": "configure_pipe_schedule_sizing",
+        "parameters": {
+          "block_name": "PIPE",
+          "material": "CARBON-STEEL",
+          "schedule": 40,
+          "nominal_diam": "1-IN",
+          "length": 25.0,
+          "length_unit": "meter"
+        }
+      },
+      {
+        "operation": "set_radfrac_condenser_type",
+        "parameters": {
+          "block_name": "COLUMN",
+          "value": "PARTIAL-V"
+        }
+      },
+      {
+        "operation": "set_radfrac_reboiler_type",
+        "parameters": {
+          "block_name": "COLUMN",
+          "value": "KETTLE"
+        }
+      },
+      {
+        "operation": "set_radfrac_stage_count",
+        "parameters": {
+          "block_name": "COLUMN",
+          "value": 12
+        }
+      },
+      {
+        "operation": "set_radfrac_feed_stage",
+        "parameters": {
+          "block_name": "COLUMN",
+          "stream_name": "COLFD",
+          "value": 8
+        }
+      },
+      {
+        "operation": "configure_radfrac_feed_convention",
+        "parameters": {
+          "block_name": "COLUMN",
+          "stream_name": "COLFD",
+          "convention": "ON-STAGE-LIQ"
+        }
+      },
+      {
+        "operation": "set_radfrac_top_pressure",
+        "parameters": {
+          "block_name": "COLUMN",
+          "value": 1.5,
+          "unit": "MPa"
+        }
+      },
+      {
+        "operation": "set_radfrac_reflux_ratio",
+        "parameters": {
+          "block_name": "COLUMN",
+          "value": 1.2
+        }
+      },
+      {
+        "operation": "set_radfrac_distillate_rate",
+        "parameters": {
+          "block_name": "COLUMN",
+          "value": 99.0,
+          "unit": "kmol/hr"
+        }
+      },
+      {
+        "operation": "configure_recycle_convergence_options",
+        "parameters": {
+          "tolerance": 1e-05,
+          "tear_method": "WEGSTEIN",
+          "wegstein_max_iterations": 200
+        }
+      },
+      {
+        "operation": "probe_model_state",
+        "parameters": {
+          "stream_names": [
+            "BZIN",
+            "H2IN",
+            "PRODUCT"
+          ],
+          "block_names": [
+            "FEEDPUMP",
+            "FEED-MIX",
+            "REACT",
+            "HP-SEP",
+            "VFLOW",
+            "LFLOW",
+            "COLUMN"
+          ],
+          "include_flowsheet": true,
+          "include_ui_next": false
         }
       }
     ]
   }
 }
+````
+
+### Trailing model text
+
+````text
+{"thought":"Batch topology and all primary equipment/feed specifications now; defer run/evidence until completion status is known.","action":"mcp_plan","parameters":{"actions":[{"operation":"connect_material_inlet_outlet","parameters":{"block_name":"FEEDPUMP","inlet_stream":"BZIN","outlet_stream":"BZIN2"}},{"operation":"connect_shared_material_port_block","parameters":{"block_name":"FEED-MIX","inlet_streams":["BZIN2","H2IN","H2RCY2","CHRCY3"],"outlet_streams":["RXIN"]}},{"operation":"connect_material_inlet_outlet","parameters":{"block_name":"REACT","inlet_stream":"RXIN","outlet_stream":"RXOUT"}},{"operation":"connect_flash2_vapor_liquid_ports","parameters":{"block_name":"HP-SEP","feed_stream":"RXOUT","vapor_stream":"VAP","liquid_stream":"LIQ"}},{"operation":"configure_fsplit_shared_outlets","parameters":{"block_name":"VFLOW","inlet_stream":"VAP","outlet_streams":["H2RCY","PURGE"],"split_fractions":{"H2RCY":0.92}}},{"operation":"connect_material_inlet_outlet","parameters":{"block_name":"COMP","inlet_stream":"H2RCY","outlet_stream":"H2RCY2"}},{"operation":"connect_material_inlet_outlet","parameters":{"block_name":"VALVE","inlet_stream":"PURGE","outlet_stream":"PURGE2"}},{"operation":"configure_fsplit_shared_outlets","parameters":{"block_name":"LFLOW","inlet_stream":"LIQ","outlet_streams":["CHRCY","COLFD"],"split_fractions":{"CHRCY":0.3}}},{"operation":"connect_material_inlet_outlet","parameters":{"block_name":"PUMP","inlet_stream":"CHRCY","outlet_stream":"CHRCY2"}},{"operation":"connect_material_inlet_outlet","parameters":{"block_name":"PIPE","inlet_stream":"CHRCY2","outlet_stream":"CHRCY3"}},{"operation":"connect_stream","parameters":{"block_name":"COLUMN","stream_name":"COLFD","port_name":"F(IN)"}},{"operation":"connect_stream","parameters":{"block_name":"COLUMN","stream_name":"LTENDS","port_name":"VD(OUT)"}},{"operation":"connect_stream","parameters":{"block_name":"COLUMN","stream_name":"PRODUCT","port_name":"B(OUT)"}},{"operation":"set_material_stream_conditions","parameters":{"stream_name":"H2IN","mixed_spec":"TP","temperature":50.0,"temperature_unit":"C","pressure":2.5,"pressure_unit":"MPa"}},{"operation":"set_material_stream_composition","parameters":{"stream_name":"H2IN","basis":"MOLE-FLOW","flows":{"H2":321.75,"N2":1.65,"CH4":6.6},"flow_unit":"kmol/hr"}},{"operation":"set_material_stream_conditions","parameters":{"stream_name":"BZIN","mixed_spec":"TP","temperature":40.0,"temperature_unit":"C","pressure":0.1,"pressure_unit":"MPa"}},{"operation":"set_material_stream_composition","parameters":{"stream_name":"BZIN","basis":"MOLE-FLOW","flows":{"BENZENE":100.0},"flow_unit":"kmol/hr"}},{"operation":"set_pump_outlet_spec","parameters":{"block_name":"FEEDPUMP","value":"USE-CURVE"}},{"operation":"set_opt_ctype","parameters":{"block_name":"FEEDPUMP","value":"SINGLE-OPER"}},{"operation":"set_opt_cformat","parameters":{"block_name":"FEEDPUMP","value":"TABLE"}},{"operation":"set_dep_var","parameters":{"block_name":"FEEDPUMP","value":"HEAD"}},{"operation":"set_indep_var","parameters":{"block_name":"FEEDPUMP","value":"VOL-FLOW"}},{"operation":"set_pump_curve_table","parameters":{"block_name":"FEEDPUMP","curve_idx":1,"flow_unit":"m3/hr","head_unit":"m","curve_points":[{"flow":20.0,"head":40.0},{"flow":10.0,"head":250.0},{"flow":5.0,"head":300.0},{"flow":3.0,"head":400.0}]}},{"operation":"set_eff","parameters":{"block_name":"FEEDPUMP","value":0.6}},{"operation":"set_deff","parameters":{"block_name":"FEEDPUMP","value":0.9}},{"operation":"set_heater_flash_spec","parameters":{"block_name":"FEED-MIX","value":"TP"}},{"operation":"set_heater_temperature","parameters":{"block_name":"FEED-MIX","value":150.0,"unit":"C"}},{"operation":"set_heater_pressure","parameters":{"block_name":"FEED-MIX","value":2.3,"unit":"MPa"}},{"operation":"configure_rstoic_stoichiometry","parameters":{"block_name":"REACT","reaction_number":1,"reactants":{"BENZENE":1.0,"H2":3.0},"products":{"CYCLOHEX":1.0}}},{"operation":"configure_rstoic_fractional_conversions","parameters":{"block_name":"REACT","conversions":[{"reaction_number":1,"component_id":"BENZENE","conversion":0.998}]}},{"operation":"configure_rstoic_flash","parameters":{"block_name":"REACT","spec_opt":"TP","temperature":200.0,"temperature_unit":"C","pressure":-0.1,"pressure_unit":"MPa"}},{"operation":"configure_flash2_operating_specs","parameters":{"block_name":"HP-SEP","spec_opt":"TP","temperature":50.0,"temperature_unit":"C","pressure":-0.05,"pressure_unit":"MPa"}},{"operation":"set_pump_outlet_spec","parameters":{"block_name":"PUMP","value":"PRES"}},{"operation":"set_pump_outlet_pressure","parameters":{"block_name":"PUMP","value":2.6,"unit":"MPa"}},{"operation":"configure_compr_pressure_rise","parameters":{"block_name":"COMP","delta_pressure":0.4,"pressure_unit":"MPa","compressor_type":"ISENTROPIC"}},{"operation":"configure_valve_outlet_pressure_design","parameters":{"block_name":"VALVE","outlet_pressure":2.0,"pressure_unit":"MPa","vendor_preset_id":"neles_globe_v810_equal_pct_1p5in"}},{"operation":"configure_pipe_schedule_sizing","parameters":{"block_name":"PIPE","material":"CARBON-STEEL","schedule":40,"nominal_diam":"1-IN","length":25.0,"length_unit":"meter"}},{"operation":"set_radfrac_condenser_type","parameters":{"block_name":"COLUMN","value":"PARTIAL-V"}},{"operation":"set_radfrac_reboiler_type","parameters":{"block_name":"COLUMN","value":"KETTLE"}},{"operation":"set_radfrac_stage_count","parameters":{"block_name":"COLUMN","value":12}},{"operation":"set_radfrac_feed_stage","parameters":{"block_name":"COLUMN","stream_name":"COLFD","value":8}},{"operation":"configure_radfrac_feed_convention","parameters":{"block_name":"COLUMN","stream_name":"COLFD","convention":"ON-STAGE-LIQ"}},{"operation":"set_radfrac_top_pressure","parameters":{"block_name":"COLUMN","value":1.5,"unit":"MPa"}},{"operation":"set_radfrac_reflux_ratio","parameters":{"block_name":"COLUMN","value":1.2}},{"operation":"set_radfrac_distillate_rate","parameters":{"block_name":"COLUMN","value":99.0,"unit":"kmol/hr"}},{"operation":"configure_recycle_convergence_options","parameters":{"tolerance":1e-5,"tear_method":"WEGSTEIN","wegstein_max_iterations":200}},{"operation":"probe_model_state","parameters":{"stream_names":["BZIN","H2IN","PRODUCT"],"block_names":["FEEDPUMP","FEED-MIX","REACT","HP-SEP","VFLOW","LFLOW","COLUMN"],"include_flowsheet":true,"include_ui_next":false}}]}}
 ````

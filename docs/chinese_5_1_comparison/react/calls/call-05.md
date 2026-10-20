@@ -1,13 +1,13 @@
-# ReAct call 1 of 10
+# ReAct call 5 of 10
 
-[ReAct index](README.md) · [Call 2 →](call-02.md) · [Raw JSONL](../react_main_control_calls.raw.jsonl)
+[← Call 4](call-04.md) · [ReAct index](../README.md) · [Call 6 →](call-06.md) · [Raw JSONL](../../raw/react_main_control_calls.raw.jsonl)
 
-`select_action` · `gpt-5.5` · **124,796 input** + **1,483 output** = **126,279 tokens** · **$0.668470**
+`select_action` · `gpt-5.5` · **131,591 input** + **517 output** = **132,108 tokens** · **$0.673465**
 
 Input provenance: `deterministically_reconstructed_from_persisted_task_context_memory_and_observations`
-Recorded at: `2026-10-18T20:58:21.073`
+Recorded at: `2026-10-18T21:00:20.696`
 
-Recorded prompt: 483,277 characters · Reconstructed prompt before translation: 485,108 characters
+Recorded prompt: 511,715 characters · Reconstructed prompt before translation: 513,704 characters
 
 ## Input
 
@@ -48,7 +48,7 @@ Causal-ablation plan treatment:
 
 ````
 
-### Message 2 — `user` (519,104 translated characters)
+### Message 2 — `user` (543,655 translated characters)
 
 ````text
 CASE_ID: chinese_5_1_radfrac
@@ -8721,22 +8721,712 @@ RUN_MEMORY_SUMMARY:
     "do_not_use_rejected_surrogates": []
   },
   "current_model_state": {
-    "state_version": 0,
-    "domain_versions": {},
-    "components": [],
+    "state_version": 71,
+    "domain_versions": {
+      "properties": 2,
+      "flowsheet": 71,
+      "stream:H2RCY2": 5,
+      "stream:BZIN": 5,
+      "stream:PRODUCT": 3,
+      "stream:CHRCY2": 5,
+      "stream:VAP": 5,
+      "stream:PURGE": 5,
+      "stream:PURGE2": 3,
+      "stream:RXOUT": 5,
+      "stream:COLFD": 7,
+      "stream:RXIN": 5,
+      "stream:BZIN2": 5,
+      "stream:H2IN": 5,
+      "stream:LIQ": 5,
+      "stream:CHRCY": 5,
+      "stream:CHRCY3": 5,
+      "stream:LTENDS": 3,
+      "stream:H2RCY": 5,
+      "block:FEEDPUMP": 11,
+      "block:FEED-MIX": 6,
+      "block:REACT": 6,
+      "block:HP-SEP": 4,
+      "block:VFLOW": 3,
+      "block:COMP": 4,
+      "block:VALVE": 4,
+      "block:LFLOW": 3,
+      "block:PUMP": 5,
+      "block:PIPE": 4,
+      "block:COLUMN": 13
+    },
+    "components": [
+      "H2",
+      "N2",
+      "CH4",
+      "BENZENE",
+      "CYCLOHEX"
+    ],
     "property_method": "",
-    "blocks": [],
-    "streams": [],
-    "connections": [],
-    "specs": [],
+    "blocks": [
+      "FEEDPUMP",
+      "FEED-MIX",
+      "REACT",
+      "HP-SEP",
+      "VFLOW",
+      "COMP",
+      "VALVE",
+      "LFLOW",
+      "PUMP",
+      "PIPE",
+      "COLUMN"
+    ],
+    "streams": [
+      "BZIN",
+      "H2IN",
+      "BZIN2",
+      "H2RCY2",
+      "RXIN",
+      "RXOUT",
+      "VAP",
+      "H2RCY",
+      "PURGE",
+      "PURGE2",
+      "LIQ",
+      "COLFD",
+      "CHRCY",
+      "CHRCY2",
+      "CHRCY3",
+      "LTENDS",
+      "PRODUCT"
+    ],
+    "connections": [
+      {
+        "block_name": "COLUMN",
+        "stream_name": "COLFD",
+        "port_name": "F(IN)",
+        "source_operation": "connect_stream"
+      },
+      {
+        "block_name": "COLUMN",
+        "stream_name": "LTENDS",
+        "port_name": "VD(OUT)",
+        "source_operation": "connect_stream"
+      },
+      {
+        "block_name": "COLUMN",
+        "stream_name": "PRODUCT",
+        "port_name": "B(OUT)",
+        "source_operation": "connect_stream"
+      }
+    ],
+    "specs": [
+      {
+        "stream_name": "H2IN",
+        "temperature": 50.0,
+        "pressure": 2.5,
+        "vapor_fraction": null,
+        "mixed_spec": "TP",
+        "temperature_unit": "C",
+        "pressure_unit": "MPa",
+        "source_operation": "set_material_stream_conditions"
+      },
+      {
+        "stream_name": "BZIN",
+        "temperature": 40.0,
+        "pressure": 0.1,
+        "vapor_fraction": null,
+        "mixed_spec": "TP",
+        "temperature_unit": "C",
+        "pressure_unit": "MPa",
+        "source_operation": "set_material_stream_conditions"
+      }
+    ],
     "engine_run": null,
     "artifacts": {},
     "readbacks": []
   },
-  "operation_ledger": {},
-  "failed_attempts": [],
-  "validator_rejections": []
-}
+  "operation_ledger": {
+    "677ff79d23598058": {
+      "operation": "add_components_by_cas",
+      "parameters": {
+        "components": [
+          {
+            "component_id": "H2",
+            "cas": "1333-74-0"
+          },
+          {
+            "component_id": "N2",
+            "cas": "7727-37-9"
+          },
+          {
+            "component_id": "CH4",
+            "cas": "74-82-8"
+          },
+          {
+            "component_id": "BENZENE",
+            "cas": "71-43-2"
+          },
+          {
+            "component_id": "CYCLOHEX",
+            "cas": "110-82-7"
+          }
+        ]
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "properties"
+      ],
+      "dependency_versions": {
+        "properties": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "components_added": [
+          {
+            "cas": "1333740",
+            "component_id": "H2",
+            "requested_component_id": "H2",
+            "preferred_component_id": "H2"
+          },
+          {
+            "cas": "7727379",
+            "component_id": "N2",
+            "requested_component_id": "N2",
+            "preferred_component_id": "N2"
+          },
+          {
+            "cas": "74-82-8",
+            "component_id": "CH4",
+            "requested_component_id": "CH4",
+            "preferred_component_id": "CH4"
+          },
+          {
+            "cas": "71-43-2",
+            "component_id": "BENZENE",
+            "requested_component_id": "BENZENE",
+            "preferred_component_id": "BENZENE"
+          },
+          {
+            "cas": "110-82-7",
+            "component_id": "CYCLOHEX",
+            "requested_component_id": "CYCLOHEX",
+            "preferred_component_id": "CYCLOHEX"
+          }
+        ],
+        "count": 5,
+        "message": "Added 5 component(s) successfully",
+        "verification": {
+          "success": true,
+          "expected_component_ids": [
+            "H2",
+            "N2",
+            "CH4",
+            "BENZENE",
+            "CYCLOHEX"
+          ],
+          "actual_component_ids": [
+            "H2",
+            "N2",
+            "CH4",
+            "BENZENE",
+            "CYCLOHEX"
+          ],
+          "missing_component_ids": []
+        },
+        "contamination": {
+          "success": true,
+          "expected_component_ids": [
+            "H2",
+            "N2",
+            "CH4",
+            "BENZENE",
+            "CYCLOHEX"
+          ],
+          "actual_component_ids": [
+            "H2",
+            "N2",
+            "CH4",
+            "BENZENE",
+            "CYCLOHEX"
+          ],
+          "extra_component_ids": [],
+          "generic_extra_component_ids": []
+        }
+      }
+    },
+    "d0f7c037faabb2bb": {
+      "operation": "ensure_property_method",
+      "parameters": {
+        "method": "RK-SOAVE"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "properties"
+      ],
+      "dependency_versions": {
+        "properties": 2
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "virtual_tool": "ensure_property_method",
+        "steps_completed": 5,
+        "steps_total": 5,
+        "last_result": null
+      }
+    },
+    "33ce8ec6c91a3f71": {
+      "operation": "create_material_streams",
+      "parameters": {
+        "stream_names": [
+          "BZIN",
+          "H2IN",
+          "BZIN2",
+          "H2RCY2",
+          "RXIN",
+          "RXOUT",
+          "VAP",
+          "H2RCY",
+          "PURGE",
+          "PURGE2",
+          "LIQ",
+          "COLFD",
+          "CHRCY",
+          "CHRCY2",
+          "CHRCY3",
+          "LTENDS",
+          "PRODUCT"
+        ]
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "stream:BZIN",
+        "stream:H2IN",
+        "stream:BZIN2",
+        "stream:H2RCY2",
+        "stream:RXIN",
+        "stream:RXOUT",
+        "stream:VAP",
+        "stream:H2RCY",
+        "stream:PURGE",
+        "stream:PURGE2",
+        "stream:LIQ",
+        "stream:COLFD",
+        "stream:CHRCY",
+        "stream:CHRCY2",
+        "stream:CHRCY3",
+        "stream:LTENDS",
+        "stream:PRODUCT"
+      ],
+      "dependency_versions": {
+        "stream:BZIN": 1,
+        "stream:H2IN": 1,
+        "stream:BZIN2": 1,
+        "stream:H2RCY2": 1,
+        "stream:RXIN": 1,
+        "stream:RXOUT": 1,
+        "stream:VAP": 1,
+        "stream:H2RCY": 1,
+        "stream:PURGE": 1,
+        "stream:PURGE2": 1,
+        "stream:LIQ": 1,
+        "stream:COLFD": 1,
+        "stream:CHRCY": 1,
+        "stream:CHRCY2": 1,
+        "stream:CHRCY3": 1,
+        "stream:LTENDS": 1,
+        "stream:PRODUCT": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "virtual_tool": "create_material_streams",
+        "steps_completed": 17,
+        "steps_total": 17,
+        "last_result": null
+      }
+    },
+    "aeeab72bf4e897bd": {
+      "operation": "create_pump",
+      "parameters": {
+        "block_name": "FEEDPUMP"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:FEEDPUMP"
+      ],
+      "dependency_versions": {
+        "block:FEEDPUMP": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "FEEDPUMP",
+        "block_type": "PUMP",
+        "composite": "FEEDPUMP!PUMP",
+        "message": "Block FEEDPUMP (PUMP) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "FEEDPUMP",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\FEEDPUMP\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "FEEDPUMP",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\FEEDPUMP\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\FEEDPUMP\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "0909126309d406aa": {
+      "operation": "create_heater",
+      "parameters": {
+        "block_name": "FEED-MIX"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:FEED-MIX"
+      ],
+      "dependency_versions": {
+        "block:FEED-MIX": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "FEED-MIX",
+        "block_type": "HEATER",
+        "composite": "FEED-MIX!HEATER",
+        "message": "Block FEED-MIX (HEATER) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "FEED-MIX",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\FEED-MIX\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "FEED-MIX",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\FEED-MIX\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\FEED-MIX\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "a6c7e44d982c03d4": {
+      "operation": "create_rstoic",
+      "parameters": {
+        "block_name": "REACT"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:REACT"
+      ],
+      "dependency_versions": {
+        "block:REACT": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "REACT",
+        "block_type": "RSTOIC",
+        "composite": "REACT!RSTOIC",
+        "message": "Block REACT (RSTOIC) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "REACT",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\REACT\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "REACT",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\REACT\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\REACT\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "a2421e5bf09b3395": {
+      "operation": "create_flash2",
+      "parameters": {
+        "block_name": "HP-SEP"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:HP-SEP"
+      ],
+      "dependency_versions": {
+        "block:HP-SEP": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "HP-SEP",
+        "block_type": "FLASH2",
+        "composite": "HP-SEP!FLASH2",
+        "message": "Block HP-SEP (FLASH2) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "HP-SEP",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\HP-SEP\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "HP-SEP",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\HP-SEP\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\HP-SEP\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "9d6acd9818f63c1d": {
+      "operation": "create_fsplit",
+      "parameters": {
+        "block_name": "VFLOW"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:VFLOW"
+      ],
+      "dependency_versions": {
+        "block:VFLOW": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "VFLOW",
+        "block_type": "FSPLIT",
+        "composite": "VFLOW!FSPLIT",
+        "message": "Block VFLOW (FSPLIT) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "VFLOW",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\VFLOW\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\VFLOW\\Input\\MAXOL"
+              ]
+            },
+            {
+              "block": "VFLOW",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\VFLOW\\Input\\MAXIT",
+              "attempted_paths": [
+                "Data\\Blocks\\VFLOW\\Input\\MAXIT"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "315f45151cc00f4e": {
+      "operation": "create_compr",
+      "parameters": {
+        "block_name": "COMP"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:COMP"
+      ],
+      "dependency_versions": {
+        "block:COMP": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "COMP",
+        "block_type": "COMPR",
+        "composite": "COMP!COMPR",
+        "message": "Block COMP (COMPR) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "COMP",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\COMP\\Input\\MAXIT",
+              "before": 30,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "COMP",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\COMP\\Input\\MAXOL",
+              "attempted_paths": [
+                "Data\\Blocks\\COMP\\Input\\MAXOL"
+              ]
+            }
+          ],
+          "success": true
+        }
+      }
+    },
+    "608a52d659fb4d06": {
+      "operation": "create_valve",
+      "parameters": {
+        "block_name": "VALVE"
+      },
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "dependency_domains": [
+        "block:VALVE"
+      ],
+      "dependency_versions": {
+        "block:VALVE": 1
+      },
+      "last_status": "success",
+      "last_evidence": {
+        "success": true,
+        "block_name": "VALVE",
+        "block_type": "VALVE",
+        "composite": "VALVE!VALVE",
+        "message": "Block VALVE (VALVE) created successfully",
+        "block_iteration_floor": {
+          "attempted": true,
+          "floor": 200,
+          "via": "com_tree",
+          "reason": "post-block-create",
+          "leaves": [
+            "MAXOL",
+            "MAXIT"
+          ],
+          "raised": [
+            {
+              "block": "VALVE",
+              "leaf": "MAXIT",
+              "path": "Data\\Blocks\\VALVE\\Input\\MAXIT",
+              "before": 50,
+              "after": 200
+            }
+          ],
+          "unchanged": [],
+          "failed": [],
+          "missing": [
+            {
+              "block": "VALVE",
+              "leaf": "MAXOL",
+              "path": "Data\\Blocks\\VALVE\\Input\\MAXOL",
+              "attempted_paths": [
+
+...[context truncated for ReAct baseline prompt]...
 
 ACTIVE_VALIDATOR_REPAIR_CONTEXT:
 (none)
@@ -8943,25 +9633,114 @@ Aspen ReAct tool surface (registry-driven facade):
 DYNAMIC_OPERATION_EXPOSURE:
 This step exposes schema/details for 173 operations. The facade retains 4979 executable profile capabilities, but undisclosed names are intentionally omitted from the action prompt to avoid repeated catalog-token overhead. Use the exposed operations; the selector refreshes the visible surface periodically and after tool or validation errors. Function-like names appearing only in prose, examples, annotations, or implementation notes are not callable tools.
 
-STEP: 1 (budget-limited; no step cap)
+STEP: 5 (budget-limited; no step cap)
 OBSERVATION_CONTEXT:
 PROMPT_REDUCER: enabled; full uncompressed trajectory remains in react_mcp_trajectory.jsonl.
 OLDER_OBSERVATION_DIGEST:
 {
-  "observation_count": 0
+  "observation_count": 2,
+  "event_counts": {
+    "preflight": 1,
+    "session_started": 1
+  },
+  "operation_counts_top": {},
+  "successful_operations_tail": [],
+  "failures_tail": [],
+  "artifacts_tail": [],
+  "validator_feedback_tail": []
 }
 
 RECENT_OBSERVATIONS_COMPACT:
 [
   {
-    "event": "preflight",
-    "health": {
-      "status": "healthy"
-    },
-    "task_hash": "<REDACTED_TASK_ID>"
+    "truncated": true,
+    "chars": 9822,
+    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 25, \"actions_executed\": 25, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"add_components_by_cas\", \"parameters\": {\"components\": [{\"component_id\": \"H2\", \"cas\": \"1333-74-0\"}, {\"component_id\": \"N2\", \"cas\": \"7727-37-9\"}, {\"component_id\": \"CH4\", \"cas\": \"74-82-8\"}, {\"component_id\": \"BENZENE\", \"cas\": \"71-43-2\"}, {\"component_id\": \"CYCLOHEX\", \"cas\": \"110-82-7\"}]}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Added 5 component(s) successfully\"}}, {\"truncated\": true, \"chars\": 525, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"ensure_property_method\\\", \\\"parameters\\\": {\\\"method\\\": \\\"RK-SOAVE\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"set_property_method\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"set_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"set_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"get_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"ge\\n...[truncated]\"}, {\"truncated\": true, \"chars\": 1611, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"create_material_streams\\\", \\\"parameters\\\": {\\\"stream_names\\\": [\\\"BZIN\\\", \\\"H2IN\\\", \\\"BZIN2\\\", \\\"H2RCY2\\\", \\\"RXIN\\\", \\\"RXOUT\\\", \\\"VAP\\\", \\\"H2RCY\\\", \\\"PURGE\\\", \\\"PURGE2\\\", \\\"LIQ\\\", \\\"COLFD\\\", \\\"CHRCY\\\", \\\"CHRCY2\\\", \\\"CHRCY3\\\", \\\"LTENDS\\\", \\\"PRODUCT\\\"]}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"create_material_streams\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"create_material_streams\\\", \\\"success\\\": \\n...[truncated]\"}, {\"event\": \"tool_result\", \"operation\": \"create_pump\", \"parameters\": {\"block_name\": \"FEEDPUMP\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Block FEEDPUMP (PUMP) created successfully\", \"block_name\": \"FEEDPUMP\"}}, {\"event\": \"tool_result\", \"operation\": \"create_heater\", \"parameters\": {\"block_name\": \"FEED-MIX\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Block FEED-MIX (HEATER) created successfully\", \"block_name\": \"FEED-MIX\"}}, {\"event\": \"tool_result\", \"operation\": \"create_rstoic\", \"parameters\": {\"block_name\": \"REACT\"}, \"facade\": true, \n...[truncated]"
   },
   {
-    "event": "session_started"
+    "truncated": true,
+    "chars": 19494,
+    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 47, \"actions_executed\": 47, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"connect_material_inlet_outlet\", \"parameters\": {\"block_name\": \"FEEDPUMP\", \"inlet_stream\": \"BZIN\", \"outlet_stream\": \"BZIN2\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"list_block_ports\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"connect_shared_material_port_block\", \"parameters\": {\"block_name\": \"FEED-MIX\", \"inlet_streams\": [\"BZIN2\", \"H2IN\", \"H2RCY2\", \"CHRCY3\"], \"outlet_streams\": [\"RXIN\"]}, \"facade\": true, \"translated_operations\": [{\"operation\": \"connect_shared_material_port_block\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"connect_material_inlet_outlet\", \"parameters\": {\"block_name\": \"REACT\", \"inlet_stream\": \"RXIN\", \"outlet_stream\": \"RXOUT\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"list_block_ports\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"truncated\": true, \"chars\": 549, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"connect_flash2_vapor_liquid_ports\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"HP-SEP\\\", \\\"feed_stream\\\": \\\"RXOUT\\\", \\\"vapor_stream\\\": \\\"VAP\\\", \\\"liquid_stream\\\": \\\"LIQ\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"list_block_ports\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"connect_stream\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"connect_stream\\\", \\\"success\\\": true, \\\"error\\\": nu\\n...[truncated]\"}, {\"event\": \"tool_result\", \"operation\": \"configure_fsplit_shared_outlets\", \"parameters\": {\"block_name\": \"VFLOW\", \"inlet_stream\": \"VAP\", \"outlet_streams\": [\"H2RCY\", \"PURGE\"], \"split_fractions\": {\"H2RCY\": 0.92}}, \"facade\": true, \"translated_operations\": [{\"operation\": \"configure_fsplit_shared_outlets\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}\n...[truncated]"
+  },
+  {
+    "event": "tool_result",
+    "operation": "probe_model_state",
+    "parameters": {
+      "stream_names": [
+        "BZIN",
+        "H2IN",
+        "BZIN2",
+        "H2RCY2",
+        "RXIN",
+        "RXOUT",
+        "VAP",
+        "H2RCY",
+        "PURGE",
+        "PURGE2",
+        "LIQ",
+        "COLFD",
+        "CHRCY",
+        "CHRCY2",
+        "CHRCY3",
+        "LTENDS",
+        "PRODUCT"
+      ],
+      "block_names": [
+        "FEEDPUMP",
+        "FEED-MIX",
+        "REACT",
+        "HP-SEP",
+        "VFLOW",
+        "COMP",
+        "VALVE",
+        "LFLOW",
+        "PUMP",
+        "PIPE",
+        "COLUMN"
+      ],
+      "include_flowsheet": true,
+      "include_ui_next": true
+    },
+    "facade": true,
+    "translated_operations": [],
+    "response_status": null,
+    "result": {}
+  },
+  {
+    "event": "tool_result",
+    "operation": "probe_model_state",
+    "parameters": {
+      "stream_names": [
+        "BZIN",
+        "H2IN",
+        "PRODUCT"
+      ],
+      "block_names": [
+        "FEEDPUMP",
+        "FEED-MIX",
+        "REACT",
+        "HP-SEP",
+        "VFLOW",
+        "COMP",
+        "VALVE",
+        "LFLOW",
+        "PUMP",
+        "PIPE",
+        "COLUMN"
+      ],
+      "include_flowsheet": true,
+      "include_ui_next": false
+    },
+    "facade": true,
+    "translated_operations": [
+      {
+        "operation": "probe_model_state",
+        "success": true,
+        "error": null
+      }
+    ],
+    "response_status": null,
+    "result": {}
   }
 ]
 
@@ -8972,251 +9751,105 @@ Choose the next JSON action.
 
 ````json
 {
-  "thought": "Build the exact named flowsheet in a batched prefix: components, RK-SOAVE, streams/blocks, and physical topology before specs.",
+  "thought": "Run workflow completion/readback diagnostics before attempting engine run; prior probes returned compact empty summaries, so use explicit completion tools.",
   "action": "mcp_plan",
+  "operation": "diagnose_completion",
   "parameters": {
     "actions": [
       {
-        "operation": "add_components_by_cas",
+        "operation": "read_global_property_method",
+        "parameters": {}
+      },
+      {
+        "operation": "ui_check_next_completion_status",
         "parameters": {
-          "components": [
-            {
-              "component_id": "H2",
-              "cas": "1333-74-0"
-            },
-            {
-              "component_id": "N2",
-              "cas": "7727-37-9"
-            },
-            {
-              "component_id": "CH4",
-              "cas": "74-82-8"
-            },
-            {
-              "component_id": "BENZENE",
-              "cas": "71-43-2"
-            },
-            {
-              "component_id": "CYCLOHEX",
-              "cas": "110-82-7"
-            }
-          ]
+          "close_window": true,
+          "status_timeout_s": 8.0
         }
       },
       {
-        "operation": "ensure_property_method",
-        "parameters": {
-          "method": "RK-SOAVE"
-        }
+        "operation": "check_flowsheet_completion",
+        "parameters": {}
       },
       {
-        "operation": "create_material_streams",
-        "parameters": {
-          "stream_names": [
-            "BZIN",
-            "H2IN",
-            "BZIN2",
-            "H2RCY2",
-            "RXIN",
-            "RXOUT",
-            "VAP",
-            "H2RCY",
-            "PURGE",
-            "PURGE2",
-            "LIQ",
-            "COLFD",
-            "CHRCY",
-            "CHRCY2",
-            "CHRCY3",
-            "LTENDS",
-            "PRODUCT"
-          ]
-        }
-      },
-      {
-        "operation": "create_pump",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "FEEDPUMP"
         }
       },
       {
-        "operation": "create_heater",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "FEED-MIX"
         }
       },
       {
-        "operation": "create_rstoic",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "REACT"
         }
       },
       {
-        "operation": "create_flash2",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "HP-SEP"
         }
       },
       {
-        "operation": "create_fsplit",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "VFLOW"
         }
       },
       {
-        "operation": "create_compr",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "COMP"
         }
       },
       {
-        "operation": "create_valve",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "VALVE"
         }
       },
       {
-        "operation": "create_fsplit",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "LFLOW"
         }
       },
       {
-        "operation": "create_pump",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "PUMP"
         }
       },
       {
-        "operation": "create_pipe",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "PIPE"
         }
       },
       {
-        "operation": "create_radfrac",
+        "operation": "check_block_completion",
         "parameters": {
           "block_name": "COLUMN"
         }
       },
       {
-        "operation": "connect_material_inlet_outlet",
+        "operation": "check_stream_completion",
         "parameters": {
-          "block_name": "FEEDPUMP",
-          "inlet_stream": "BZIN",
-          "outlet_stream": "BZIN2"
+          "stream_name": "BZIN"
         }
       },
       {
-        "operation": "connect_shared_material_port_block",
+        "operation": "check_stream_completion",
         "parameters": {
-          "block_name": "FEED-MIX",
-          "inlet_streams": [
-            "BZIN2",
-            "H2IN",
-            "H2RCY2",
-            "CHRCY3"
-          ],
-          "outlet_streams": [
-            "RXIN"
-          ]
-        }
-      },
-      {
-        "operation": "connect_material_inlet_outlet",
-        "parameters": {
-          "block_name": "REACT",
-          "inlet_stream": "RXIN",
-          "outlet_stream": "RXOUT"
-        }
-      },
-      {
-        "operation": "connect_flash2_vapor_liquid_ports",
-        "parameters": {
-          "block_name": "HP-SEP",
-          "feed_stream": "RXOUT",
-          "vapor_stream": "VAP",
-          "liquid_stream": "LIQ"
-        }
-      },
-      {
-        "operation": "configure_fsplit_shared_outlets",
-        "parameters": {
-          "block_name": "VFLOW",
-          "inlet_stream": "VAP",
-          "outlet_streams": [
-            "H2RCY",
-            "PURGE"
-          ],
-          "split_fractions": {
-            "H2RCY": 0.92
-          }
-        }
-      },
-      {
-        "operation": "connect_material_inlet_outlet",
-        "parameters": {
-          "block_name": "COMP",
-          "inlet_stream": "H2RCY",
-          "outlet_stream": "H2RCY2"
-        }
-      },
-      {
-        "operation": "connect_material_inlet_outlet",
-        "parameters": {
-          "block_name": "VALVE",
-          "inlet_stream": "PURGE",
-          "outlet_stream": "PURGE2"
-        }
-      },
-      {
-        "operation": "configure_fsplit_shared_outlets",
-        "parameters": {
-          "block_name": "LFLOW",
-          "inlet_stream": "LIQ",
-          "outlet_streams": [
-            "CHRCY",
-            "COLFD"
-          ],
-          "split_fractions": {
-            "CHRCY": 0.3
-          }
-        }
-      },
-      {
-        "operation": "connect_material_inlet_outlet",
-        "parameters": {
-          "block_name": "PUMP",
-          "inlet_stream": "CHRCY",
-          "outlet_stream": "CHRCY2"
-        }
-      },
-      {
-        "operation": "connect_material_inlet_outlet",
-        "parameters": {
-          "block_name": "PIPE",
-          "inlet_stream": "CHRCY2",
-          "outlet_stream": "CHRCY3"
-        }
-      },
-      {
-        "operation": "connect_radfrac_feed_distillate_bottoms",
-        "parameters": {
-          "block_name": "COLUMN",
-          "inlet_streams": [
-            "COLFD"
-          ],
-          "distillate_stream": "LTENDS",
-          "bottoms_stream": "PRODUCT"
+          "stream_name": "H2IN"
         }
       }
     ]
   }
 }
-````
-
-### Trailing model text
-
-````text
-{"thought":"Topology build started; waiting for MCP plan observations to continue with any repair and then specifications.","action":"finalize","final_summary":{"case_id":"chinese_5_1_radfrac","ok":false,"evidence":{},"results":{},"self_validation":{"status":"blocked_before_observation","reason":"No tool observation was provided after the batched MCP plan, so I cannot honestly claim the Aspen flowsheet was created or solved."}}}
 ````

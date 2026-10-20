@@ -1,13 +1,13 @@
-# ReAct call 3 of 10
+# ReAct call 6 of 10
 
-[← Call 2](call-02.md) · [ReAct index](README.md) · [Call 4 →](call-04.md) · [Raw JSONL](../react_main_control_calls.raw.jsonl)
+[← Call 5](call-05.md) · [ReAct index](../README.md) · [Call 7 →](call-07.md) · [Raw JSONL](../../raw/react_main_control_calls.raw.jsonl)
 
-`select_action` · `gpt-5.5` · **131,210 input** + **401 output** = **131,611 tokens** · **$0.668080**
+`select_action` · `gpt-5.5` · **131,547 input** + **258 output** = **131,805 tokens** · **$0.665475**
 
 Input provenance: `deterministically_reconstructed_from_persisted_task_context_memory_and_observations`
-Recorded at: `2026-10-18T20:59:30.641`
+Recorded at: `2026-10-18T21:00:38.714`
 
-Recorded prompt: 510,109 characters · Reconstructed prompt before translation: 511,940 characters
+Recorded prompt: 511,797 characters · Reconstructed prompt before translation: 513,786 characters
 
 ## Input
 
@@ -48,7 +48,7 @@ Causal-ablation plan treatment:
 
 ````
 
-### Message 2 — `user` (542,112 translated characters)
+### Message 2 — `user` (543,696 translated characters)
 
 ````text
 CASE_ID: chinese_5_1_radfrac
@@ -8721,10 +8721,10 @@ RUN_MEMORY_SUMMARY:
     "do_not_use_rejected_surrogates": []
   },
   "current_model_state": {
-    "state_version": 71,
+    "state_version": 72,
     "domain_versions": {
       "properties": 2,
-      "flowsheet": 71,
+      "flowsheet": 72,
       "stream:H2RCY2": 5,
       "stream:BZIN": 5,
       "stream:PRODUCT": 3,
@@ -9633,35 +9633,115 @@ Aspen ReAct tool surface (registry-driven facade):
 DYNAMIC_OPERATION_EXPOSURE:
 This step exposes schema/details for 173 operations. The facade retains 4979 executable profile capabilities, but undisclosed names are intentionally omitted from the action prompt to avoid repeated catalog-token overhead. Use the exposed operations; the selector refreshes the visible surface periodically and after tool or validation errors. Function-like names appearing only in prose, examples, annotations, or implementation notes are not callable tools.
 
-STEP: 3 (budget-limited; no step cap)
+STEP: 6 (budget-limited; no step cap)
 OBSERVATION_CONTEXT:
 PROMPT_REDUCER: enabled; full uncompressed trajectory remains in react_mcp_trajectory.jsonl.
 OLDER_OBSERVATION_DIGEST:
 {
-  "observation_count": 0
+  "observation_count": 3,
+  "event_counts": {
+    "preflight": 1,
+    "session_started": 1,
+    "plan_result": 1
+  },
+  "operation_counts_top": {},
+  "successful_operations_tail": [],
+  "failures_tail": [],
+  "artifacts_tail": [],
+  "validator_feedback_tail": []
 }
 
 RECENT_OBSERVATIONS_COMPACT:
 [
   {
-    "event": "preflight",
-    "health": {
-      "status": "healthy"
-    },
-    "task_hash": "<REDACTED_TASK_ID>"
-  },
-  {
-    "event": "session_started"
-  },
-  {
-    "truncated": true,
-    "chars": 9822,
-    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 25, \"actions_executed\": 25, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"add_components_by_cas\", \"parameters\": {\"components\": [{\"component_id\": \"H2\", \"cas\": \"1333-74-0\"}, {\"component_id\": \"N2\", \"cas\": \"7727-37-9\"}, {\"component_id\": \"CH4\", \"cas\": \"74-82-8\"}, {\"component_id\": \"BENZENE\", \"cas\": \"71-43-2\"}, {\"component_id\": \"CYCLOHEX\", \"cas\": \"110-82-7\"}]}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Added 5 component(s) successfully\"}}, {\"truncated\": true, \"chars\": 525, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"ensure_property_method\\\", \\\"parameters\\\": {\\\"method\\\": \\\"RK-SOAVE\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"set_property_method\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"set_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"set_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"get_variable\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"ge\\n...[truncated]\"}, {\"truncated\": true, \"chars\": 1611, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"create_material_streams\\\", \\\"parameters\\\": {\\\"stream_names\\\": [\\\"BZIN\\\", \\\"H2IN\\\", \\\"BZIN2\\\", \\\"H2RCY2\\\", \\\"RXIN\\\", \\\"RXOUT\\\", \\\"VAP\\\", \\\"H2RCY\\\", \\\"PURGE\\\", \\\"PURGE2\\\", \\\"LIQ\\\", \\\"COLFD\\\", \\\"CHRCY\\\", \\\"CHRCY2\\\", \\\"CHRCY3\\\", \\\"LTENDS\\\", \\\"PRODUCT\\\"]}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"create_material_streams\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"create_material_streams\\\", \\\"success\\\": \\n...[truncated]\"}, {\"event\": \"tool_result\", \"operation\": \"create_pump\", \"parameters\": {\"block_name\": \"FEEDPUMP\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Block FEEDPUMP (PUMP) created successfully\", \"block_name\": \"FEEDPUMP\"}}, {\"event\": \"tool_result\", \"operation\": \"create_heater\", \"parameters\": {\"block_name\": \"FEED-MIX\"}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"message\": \"Block FEED-MIX (HEATER) created successfully\", \"block_name\": \"FEED-MIX\"}}, {\"event\": \"tool_result\", \"operation\": \"create_rstoic\", \"parameters\": {\"block_name\": \"REACT\"}, \"facade\": true, \n...[truncated]"
-  },
-  {
     "truncated": true,
     "chars": 19494,
     "preview": "{\"event\": \"plan_result\", \"actions_requested\": 47, \"actions_executed\": 47, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"connect_material_inlet_outlet\", \"parameters\": {\"block_name\": \"FEEDPUMP\", \"inlet_stream\": \"BZIN\", \"outlet_stream\": \"BZIN2\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"list_block_ports\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"connect_shared_material_port_block\", \"parameters\": {\"block_name\": \"FEED-MIX\", \"inlet_streams\": [\"BZIN2\", \"H2IN\", \"H2RCY2\", \"CHRCY3\"], \"outlet_streams\": [\"RXIN\"]}, \"facade\": true, \"translated_operations\": [{\"operation\": \"connect_shared_material_port_block\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"connect_material_inlet_outlet\", \"parameters\": {\"block_name\": \"REACT\", \"inlet_stream\": \"RXIN\", \"outlet_stream\": \"RXOUT\"}, \"facade\": true, \"translated_operations\": [{\"operation\": \"list_block_ports\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}, {\"operation\": \"connect_stream\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"truncated\": true, \"chars\": 549, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"connect_flash2_vapor_liquid_ports\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"HP-SEP\\\", \\\"feed_stream\\\": \\\"RXOUT\\\", \\\"vapor_stream\\\": \\\"VAP\\\", \\\"liquid_stream\\\": \\\"LIQ\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [{\\\"operation\\\": \\\"list_block_ports\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"connect_stream\\\", \\\"success\\\": true, \\\"error\\\": null}, {\\\"operation\\\": \\\"connect_stream\\\", \\\"success\\\": true, \\\"error\\\": nu\\n...[truncated]\"}, {\"event\": \"tool_result\", \"operation\": \"configure_fsplit_shared_outlets\", \"parameters\": {\"block_name\": \"VFLOW\", \"inlet_stream\": \"VAP\", \"outlet_streams\": [\"H2RCY\", \"PURGE\"], \"split_fractions\": {\"H2RCY\": 0.92}}, \"facade\": true, \"translated_operations\": [{\"operation\": \"configure_fsplit_shared_outlets\", \"success\": true, \"error\": null}], \"response_status\": \"success\", \"result\": {\"success\": true}}\n...[truncated]"
+  },
+  {
+    "event": "tool_result",
+    "operation": "probe_model_state",
+    "parameters": {
+      "stream_names": [
+        "BZIN",
+        "H2IN",
+        "BZIN2",
+        "H2RCY2",
+        "RXIN",
+        "RXOUT",
+        "VAP",
+        "H2RCY",
+        "PURGE",
+        "PURGE2",
+        "LIQ",
+        "COLFD",
+        "CHRCY",
+        "CHRCY2",
+        "CHRCY3",
+        "LTENDS",
+        "PRODUCT"
+      ],
+      "block_names": [
+        "FEEDPUMP",
+        "FEED-MIX",
+        "REACT",
+        "HP-SEP",
+        "VFLOW",
+        "COMP",
+        "VALVE",
+        "LFLOW",
+        "PUMP",
+        "PIPE",
+        "COLUMN"
+      ],
+      "include_flowsheet": true,
+      "include_ui_next": true
+    },
+    "facade": true,
+    "translated_operations": [],
+    "response_status": null,
+    "result": {}
+  },
+  {
+    "event": "tool_result",
+    "operation": "probe_model_state",
+    "parameters": {
+      "stream_names": [
+        "BZIN",
+        "H2IN",
+        "PRODUCT"
+      ],
+      "block_names": [
+        "FEEDPUMP",
+        "FEED-MIX",
+        "REACT",
+        "HP-SEP",
+        "VFLOW",
+        "COMP",
+        "VALVE",
+        "LFLOW",
+        "PUMP",
+        "PIPE",
+        "COLUMN"
+      ],
+      "include_flowsheet": true,
+      "include_ui_next": false
+    },
+    "facade": true,
+    "translated_operations": [
+      {
+        "operation": "probe_model_state",
+        "success": true,
+        "error": null
+      }
+    ],
+    "response_status": null,
+    "result": {}
+  },
+  {
+    "truncated": true,
+    "chars": 8167,
+    "preview": "{\"event\": \"plan_result\", \"actions_requested\": 16, \"actions_executed\": 16, \"stopped_on_error\": false, \"first_error_index\": null, \"pending_action_count\": 0, \"action_outcomes\": [{\"event\": \"tool_result\", \"operation\": \"read_global_property_method\", \"parameters\": {}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true}}, {\"event\": \"tool_result\", \"operation\": \"ui_check_next_completion_status\", \"parameters\": {\"close_window\": true, \"status_timeout_s\": 8.0}, \"facade\": true, \"translated_operations\": [], \"response_status\": \"success\", \"result\": {\"success\": true, \"per_error\": null}}, {\"truncated\": true, \"chars\": 556, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_flowsheet_completion\\\", \\\"parameters\\\": {}, \\\"facade\\\": true, \\\"translated_operations\\\": [], \\\"response_status\\\": \\\"success\\\", \\\"result\\\": {\\\"success\\\": true, \\\"node_path_used\\\": \\\"Data\\\\\\\\Flowsheet\\\\\\\\Section\\\\\\\\GLOBAL\\\", \\\"input_state\\\": \\\"complete\\\", \\\"input_complete\\\": true, \\\"status_flags\\\": {\\\"results_success\\\": false, \\\"no_results\\\": true, \\\"results_warnings\\\": false, \\\"input_incomplete\\\": false, \\\"input_co\\n...[truncated]\"}, {\"truncated\": true, \"chars\": 602, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_block_completion\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"FEEDPUMP\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [], \\\"response_status\\\": \\\"success\\\", \\\"result\\\": {\\\"success\\\": true, \\\"block_name\\\": \\\"FEEDPUMP\\\", \\\"node_path_used\\\": \\\"Data\\\\\\\\Blocks\\\\\\\\FEEDPUMP\\\", \\\"input_state\\\": \\\"complete\\\", \\\"input_complete\\\": true, \\\"status_flags\\\": {\\\"results_success\\\": false, \\\"no_results\\\": true, \\\"results_warnings\\\": false, \\n...[truncated]\"}, {\"truncated\": true, \"chars\": 602, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_block_completion\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"FEED-MIX\\\"}, \\\"facade\\\": true, \\\"translated_operations\\\": [], \\\"response_status\\\": \\\"success\\\", \\\"result\\\": {\\\"success\\\": true, \\\"block_name\\\": \\\"FEED-MIX\\\", \\\"node_path_used\\\": \\\"Data\\\\\\\\Blocks\\\\\\\\FEED-MIX\\\", \\\"input_state\\\": \\\"complete\\\", \\\"input_complete\\\": true, \\\"status_flags\\\": {\\\"results_success\\\": false, \\\"no_results\\\": true, \\\"results_warnings\\\": false, \\n...[truncated]\"}, {\"truncated\": true, \"chars\": 593, \"preview\": \"{\\\"event\\\": \\\"tool_result\\\", \\\"operation\\\": \\\"check_block_completion\\\", \\\"parameters\\\": {\\\"block_name\\\": \\\"REACT\\\"}, \\\"facade\\\": true, \\\n...[truncated]"
   }
 ]
 
@@ -9672,44 +9752,14 @@ Choose the next JSON action.
 
 ````json
 {
-  "thought": "Check live model completion/readbacks before attempting run; need identify missing specs or topology contradictions from current Aspen state.",
+  "thought": "Model appears built and completion checked; run/export current flowsheet to see trusted status and diagnostics before readbacks/finalization.",
   "action": "mcp_tool",
-  "operation": "probe_model_state",
+  "operation": "export_final_evidence",
   "parameters": {
-    "stream_names": [
-      "BZIN",
-      "H2IN",
-      "BZIN2",
-      "H2RCY2",
-      "RXIN",
-      "RXOUT",
-      "VAP",
-      "H2RCY",
-      "PURGE",
-      "PURGE2",
-      "LIQ",
-      "COLFD",
-      "CHRCY",
-      "CHRCY2",
-      "CHRCY3",
-      "LTENDS",
-      "PRODUCT"
-    ],
-    "block_names": [
-      "FEEDPUMP",
-      "FEED-MIX",
-      "REACT",
-      "HP-SEP",
-      "VFLOW",
-      "COMP",
-      "VALVE",
-      "LFLOW",
-      "PUMP",
-      "PIPE",
-      "COLUMN"
-    ],
-    "include_flowsheet": true,
-    "include_ui_next": true
+    "run_engine": true,
+    "rep_filename": "chinese_5_1_radfrac.rep",
+    "apw_filename": "chinese_5_1_radfrac.apw",
+    "export_format": 2
   }
 }
 ````

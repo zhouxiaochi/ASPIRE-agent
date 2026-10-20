@@ -26,27 +26,16 @@ The Aspen Plus backup files prepared for the 2026-10-19 submission are available
 - [Download the SHA-256 checksum](https://github.com/zhouxiaochi/ASPIRE-agent/releases/download/bkp-files-20261019/ASPIRE-agent-bkp-files-20261019.sha256)
 - Contents: 66 Aspen Plus `.bkp` files — 53 benchmark files covering the 41-case set and 13 paper-study files
 
-## Research execution records
+## CHN51: Script Agent vs ReAct
 
-Sanitized end-to-end records from successful research runs of the `chinese_5_1_radfrac` benchmark are available for two control approaches:
-
-- [ReAct Aspen operation trace](docs/react-execution-records/chinese_5_1_radfrac/): all 325 ordered Aspen calls from the ReAct-controlled run.
-- [Script Agent execution record](docs/script-agent-execution-records/chinese_5_1_radfrac/): the sanitized event ledger, aggregate metrics, and both generated code versions from the Script-based ASPIRE run.
-
-The Script Agent record distinguishes the initial candidate from its pre-execution static revision. The initial candidate was rejected by a deterministic source contract before any Aspen-side mutation; only the revision was executed.
-
-### Main-control LLM call comparison
-
-[Open the comparison guide](docs/llm-call-comparison/chinese_5_1_radfrac/) or inspect the two complete raw JSONL exports directly.
+The CHN51 comparison is organized under a [single token-first comparison page](docs/chinese_5_1_comparison/).
 
 | Method | Main-control calls | Input tokens | Output tokens | Total tokens |
 | --- | ---: | ---: | ---: | ---: |
-| [Script Agent](docs/llm-call-comparison/chinese_5_1_radfrac/script-agent/) | 2 | 269,475 | 26,976 | **296,451** |
-| [ReAct](docs/llm-call-comparison/chinese_5_1_radfrac/react/) | 10 | 1,309,384 | 10,602 | **1,319,986** |
+| [Script Agent](docs/chinese_5_1_comparison/script-agent/) | 2 | 269,475 | 26,976 | **296,451** |
+| [ReAct](docs/chinese_5_1_comparison/react/) | 10 | 1,309,384 | 10,602 | **1,319,986** |
 
-ReAct used **4.45×** as many main-control tokens in this run. Each record repeats the complete input structure; Chinese source passages are faithfully translated into English in the public export; provider token telemetry remains the original recorded usage.
-
-Raw model responses, prompts, context packs, credentials, proprietary Aspen artifacts, local filesystem paths, and unsanitized validator payloads are excluded. These research traces exercise process equipment beyond the packaged public `MIXER`/`HEATER` support described below. They document experimental executions and do not expand the supported public API.
+**ReAct used 4.45× as many main-control tokens.** The unified comparison directory also contains generated Script Agent code, execution metrics, the ReAct Aspen operation trace, readable per-call pages, and raw JSONL downloads.
 
 ## Scope
 
