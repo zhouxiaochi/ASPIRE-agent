@@ -41,8 +41,8 @@ The Script Agent record distinguishes the initial candidate from its pre-executi
 
 | Method | Main-control calls | Input tokens | Output tokens | Total tokens |
 | --- | ---: | ---: | ---: | ---: |
-| [Script Agent](docs/llm-call-comparison/chinese_5_1_radfrac/script_agent_main_control_calls.raw.jsonl) | 2 | 269,475 | 26,976 | **296,451** |
-| [ReAct](docs/llm-call-comparison/chinese_5_1_radfrac/react_main_control_calls.raw.jsonl) | 10 | 1,309,384 | 10,602 | **1,319,986** |
+| [Script Agent](docs/llm-call-comparison/chinese_5_1_radfrac/script-agent/) | 2 | 269,475 | 26,976 | **296,451** |
+| [ReAct](docs/llm-call-comparison/chinese_5_1_radfrac/react/) | 10 | 1,309,384 | 10,602 | **1,319,986** |
 
 ReAct used **4.45×** as many main-control tokens in this run. Each record repeats the complete input structure; non-English source passages are explicitly marked in the public English-only export rather than silently translated.
 
